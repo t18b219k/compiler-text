@@ -3,20 +3,22 @@
  * @copyright (c) 2006, Tohoku University.
  * @author Atsushi Ohori
  *)
+open Type
+open Syntax
 structure TypedSyntax = 
 struct
   type ty = Type.ty
   type prim = Syntax.prim
-  datatype exp
+  datatype typed_exp
     = EXPID of  string*ty | INT of int | STRING of string 
-    | TRUE | FALSE | EXPFN of string * exp *ty
-    | EXPAPP of exp * exp *ty | EXPPAIR of exp * exp
-    | EXPPROJ1 of exp | EXPPROJ2 of exp 
-    | EXPPRIM of prim *  exp * exp 
-    | EXPIF of exp * exp * exp 
-    | EXPFIX of string * string * exp * ty
+    | TRUE | FALSE | EXPFN of string * typed_exp *ty
+    | EXPAPP of typed_exp * typed_exp *ty | EXPPAIR of typed_exp * typed_exp
+    | EXPPROJ1 of typed_exp | EXPPROJ2 of typed_exp 
+    | EXPPRIM of prim *  typed_exp * typed_exp 
+    | EXPIF of typed_exp * typed_exp * typed_exp 
+    | EXPFIX of string * string * typed_exp * ty
   and dec 
-    = VAL of string * exp
+    = VAL of string * typed_exp
   fun getTy e =  case e of
       INT int => INTty
       | STRING string => STRINGty
@@ -24,33 +26,31 @@ struct
       | FALSE => BOOLty
       | EXPID (string,ty)=> ty
       | EXPPAIR (exp1, exp2) => PAIRty(getTy exp1,getTy exp2)
-      | EXPAPP (exp1, exp2) =>case getTy exp1 of
-        FUNty(_,result)=>result
-        |_=>INTty 
+      | EXPAPP (exp1, exp2,ty) =>ty
       | EXPIF (exp1, exp2, exp3) =>getTy exp2        
-      | EXPFN (string, exp,ty) =>ty
-      | EXPPROJ1 exp => case getTy exp of
+      | EXPFN (string, typed_exp,ty) =>ty
+      | EXPPROJ1 typed_exp =>( case (getTy typed_exp) of
         PAIRty(a,_)=>a
-        |_=>INTty  
-      | EXPPROJ2 exp =>  case getTy exp of
+    )
+      | EXPPROJ2 typed_exp =>  (case (getTy typed_exp) of
         PAIRty(_,b)=>b
-        |_=>INTty  
-      | EXPFIX (f, x, exp,ty) =>ty
-      | EXPPRIM (p, exp1, exp2) =>case p of 
-        Eq=>BOOLty
-        |_=>INTty
+    )
+      | EXPFIX (f, x, typed_exp,ty) =>ty
+      | EXPPRIM (p, exp1, exp2) =>(case p of 
+        EQ=>BOOLty
+        |_=>INTty)
 
-  fun expToString exp =
-      case exp of
+  fun expToString typed_exp =
+      case typed_exp of
         INT int => Int.toString int
       | STRING string => "\"" ^ string ^ "\""
       | TRUE => "true"
       | FALSE => "false"
-      | EXPID(string,ty) => string ^ Type.tyToString ty
+      | EXPID(string,ty) => string ^ tyToString ty
       | EXPPAIR (exp1, exp2) => 
         "(" ^ expToString exp1 ^ "," ^ expToString exp2 ^ ")"
       | EXPAPP (exp1, exp2,ty) =>
-        "(" ^ expToString exp1 ^ " " ^ expToString exp2 ^ ")" ^ Type.tyToString ty
+        "(" ^ expToString exp1 ^ " " ^ expToString exp2 ^ ")" ^ tyToString ty
       | EXPIF (exp1, exp2, exp3) =>
         "if " 
          ^ expToString exp1
@@ -58,40 +58,42 @@ struct
          ^ expToString exp2
          ^ " else "
          ^ expToString exp3
-         ^ Type.tyToString (getTy exp2)
-      | EXPFN (string, exp,ty) =>
-        "(fn " ^ string ^ " => " ^ expToString exp ^ ") : "^ Type.tyToString ty
-      | EXPPROJ1 exp => "#1 " ^ expToString exp " : " ^ Type.tyToString getTy (case exp of
+         ^ tyToString (getTy exp2)
+      | EXPFN (var_id, typed_exp,ty) =>
+        "(fn " ^ var_id ^ " => " ^ expToString typed_exp ^ ") : "^ tyToString ty
+      | EXPPROJ1 typed_exp => "#1 " ^ expToString typed_exp ^ " : " ^ tyToString  (case (getTy typed_exp) of
         PAIRty(a,b)=>a)
-      | EXPPROJ2 exp => "#2 " ^ expToString exp " : " ^ Type.tyToString getTy (case exp of
+      | EXPPROJ2 typed_exp => "#2 " ^ expToString typed_exp ^ " : " ^ tyToString  (case (getTy typed_exp) of
         PAIRty(a,b)=>b)
-      | EXPFIX (f, x, exp,ty) =>
+      | EXPFIX (f, x, typed_exp,ty) =>
         "(fix " 
         ^ f 
         ^ "("
         ^ x 
-        ^ ") => " ^ expToString exp ^ ") : " ^ Type.tyToString ty
+        ^ ") => " ^ expToString typed_exp ^ ") : " ^ (tyToString ty)
       | EXPPRIM (p, exp1, exp2) =>
         let
-          val prim = case p of ADD => "add" | SUB => "sub"
-                             | MUL => "mul" | DIV => "div"
-                             | EQ => "eq"
+          val prim = case p of ADD => "add"
+           | SUB => "sub"
+           | MUL => "mul" 
+           | DIV => "div"
+            | EQ => "eq"
         in
-          "prim(" ^ prim ^ "," ^ expToString exp1 ^ "," ^ expToString exp2 ^ ")" ^ Type.tyToString (case p of Eq => BOOLty
-          |_=>INTty)
+          "prim(" ^ prim ^ "," ^ expToString exp1 ^ "," ^ expToString exp2 ^ ") : " ^ (tyToString (case p of EQ => BOOLty
+          |_ => INTty))
         end
   and decToString dec =
       case dec of
-        VAL (x, exp) =>
-        "val " ^ x ^ " = " ^ expToString exp
+        VAL (x, typed_exp) =>
+        "val " ^ x ^ " = " ^ expToString typed_exp
   
 
     
 (*
-  fun printExp exp = print (expToString exp)
+  fun printExp typed_exp = print (expToString typed_exp)
   fun printDec dec = print (decToString dec)
-  fun expToString exp = Dynamic.format exp
+  fun expToString typed_exp = Dynamic.format typed_exp
   fun decToString dec = Dynamic.format dec
-  fun getTy  exp = Type.ty
+  fun getTy  typed_exp = Type.ty
 *)
 end
