@@ -9,6 +9,8 @@ _require "../typeinf/TypeUtils.smi"
 _require "../SECD/Comp.smi"
 _require "../SECD/Exec.smi"
 _require "../SECD/Value.smi"
+_require "../typedSECD/Instruction.smi"
+_require "../typedSECD/Comp.smi"
 structure Top =
 struct
   val top : string -> unit

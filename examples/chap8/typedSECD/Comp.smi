@@ -1,0 +1,9 @@
+_require "basis.smi"
+_require "../parser/TypedSyntax.smi"
+_require "../parser/Syntax.smi"
+_require "./Instruction.smi"
+_require "../typeinf/Type.smi"
+structure TypedComp =
+struct
+  val compile : TypedSyntax.dec -> string * TypedInstruction.C
+end
