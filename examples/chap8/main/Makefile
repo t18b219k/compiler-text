@@ -7,12 +7,16 @@ Main: ../parser/Syntax.smi ../parser/CoreML.grm.sig ../parser/CoreML.grm.smi \
  ../parser/TypedSyntax.smi ../typeinf/TypeUtils.smi ../typeinf/UnifyTy.smi \
  ../typeinf/Typeinf.smi ../SECD/Instruction.smi ../SECD/Comp.smi \
  ../SECD/Value.smi ../SECD/Exec.smi ../typedSECD/Instruction.smi \
- ../typedSECD/Comp.smi Top.smi Main.smi ../parser/Syntax.o \
- ../parser/CoreML.grm.o ../parser/CoreML.lex.o ../parser/Parser.o \
- ../typeinf/Type.o ../parser/TypedSyntax.o ../typeinf/TypeUtils.o \
- ../typeinf/UnifyTy.o ../typeinf/Typeinf.o ../SECD/Instruction.o \
- ../SECD/Comp.o ../SECD/Value.o ../SECD/Exec.o ../typedSECD/Instruction.o \
- ../typedSECD/Comp.o Top.o Main.o
+ ../typedSECD/Comp.smi ../wasm_binary_emitter/Type.smi \
+ ../wasm_binary_emitter/Comp.smi ../wasm_binary_emitter/emitter.smi \
+ ../wasm_binary_emitter/wasm_instruction.smi Top.smi Main.smi \
+ ../parser/Syntax.o ../parser/CoreML.grm.o ../parser/CoreML.lex.o \
+ ../parser/Parser.o ../typeinf/Type.o ../parser/TypedSyntax.o \
+ ../typeinf/TypeUtils.o ../typeinf/UnifyTy.o ../typeinf/Typeinf.o \
+ ../SECD/Instruction.o ../SECD/Comp.o ../SECD/Value.o ../SECD/Exec.o \
+ ../typedSECD/Instruction.o ../typedSECD/Comp.o ../wasm_binary_emitter/Type.o \
+ ../wasm_binary_emitter/Comp.o ../wasm_binary_emitter/emitter.o \
+ ../wasm_binary_emitter/wasm_instruction.o Top.o Main.o
 	$(SMLSHARP) $(LDFLAGS) -o Main Main.smi $(LIBS)
 ../parser/Syntax.o: ../parser/Syntax.sml ../parser/Syntax.smi
 	$(SMLSHARP) $(SMLFLAGS) -o ../parser/Syntax.o -c ../parser/Syntax.sml
@@ -66,17 +70,41 @@ Main: ../parser/Syntax.smi ../parser/CoreML.grm.sig ../parser/CoreML.grm.smi \
  ../typeinf/Type.smi ../parser/TypedSyntax.smi ../typedSECD/Instruction.smi \
  ../typedSECD/Comp.smi
 	$(SMLSHARP) $(SMLFLAGS) -o ../typedSECD/Comp.o -c ../typedSECD/Comp.sml
+../wasm_binary_emitter/Type.o: ../wasm_binary_emitter/Type.sml \
+ ../wasm_binary_emitter/Type.smi
+	$(SMLSHARP) $(SMLFLAGS) -o ../wasm_binary_emitter/Type.o -c \
+ ../wasm_binary_emitter/Type.sml
+../wasm_binary_emitter/Comp.o: ../wasm_binary_emitter/Comp.sml \
+ ../typeinf/Type.smi ../typedSECD/Instruction.smi \
+ ../wasm_binary_emitter/Type.smi ../wasm_binary_emitter/Comp.smi
+	$(SMLSHARP) $(SMLFLAGS) -o ../wasm_binary_emitter/Comp.o -c \
+ ../wasm_binary_emitter/Comp.sml
+../wasm_binary_emitter/emitter.o: ../wasm_binary_emitter/emitter.sml \
+ ../wasm_binary_emitter/Type.smi ../wasm_binary_emitter/emitter.smi
+	$(SMLSHARP) $(SMLFLAGS) -o ../wasm_binary_emitter/emitter.o -c \
+ ../wasm_binary_emitter/emitter.sml
+../wasm_binary_emitter/wasm_instruction.o: \
+ ../wasm_binary_emitter/wasm_instruction.sml \
+ ../wasm_binary_emitter/wasm_instruction.smi
+	$(SMLSHARP) $(SMLFLAGS) -o ../wasm_binary_emitter/wasm_instruction.o \
+ -c ../wasm_binary_emitter/wasm_instruction.sml
 Top.o: Top.sml ../parser/Syntax.smi ../parser/CoreML.grm.sig \
  ../parser/CoreML.grm.smi ../parser/CoreML.lex.smi ../parser/Parser.smi \
  ../typeinf/Type.smi ../parser/TypedSyntax.smi ../typeinf/TypeUtils.smi \
  ../typeinf/UnifyTy.smi ../typeinf/Typeinf.smi ../SECD/Instruction.smi \
  ../SECD/Comp.smi ../SECD/Value.smi ../SECD/Exec.smi \
- ../typedSECD/Instruction.smi ../typedSECD/Comp.smi Top.smi
+ ../typedSECD/Instruction.smi ../typedSECD/Comp.smi \
+ ../wasm_binary_emitter/Type.smi ../wasm_binary_emitter/Comp.smi \
+ ../wasm_binary_emitter/emitter.smi \
+ ../wasm_binary_emitter/wasm_instruction.smi Top.smi
 	$(SMLSHARP) $(SMLFLAGS) -o Top.o -c Top.sml
 Main.o: Main.sml ../parser/Syntax.smi ../parser/CoreML.grm.sig \
  ../parser/CoreML.grm.smi ../parser/CoreML.lex.smi ../parser/Parser.smi \
  ../typeinf/Type.smi ../parser/TypedSyntax.smi ../typeinf/TypeUtils.smi \
  ../typeinf/UnifyTy.smi ../typeinf/Typeinf.smi ../SECD/Instruction.smi \
  ../SECD/Comp.smi ../SECD/Value.smi ../SECD/Exec.smi \
- ../typedSECD/Instruction.smi ../typedSECD/Comp.smi Top.smi Main.smi
+ ../typedSECD/Instruction.smi ../typedSECD/Comp.smi \
+ ../wasm_binary_emitter/Type.smi ../wasm_binary_emitter/Comp.smi \
+ ../wasm_binary_emitter/emitter.smi \
+ ../wasm_binary_emitter/wasm_instruction.smi Top.smi Main.smi
 	$(SMLSHARP) $(SMLFLAGS) -o Main.o -c Main.sml

@@ -1,0 +1,8 @@
+_require "basis.smi"
+_require "../typedSECD/Instruction.smi"
+_require "../typeinf/Type.smi"
+_require "./Type.smi"
+structure Comp = 
+struct
+val lower_ty_to_num_ty:Type.ty ->WasmType.num_ty
+end 

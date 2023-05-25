@@ -11,6 +11,10 @@ _require "../SECD/Exec.smi"
 _require "../SECD/Value.smi"
 _require "../typedSECD/Instruction.smi"
 _require "../typedSECD/Comp.smi"
+_require "../wasm_binary_emitter/Comp.smi"
+_require "../wasm_binary_emitter/emitter.smi"
+_require "../wasm_binary_emitter/Type.smi"
+_require "../wasm_binary_emitter/wasm_instruction.smi"
 structure Top =
 struct
   val top : string -> unit

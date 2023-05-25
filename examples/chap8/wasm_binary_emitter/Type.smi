@@ -1,0 +1,17 @@
+_require "basis.smi"
+structure WasmType =
+struct
+  datatype num_ty = I32|I64|F32|F64
+  datatype vec_ty = v128
+  datatype ref_ty = funcref|externref
+  datatype value_ty = number of num_ty | vector of vec_ty | reference of ref_ty
+  datatype result_ty = types of value_ty list
+  type fun_ty = result_ty *result_ty
+  
+  val dump_num_ty: num_ty -> word8 list
+  val dump_vec_ty:vec_ty ->word8 list
+  val dump_ref_ty:ref_ty ->word8 list
+  val dump_value_ty:value_ty->word8 list
+  val dump_result_ty:result_ty->word8 list
+  val dump_fun_ty:fun_ty->word8 list
+end
