@@ -46,11 +46,11 @@ struct
       | STRING string => "\"" ^ string ^ "\""
       | TRUE => "true"
       | FALSE => "false"
-      | EXPID(string,ty) => string ^ tyToString ty
+      | EXPID(string,ty) => string ^" : "^tyToString ty
       | EXPPAIR (exp1, exp2) => 
         "(" ^ expToString exp1 ^ "," ^ expToString exp2 ^ ")"
       | EXPAPP (exp1, exp2,ty) =>
-        "(" ^ expToString exp1 ^ " " ^ expToString exp2 ^ ")" ^ tyToString ty
+        "(" ^ expToString exp1 ^ " " ^ expToString exp2 ^ ") : " ^ tyToString ty
       | EXPIF (exp1, exp2, exp3) =>
         "if " 
          ^ expToString exp1

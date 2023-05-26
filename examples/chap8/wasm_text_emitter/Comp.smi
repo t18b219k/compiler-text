@@ -1,8 +1,9 @@
 _require "basis.smi"
-_require "../typedSECD/Instruction.smi"
+_require "../parser/TypedSyntax.smi"
 _require "../typeinf/Type.smi"
 _require "./Type.smi"
+_require "./WasmModule"
 structure Comp = 
 struct
-val lower_ty_to_num_ty:Type.ty ->WasmType.num_ty
+    val compile:TypedSyntax.typed_exp= 
 end 

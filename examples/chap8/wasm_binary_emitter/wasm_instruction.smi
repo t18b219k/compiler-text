@@ -1,4 +1,0 @@
-structure WASMInstruction =
-struct
-  datatype Instruction = I32Const of int32|I32Eq| I64Const of int64|I64Add|I64Sub|I64Mul|I64Div|I64Eq |CallIndirect
-end

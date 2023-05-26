@@ -1,0 +1,8 @@
+_require "basis.smi"
+structure WasmModule=
+struct
+    datatype numtype =i32|i64|f32|f64
+    datatype limits = min of word32 | minmax of word32*word32
+    datatype comment = line of string | block of string
+    datatype label = label of string
+end
