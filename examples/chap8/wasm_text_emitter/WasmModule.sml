@@ -1,41 +1,27 @@
 structure WasmModule=
 struct
-    datatype typeidx  =int_id of word32|text_id of string
-    fun typeidxToString x= case x of 
-        int_id(x) => Word32.toString x
-        |text_id(x)=>"$"^x 
-    datatype funcidx =int_id of word32|text_id of string
-        fun funcidxToString x= case x of 
-        int_id(x) => Word32.toString x
-        |text_id(x)=>"$"^x 
-    datatype tableidx = int_id of word32|text_id of string
-        fun tableidxToString x= case x of 
-        int_id(x) => Word32.toString x
-        |text_id(x)=>"$"^x 
-    datatype memidx = int_id of word32|text_id of string
-        fun memidxToString x= case x of 
-        int_id(x) => Word32.toString x
-        |text_id(x)=>"$"^x 
-    datatype globalidx = int_id of word32|text_id of string
-        fun globalidxToString x= case x of 
-        int_id(x) => Word32.toString x
-        |text_id(x)=>"$"^x 
-    datatype elemidx = int_id of word32|text_id of string
-        fun elemidxToString x= case x of 
-        int_id(x) => Word32.toString x
-        |text_id(x)=>"$"^x 
-    datatype dataidx = int_id of word32|text_id of string
-        fun dataidxToString x= case x of 
-        int_id(x) => Word32.toString x
-        |text_id(x)=>"$"^x 
-    datatype localidx = int_id of word32|text_id of string
-        fun localidxToString x= case x of 
-        int_id(x) => Word32.toString x
-        |text_id(x)=>"$"^x 
-    datatype labelidx = int_id of word32|text_id of string
-    fun labelidxToString x= case x of 
-        int_id(x) => Word32.toString x
-        |text_id(x)=>"$"^x 
+    datatype idx =int_id of word32|text_id of string 
+    fun idxToString (int_id w)= Word32.toString w
+    | idxToString (text_id s)= "$"^s
+    datatype typeidx  = typeidx of idx  
+    fun typeidxToString (typeidx idx)  =idxToString idx
+    datatype funcidx =funcidx of idx 
+    fun funcidxToString (funcidx idx)  =idxToString idx
+    datatype tableidx = tableidx of idx
+    fun tableidxToString (tableidx idx)  =idxToString idx
+    datatype memidx  =memidx of idx
+    fun memidxToString (memidx idx)  =idxToString idx
+    datatype globalidx = globalidx of idx
+    fun globalidxToString (globalidx idx)  =idxToString idx
+    datatype elemidx = elemidx of idx
+    fun elemidxToString (elemidx idx)  =idxToString idx
+    datatype dataidx = dataidx of idx
+    fun dataidxToString (dataidx idx)  =idxToString idx
+    datatype localidx = localidx of idx
+    fun localidxToString (localidx idx)  =idxToString idx
+    datatype labelidx = labelidx of idx
+    fun labelidxToString (labelidx idx)  =idxToString idx
+
     datatype numtype =i32|i64|f32|f64
     fun numtypeToString x = case x of
     i32=>"i32"
@@ -68,10 +54,19 @@ struct
     fun functypeToString x  = case x of
     functype(params,results)=> "( func "^(foldr (op ^) "" (map paramToString params) )^" "^(foldr (op ^) "" (map resultToString results) )^  ")"
     datatype limits = min of word32 | minmax of word32*word32
+    fun limitsToString l=case l of 
+    min(n)=>Word32.toString n
+    |minmax(n,m)=> Word32.toString n ^" "^Word32.toString m
     datatype memtype = memtype of limits
+    fun memtypeToString mt = case mt of 
+    memtype(l)=>limitsToString l
     datatype tabletype = tabletype of limits*reftype
+    fun tabletypeToString tt = case tt of 
+    tabletype(l,rt)=> limitsToString l ^ reftypeToString rt
     datatype globaltype = const of valtype | mutable of valtype
-
+    fun globaltypeToString gt = case gt of 
+    const(vt)=>valtypeToString vt 
+    |mutable(vt)=>"(mut "^ valtypeToString vt^" )"
     datatype comment = line of string | block of string
     datatype label = label of string
 
@@ -81,7 +76,7 @@ struct
     |blocktype(SOME(r))=>resultToString r 
     datatype instruction =
      (*制御構造*)
-     block of label option * blocktype * instruction list
+     block_i of label option * blocktype * instruction list
     |loop  of label option * blocktype * instruction list
     |if_    of label option * blocktype * instruction list* instruction list
     |nop
@@ -160,7 +155,7 @@ struct
     |f64max
     |f64copysign    
     fun instructionToString inst = case inst of
-    block( l , bt , iseq)=>"block " ^ (case l of 
+    block_i( l , bt , iseq)=>"block " ^ (case l of 
     SOME(label(l))=>"$"^l
     |NONE=>"")^foldr (op ^) "" (map instructionToString iseq)  ^"end"
     |loop ( l , bt , iseq)=>"loop " ^ (case l of 
@@ -238,4 +233,177 @@ struct
     |f64min=>"f64.min"
     |f64max=>"f64.max"
     |f64copysign=>"f64.copysign"
-    end
+    datatype expr = expr of instruction list
+    fun exprToString_bracketted e = case e of 
+    expr(il)=> foldr (op ^)""(map (fn i => instructionToString i ^"\n") il)
+    fun exprToString e = case e of 
+    expr(il)=> (foldr (op ^)""(map (fn i => instructionToString i ^"\n") il))^"end"
+    (*module field elements*)
+    datatype type_definition = type_definition of string option * functype 
+    fun type_definitionToString definition = case definition of 
+    type_definition(id,ft)=> "(type"^
+    (case id of 
+    SOME(id)=>id
+    |NONE=>"" ^
+    functypeToString ft)
+    ^")" 
+    datatype typeuse = name_only of typeidx | with_functype of typeidx * param list * result list
+    fun typeuseToString ty_use=case ty_use of 
+    name_only(id) =>"(type "^typeidxToString id^")"
+    |with_functype(id,params,results)=>"(type "
+    ^typeidxToString id 
+    ^")"
+    ^(foldr (op ^) "" (map paramToString params) )
+    ^" "
+    ^(foldr (op ^) "" (map resultToString results) )
+    datatype import_desc = f of funcidx option  *typeuse | t of tableidx  option* tabletype  |m of memidx option * memtype  |g of globalidx option* globaltype
+    fun import_descToString desc = (case desc of 
+    f(id,x)=>"(func" ^(case id of 
+    NONE=>""
+    |SOME(id)=> funcidxToString id)^
+    typeuseToString x
+    ^ ")"
+    |t(id,tt)=>"(table"^(case id of 
+    NONE=>" "
+    |SOME(id)=> tableidxToString id)^
+    tabletypeToString tt
+    |m(id,mt)=>"(memory"^(case id of 
+    NONE=>" "
+    |SOME(id)=> memidxToString id)^
+    memtypeToString mt^")"
+    |g(id,gt)=>"(global"^(case id of 
+    NONE=>" "
+    |SOME(id) =>globalidxToString id)^
+    globaltypeToString gt
+    ^
+    ")"
+    )
+    datatype import = import of string*string*import_desc
+    
+    fun importToString im = case im of 
+    import(module,nm,d)=>"(import"^
+    module ^" "^nm ^" " ^import_descToString d
+    ^")"
+    datatype local_ = local_ of localidx option * valtype
+    fun local_ToString l =case l of
+    local_(id,vt)=>"(local "^ (case id of 
+    NONE=>""
+    |SOME(id)=>localidxToString id 
+    )
+    ^" "^valtypeToString vt ^")"
+
+    type func =  funcidx option * typeuse * local_ list * instruction list 
+    fun funcToString (id,type_use,ll,il)= 
+     "(func " ^ (case id of
+     NONE=>""
+     |SOME(idx)=>funcidxToString idx) 
+     ^" "
+     ^typeuseToString type_use 
+     ^"\n"
+     ^(foldr (op ^) ""  (map local_ToString ll) )
+     ^"\n"
+     ^(foldr (op ^) "" (map instructionToString il))
+     ^")"
+    type table =  tableidx option * tabletype 
+    fun tableToString (ti,tt) = "(table "^
+    (case ti of 
+    NONE=>" "
+    |SOME(idx)=>tableidxToString idx
+    )^
+    tabletypeToString tt
+    ^
+    ")"
+    type mem =  memidx option *memtype
+    fun memToString (id,mt)="(memory "^(case id of 
+    SOME(id)=> memidxToString id 
+    |NONE=>"" )^
+    " "
+    ^ memtypeToString mt
+    ^")"
+    type global = globalidx option * globaltype *expr 
+    fun globalToString (id,gt,e)= "(global "^(case id of 
+    SOME(id)=>globalidxToString id
+    |NONE=>"")
+    ^globaltypeToString gt 
+    ^" "
+    ^ exprToString_bracketted e
+    ^")"
+    datatype export_desc =func_e of funcidx | table_e of tableidx |memory_e of memidx | global_e of globalidx 
+    fun export_descToString desc = case desc of 
+    func_e(fid)=>"(func "^funcidxToString fid ^")" 
+    |table_e(tid)=>"(table "^tableidxToString tid^")"
+    |memory_e(mid)=>"(memory "^memidxToString mid^")"
+    |global_e(gid)=>"(global "^globalidxToString gid^")"
+    datatype export = export of string * export_desc
+    fun exportToString ex  =case ex of 
+    export(name,desc)=>"(export "^name^export_descToString desc^")"
+    datatype start = start of funcidx
+    fun startToString s = case s of 
+    start(fid)=>"(start "^funcidxToString fid^")"
+    datatype elemexpr =elemexpr of expr 
+    fun elemexprToString ee = case ee of 
+    elemexpr(e)=> "(item "^exprToString_bracketted e ^")" 
+    datatype elemlist =elemlist of reftype * elemexpr list
+    fun elemlistToString el = case el of 
+    elemlist(rt,eel)=> reftypeToString rt ^" "^ foldr (op ^) "" (map (fn ee =>elemexprToString ee ^"\n")  eel)
+    datatype elemmode = passive_elem_mode |active_elem_mode of tableidx * expr | declarative
+    fun elemmodeToString em =case em of 
+    passive_elem_mode=>" "
+    |active_elem_mode(tid,e)=>"(table "^tableidxToString tid^")"^"(offset "^exprToString_bracketted e^")"   
+    |declarative=>"declare"
+    datatype elem = element of elemidx option * elemlist * elemmode
+    fun elementToString e =case e of 
+    element(id,el,em)=>"(elem "^ (case id of 
+    NONE=>" "
+    |SOME(id)=>elemidxToString id 
+    )
+    ^elemmodeToString em 
+    ^elemlistToString el
+    ^
+    ")"
+    datatype datamode = passive_data_mode | active_data_mode of memidx * expr 
+    fun datamodeToString dm = case dm of 
+    passive_data_mode=>" "
+    |active_data_mode(id,e)=>memidxToString id ^ "(offset "^exprToString_bracketted e^")" 
+    (*とりあえずは文字列が扱えればよし*)
+    datatype data = data of dataidx option * datamode *string 
+    fun dataToString d=case d of 
+    data(did,dm,s)=>"(data "^(case did of 
+    NONE=>" "
+    |SOME(id)=>dataidxToString id)^datamodeToString dm ^" "^s^")" 
+    (*module fields *)
+    type types = type_definition list
+    fun typesToString tl = foldr (op ^) "" (map type_definitionToString tl)
+    type funcs = func list
+        fun funcsToString tl = foldr (op ^) "" (map funcToString tl)
+    type tables = table list
+        fun tablesToString tl = foldr (op ^) "" (map tableToString tl)
+    type mems =mem list 
+        fun memsToString tl = foldr (op ^) "" (map memToString tl)
+    type globals = global list
+        fun globalsToString tl = foldr (op ^) "" (map globalToString tl)
+    type elems =elem list
+        fun elemsToString tl = foldr (op ^) "" (map elementToString tl)
+    type datas = data list 
+        fun datasToString tl = foldr (op ^) "" (map dataToString tl)
+
+    type imports = import list 
+        fun importsToString tl = foldr (op ^) "" (map importToString tl)
+    type exports =export list
+        fun exportsToString tl = foldr (op ^) "" (map exportToString tl)
+
+    (*Abstract WASM Module *)
+    type module = {ty:types,im:imports,fn_:funcs,ta:tables,me:mems,gl:globals,ex:exports,st:start,el:elems,da:datas}
+    fun moduleToString {ty:types,im:imports,fn_:funcs,ta:tables,me:mems,gl:globals,ex:exports,st:start,el:elems,da:datas}=
+    "( module "^
+    typesToString (ty )^
+    importsToString (im )^
+    funcsToString (fn_ )^
+    tablesToString (ta )^ 
+    memsToString (me )^
+    globalsToString (gl )^
+    exportsToString (ex )^
+    startToString (st  )^
+    elemsToString (el  )^
+    datasToString (da )  ^")"
+end

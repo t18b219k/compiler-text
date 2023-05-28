@@ -1,9 +1,8 @@
 _require "basis.smi"
 _require "../parser/TypedSyntax.smi"
 _require "../typeinf/Type.smi"
-_require "./Type.smi"
-_require "./WasmModule"
+_require "./WasmModule.smi"
 structure Comp = 
 struct
-    val compile:TypedSyntax.typed_exp= 
+    val compile:TypedSyntax.typed_dec-> WasmModule.module
 end 

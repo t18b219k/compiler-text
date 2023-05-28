@@ -18,9 +18,9 @@ struct
     | EXPPRIM of prim *  typed_exp * typed_exp 
     | EXPIF of typed_exp * typed_exp * typed_exp 
     | EXPFIX of string * string * typed_exp * ty
-  and dec 
+  and typed_dec 
     = VAL of string * typed_exp
   val expToString : typed_exp -> string
-  val decToString : dec -> string
+  val typed_decToString : typed_dec -> string
   val getTy : typed_exp -> ty
 end

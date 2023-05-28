@@ -1,8 +1,140 @@
 _require "basis.smi"
 structure WasmModule=
 struct
+
+    datatype idx =int_id of word32|text_id of string 
+    datatype typeidx  = typeidx of idx  
+    datatype funcidx =funcidx of idx 
+    datatype tableidx = tableidx of idx
+    datatype memidx  =memidx of idx
+    datatype globalidx = globalidx of idx
+    datatype elemidx = elemidx of idx
+    datatype dataidx = dataidx of idx
+    datatype localidx = localidx of idx
+    datatype labelidx = labelidx of idx
+
     datatype numtype =i32|i64|f32|f64
     datatype limits = min of word32 | minmax of word32*word32
     datatype comment = line of string | block of string
     datatype label = label of string
+    datatype vectype = v128
+    datatype reftype = funcref | externref    
+    datatype heaptype =func|extern
+    datatype valtype = numtype of numtype | vectype of vectype | reftype of reftype
+    datatype param = param of string * valtype 
+    datatype result = result of valtype 
+    datatype functype = functype of param list *  result list
+    datatype memtype = memtype of limits
+    datatype globaltype = const of valtype | mutable of valtype
+    datatype tabletype = tabletype of limits*reftype
+        datatype blocktype = blocktype of result option 
+        datatype instruction =
+     (*制御構造*)
+     block_i of label option * blocktype * instruction list
+    |loop  of label option * blocktype * instruction list
+    |if_    of label option * blocktype * instruction list* instruction list
+    |nop
+    |unreachable
+    |br of label
+    |br_if of label
+    |br_table of label list* label
+    |return
+    |call of label
+    |call_indirect of label * label
+    (*数値演算命令*)
+    |i32const of int32 | i64const of int64|f32const of real32|f64const of real
+    (*count leading zeros*)
+    |i32clz
+    |i32ctz
+    |i32popcnt
+    |i32add
+    |i32sub
+    |i32mul
+    |i32div_s
+    |i32div_u
+    |i32rem_s
+    |i32rem_u
+    |i32and
+    |i32or
+    |i32xor
+    |i32shl
+    |i32shr_s
+    |i32shr_u
+    |i32rotl
+    |i32rotr
+    |i64clz
+    |i64ctz
+    |i64popcnt
+    |i64add
+    |i64sub
+    |i64mul
+    |i64div_s
+    |i64div_u
+    |i64rem_s
+    |i64rem_u
+    |i64and
+    |i64or
+    |i64xor
+    |i64shl
+    |i64shr_s
+    |i64shr_u
+    |i64rotl
+    |i64rotr
+    |f32abs
+    |f32neg
+    |f32ceil
+    |f32floor
+    |f32trunc
+    |f32nearest
+    |f32sqrt
+    |f32add
+    |f32sub
+    |f32mul
+    |f32div
+    |f32min
+    |f32max
+    |f32copysign
+    |f64abs
+    |f64neg
+    |f64ceil
+    |f64floor
+    |f64trunc
+    |f64nearest
+    |f64sqrt
+    |f64add
+    |f64sub
+    |f64mul
+    |f64div
+    |f64min
+    |f64max
+    |f64copysign    
+    datatype expr = expr of instruction list
+    datatype type_definition = type_definition of string option * functype 
+    datatype typeuse = name_only of typeidx | with_functype of typeidx * param list * result list
+    datatype import_desc = f of funcidx option  *typeuse | t of tableidx  option* tabletype  |m of memidx option * memtype  |g of globalidx option* globaltype
+    datatype import = import of string*string*import_desc
+    datatype local_ = local_ of localidx option * valtype
+     type func =  funcidx option * typeuse * local_ list * instruction list 
+    type table =  tableidx option * tabletype 
+    type mem =  memidx option *memtype
+    type global = globalidx option * globaltype *expr 
+    datatype export_desc =func_e of funcidx | table_e of tableidx |memory_e of memidx | global_e of globalidx 
+    datatype export = export of string * export_desc
+    datatype start = start of funcidx
+    datatype elemexpr =elemexpr of expr 
+    datatype elemlist =elemlist of reftype * elemexpr list
+    datatype elemmode = passive_elem_mode |active_elem_mode of tableidx * expr | declarative
+    datatype elem = element of elemidx option * elemlist * elemmode
+    datatype datamode = passive_data_mode | active_data_mode of memidx * expr 
+    datatype data = data of dataidx option * datamode *string 
+    type types = type_definition list
+    type funcs = func list
+    type tables = table list
+    type mems =mem list 
+    type globals = global list
+    type elems =elem list
+    type datas = data list 
+    type imports = import list
+    type exports =export list
+    type module = {ty:types,im:imports,fn_:funcs,ta:tables,me:mems,gl:globals,ex:exports,st:start,el:elems,da:datas}
 end

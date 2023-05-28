@@ -9,9 +9,9 @@ _require "../typeinf/TypeUtils.smi"
 _require "../SECD/Comp.smi"
 _require "../SECD/Exec.smi"
 _require "../SECD/Value.smi"
-_require "../wasm_binary_emitter/emitter.smi"
-_require "../wasm_binary_emitter/Type.smi"
-_require "../wasm_binary_emitter/wasm_instruction.smi"
+_require "../wasm_text_emitter/WasmModule.smi"
+_require "../wasm_text_emitter/Comp.smi"
+
 structure Top =
 struct
   val top : string -> unit

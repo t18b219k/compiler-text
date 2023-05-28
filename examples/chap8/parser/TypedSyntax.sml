@@ -17,7 +17,7 @@ struct
     | EXPPRIM of prim *  typed_exp * typed_exp 
     | EXPIF of typed_exp * typed_exp * typed_exp 
     | EXPFIX of string * string * typed_exp * ty
-  and dec 
+  and typed_dec 
     = VAL of string * typed_exp
   fun getTy e =  case e of
       INT int => INTty
@@ -82,7 +82,7 @@ struct
           "prim(" ^ prim ^ "," ^ expToString exp1 ^ "," ^ expToString exp2 ^ ") : " ^ (tyToString (case p of EQ => BOOLty
           |_ => INTty))
         end
-  and decToString dec =
+  and typed_decToString dec =
       case dec of
         VAL (x, typed_exp) =>
         "val " ^ x ^ " = " ^ expToString typed_exp
