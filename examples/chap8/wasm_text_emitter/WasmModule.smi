@@ -1,7 +1,11 @@
 _require "basis.smi"
+structure ID =
+struct 
+    datatype idx =int_id of word32 | text_id of string 
+end 
+
 structure WasmModule=
 struct
-
     datatype idx =int_id of word32|text_id of string 
     datatype typeidx  = typeidx of idx  
     datatype funcidx =funcidx of idx 
@@ -27,8 +31,11 @@ struct
     datatype memtype = memtype of limits
     datatype globaltype = const of valtype | mutable of valtype
     datatype tabletype = tabletype of limits*reftype
-        datatype blocktype = blocktype of result option 
-        datatype instruction =
+    datatype blocktype = blocktype of result option 
+    
+    datatype typeuse = name_only of typeidx | with_functype of typeidx * param list * result list
+    datatype memarg =memarg of word32 * word32
+    datatype instruction =
      (*制御構造*)
      block_i of label option * blocktype * instruction list
     |loop  of label option * blocktype * instruction list
@@ -39,8 +46,56 @@ struct
     |br_if of label
     |br_table of label list* label
     |return
-    |call of label
-    |call_indirect of label * label
+    |call of funcidx
+    |call_indirect of tableidx * typeuse
+    |drop
+    |select
+    (*local variable instruction*)
+    |localget of localidx
+    |localset of localidx 
+    |localtee of localidx
+    (*global variable instruction*) 
+    |globalget of globalidx
+    |globalset of globalidx
+    (*table isntructions*)
+    |tableget of tableidx
+    |tableset of tableidx 
+    |tablesize of tableidx
+    |tablegrow of tableidx 
+    |tablefill of tableidx
+    |tablecopy of tableidx*tableidx
+    |tableinit of tableidx*elemidx
+    |elemdrop of elemidx
+    (*memory instruction*)
+    |i32load of memarg
+    |i64load of memarg
+    |f32load of memarg
+    |f64load of memarg
+    |i32load8_s of memarg
+    |i32load8_u of memarg
+    |i32load16_s of memarg
+    |i32load16_u of memarg 
+    |i64load8_s of memarg
+    |i64load8_u of memarg
+    |i64load16_s of memarg
+    |i64load16_u of memarg 
+    |i64load32_s of memarg
+    |i64load32_u of memarg
+    |i32store of memarg
+    |i64store of memarg
+    |f32store of memarg
+    |f64store of memarg
+    |i32store8 of memarg
+    |i32store16 of memarg
+    |i64store8 of memarg
+    |i64store16 of memarg
+    |i64store32 of memarg
+    |memorysize
+    |memorygrow
+    |memoryfill
+    |memorycopy 
+    |memoryinit of dataidx
+    |datadrop of dataidx
     (*数値演算命令*)
     |i32const of int32 | i64const of int64|f32const of real32|f64const of real
     (*count leading zeros*)
@@ -107,14 +162,47 @@ struct
     |f64div
     |f64min
     |f64max
-    |f64copysign    
-    datatype expr = expr of instruction list
-    datatype type_definition = type_definition of string option * functype 
-    datatype typeuse = name_only of typeidx | with_functype of typeidx * param list * result list
+    |f64copysign        
+    |i32eqz
+    |i32eq
+    |i32ne
+    |i32lt_s
+    |i32lt_u
+    |i32gt_s
+    |i32gt_u
+    |i32le_s
+    |i32le_u
+    |i32ge_s
+    |i32ge_u
+    |i64eqz
+    |i64eq
+    |i64ne
+    |i64lt_s
+    |i64lt_u
+    |i64gt_s
+    |i64gt_u
+    |i64le_s
+    |i64le_u
+    |i64ge_s
+    |i64ge_u
+    |f32eq
+    |f32ne
+    |f32lt
+    |f32gt
+    |f32le
+    |f32ge
+    |f64eq
+    |f64ne
+    |f64lt
+    |f64gt
+    |f64le
+    |f64ge
+    type expr = instruction list
+    datatype type_definition = type_definition of string option * functype
     datatype import_desc = f of funcidx option  *typeuse | t of tableidx  option* tabletype  |m of memidx option * memtype  |g of globalidx option* globaltype
     datatype import = import of string*string*import_desc
     datatype local_ = local_ of localidx option * valtype
-     type func =  funcidx option * typeuse * local_ list * instruction list 
+    type func =  funcidx option * typeuse * local_ list * instruction list 
     type table =  tableidx option * tabletype 
     type mem =  memidx option *memtype
     type global = globalidx option * globaltype *expr 
@@ -137,4 +225,5 @@ struct
     type imports = import list
     type exports =export list
     type module = {ty:types,im:imports,fn_:funcs,ta:tables,me:mems,gl:globals,ex:exports,st:start,el:elems,da:datas}
+    val emptyModule:module
 end

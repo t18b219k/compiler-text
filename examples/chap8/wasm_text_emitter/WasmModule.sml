@@ -1,3 +1,7 @@
+structure ID =
+struct 
+    datatype idx =int_id of word32 | text_id of string 
+end 
 structure WasmModule=
 struct
     datatype idx =int_id of word32|text_id of string 
@@ -74,6 +78,14 @@ struct
     fun blocktypeToString bt = case bt of 
     blocktype(NONE)=>""
     |blocktype(SOME(r))=>resultToString r 
+
+    datatype memarg =memarg of word32 * word32
+
+    fun memargToString ma =case ma of 
+    memarg(offset,align)=>"offset="^Word32.toString offset ^" "^"align="^Word32.toString align
+
+    datatype typeuse = name_only of typeidx | with_functype of typeidx * param list * result list
+    
     datatype instruction =
      (*制御構造*)
      block_i of label option * blocktype * instruction list
@@ -85,8 +97,56 @@ struct
     |br_if of label
     |br_table of label list* label
     |return
-    |call of label
-    |call_indirect of label * label
+    |call of funcidx
+    |call_indirect of tableidx * typeuse
+    |drop
+    |select
+    (*local variable instruction*)
+    |localget of localidx
+    |localset of localidx 
+    |localtee of localidx
+    (*global variable instruction*) 
+    |globalget of globalidx
+    |globalset of globalidx
+    (*table isntructions*)
+    |tableget of tableidx
+    |tableset of tableidx 
+    |tablesize of tableidx
+    |tablegrow of tableidx 
+    |tablefill of tableidx
+    |tablecopy of tableidx*tableidx
+    |tableinit of tableidx*elemidx
+    |elemdrop of elemidx
+    (*memory instruction*)
+    |i32load of memarg
+    |i64load of memarg
+    |f32load of memarg
+    |f64load of memarg
+    |i32load8_s of memarg
+    |i32load8_u of memarg
+    |i32load16_s of memarg
+    |i32load16_u of memarg 
+    |i64load8_s of memarg
+    |i64load8_u of memarg
+    |i64load16_s of memarg
+    |i64load16_u of memarg 
+    |i64load32_s of memarg
+    |i64load32_u of memarg
+    |i32store of memarg
+    |i64store of memarg
+    |f32store of memarg
+    |f64store of memarg
+    |i32store8 of memarg
+    |i32store16 of memarg
+    |i64store8 of memarg
+    |i64store16 of memarg
+    |i64store32 of memarg
+    |memorysize
+    |memorygrow
+    |memoryfill
+    |memorycopy 
+    |memoryinit of dataidx
+    |datadrop of dataidx
     (*数値演算命令*)
     |i32const of int32 | i64const of int64|f32const of real32|f64const of real
     (*count leading zeros*)
@@ -154,6 +214,40 @@ struct
     |f64min
     |f64max
     |f64copysign    
+    |i32eqz
+    |i32eq
+    |i32ne
+    |i32lt_s
+    |i32lt_u
+    |i32gt_s
+    |i32gt_u
+    |i32le_s
+    |i32le_u
+    |i32ge_s
+    |i32ge_u
+    |i64eqz
+    |i64eq
+    |i64ne
+    |i64lt_s
+    |i64lt_u
+    |i64gt_s
+    |i64gt_u
+    |i64le_s
+    |i64le_u
+    |i64ge_s
+    |i64ge_u
+    |f32eq
+    |f32ne
+    |f32lt
+    |f32gt
+    |f32le
+    |f32ge
+    |f64eq
+    |f64ne
+    |f64lt
+    |f64gt
+    |f64le
+    |f64ge
     fun instructionToString inst = case inst of
     block_i( l , bt , iseq)=>"block " ^ (case l of 
     SOME(label(l))=>"$"^l
@@ -233,11 +327,10 @@ struct
     |f64min=>"f64.min"
     |f64max=>"f64.max"
     |f64copysign=>"f64.copysign"
-    datatype expr = expr of instruction list
-    fun exprToString_bracketted e = case e of 
-    expr(il)=> foldr (op ^)""(map (fn i => instructionToString i ^"\n") il)
-    fun exprToString e = case e of 
-    expr(il)=> (foldr (op ^)""(map (fn i => instructionToString i ^"\n") il))^"end"
+
+    type expr =  instruction list
+    fun exprToString_bracketted il =  foldr (op ^)""(map (fn i => instructionToString i ^"\n") il)
+    fun exprToString il =(foldr (op ^)""(map (fn i => instructionToString i ^"\n") il))^"end"
     (*module field elements*)
     datatype type_definition = type_definition of string option * functype 
     fun type_definitionToString definition = case definition of 
@@ -247,7 +340,7 @@ struct
     |NONE=>"" ^
     functypeToString ft)
     ^")" 
-    datatype typeuse = name_only of typeidx | with_functype of typeidx * param list * result list
+
     fun typeuseToString ty_use=case ty_use of 
     name_only(id) =>"(type "^typeidxToString id^")"
     |with_functype(id,params,results)=>"(type "
@@ -406,4 +499,5 @@ struct
     startToString (st  )^
     elemsToString (el  )^
     datasToString (da )  ^")"
+    val emptyModule = {ty=[],fn_=[],ta=[],me=[],gl=[],el=[],da=[],im=[],ex=[],st=start (funcidx(text_id "__start"))}
 end
