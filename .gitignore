@@ -1,0 +1,4 @@
+*.o
+examples/chap8/main/Top.o
+examples/chap8/SECD/Comp.o
+examples/chap8/main/Main.o
