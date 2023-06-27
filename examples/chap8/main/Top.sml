@@ -1,13 +1,13 @@
 structure Top =
 struct
-  fun readAndPrintLoop env gamma stream =
+  fun readAndPrintLoop gamma stream =
     let
       val (dec, stream) = Parser.doParse stream
-      val newGamma = Typeinf.typeinf gamma dec
-      val namedCode = Comp.compile dec
-      val newEnv = Exec.run env namedCode
+      val (newGamma,typed_expr)=Typeinf.typeinf_with_typed_expr gamma dec 
+      val Syntax.VAL(name,_)=dec
+      val wasmCode = WasmComp.compile [TypedSyntax.VAL(name,typed_expr)]
     in
-      readAndPrintLoop newEnv newGamma stream
+      readAndPrintLoop  newGamma stream
     end
   fun top file =
     let
@@ -16,9 +16,9 @@ struct
                      | _ => TextIO.openIn file
       val stream = Parser.makeStream inStream
       val gamma = TypeUtils.emptyTyEnv
-      val env = Value.emptyEnv
+      val module = WasmModule.emptyModule 
     in
-      readAndPrintLoop env gamma stream 
+      readAndPrintLoop  gamma stream 
       handle Parser.EOF => ()
            | Parser.ParseError => print "Syntax error\n"
            | Typeinf.TypeError => print "Type error\n"

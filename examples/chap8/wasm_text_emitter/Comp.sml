@@ -80,7 +80,7 @@ struct
   fun getStringCount ctx =length (#strings ctx)
 
   (*compile_expr:TypedSyntax.typed_exp-> WasmModule instruction list-> WasmModule.module -> int ->(WasmModule.instruction list * WasmModule.module * int ) *)
-
+  (*Kは継続　(後に続く計算.)*)
   fun compile_expr e K module memoffset= case e of 
   TS.INT(i)=>((I.i32const i) ::K,module,memoffset)
   |TS.STRING(s)=>
@@ -113,7 +113,6 @@ struct
                 I.localget(I.localidx(I.text_id("pair_addr")))::e2_store::I.localget(I.localidx(I.text_id("pair_addr")))::e1_store::I.localtee(I.localidx(I.text_id("pair_addr")))::alloc_call::(I.i32const size_of_pair )::K,module,memoffset)
               end
   |TS.EXPPROJ1 e =>
-  (*
   let val ty =TS.getTy e 
       val i =case ty of
       PAIRty(INTty,_)=>I.i32load(I.memarg(0w0,0w4)) 
@@ -121,10 +120,9 @@ struct
       |PAIRty(STRINGty,_)=>I.i32load(I.memarg(0w0,0w4)) 
       |PAIRty(PAIRty(_,_),_)=>I.i32load(I.memarg(0w0,0w4)) 
       |PAIRty(FUNty(_,_),_)=>I.i32load(I.memarg(0w0,0w4)) 
-     in*)
-      compile_expr e (I.i32load(I.memarg(0w0,0w4)) :: K) module memoffset 
-    (*
-    end*) 
+     in
+      compile_expr e (i:: K) module memoffset 
+    end
     (*pair #2は#1のlinear memory のバイト数オフセットして
     さしているものがpair,closureならばnop 
     INTty ならば i32load
@@ -180,6 +178,7 @@ struct
         val closure_size =foldr (op + )  4 (map (fn (v_name,v_ty)=> size_of_valtype v_ty)  prelude) 
         (*クロージャをlinear メモリに保管するための領域を確保*)
         val alloc_call = I.localtee(I.localidx(I.text_id("closure_ptr")))::I.call(I.funcidx(I.text_id("alloc"))) ::I.i32const closure_size::[]  
+        
         (*クロージャのデータを保存する.*)
         (*ftbl 関数テーブルのインデックスの保存.*)
         (*あとはprelude の順に詰めていく.*)
@@ -190,6 +189,7 @@ struct
 
     |TS.EXPFIX(f,x,e_inner,ty)=>
     let val fvs  =fv e  
+        (*クロージャ内で使う変数群の生成*)
         val prelude =  SEnv.foldr (op ::) [] (SEnv.mapi (fn (v_name,v_ty)=> (v_name,CMLTyTovaltype v_ty)) fvs)  
         (*クロージャは関数ポインタを含むため 自由変数+ 関数ポインタ4バイトが必要*)
         val closure_size =foldr (op + )  4 (map (fn (v_name,v_ty)=> size_of_valtype v_ty)  prelude) 
@@ -199,18 +199,51 @@ struct
         (*ftbl 関数テーブルのインデックスの保存.*)
         (*あとはprelude の順に詰めていく.*)
         (*変数は val ,fun で宣言され,local にある.*)
-        val saves = [] in
+        
+        (*ここで関数の生成を行う.*)
+        (*クロージャのコード生成*)
+        val function_body = compile_expr e [] module memoffset
+        val locals = map (fn (v_name,v_ty)=>I.local_(SOME(I.localidx(I.text_id v_name)),v_ty)) prelude
+        (*クロージャからローカル変数に展開*)
+        (*メモリからオフセット付きでアクセスしてローカル変数に保存*)
+        val saves = [] 
+        in
             (saves@alloc_call@K, module ,memoffset)
         end 
 
     |TS.EXPAPP(e_1,e_2,ty)=>
     (*スタックにはクロージャptr が積まれている.*)
     (*クロージャptr からftbl ptr を参照.*)
+    (*クロージャポインタから関数ポインタを取り出すためにローカル変数 __fptr を使う *)
       let val ft = FUNty(TS.getTy e_2,ty)  
           val (K,module,memoffset) =compile_expr e_2 K module memoffset  
-          val (K,module ,memoffset) = compile_expr e_1 K module memoffset  
-          val call_inst = I.call_indirect(I.tableidx(I.text_id(generate_dispatch_table_name ft)),I.name_only(I.typeidx(I.text_id(generate_type_id ft))))::I.i32load(I.memarg(0w0,0w4))::[] in 
+          val (K,module ,memoffset) = compile_expr e_1 K module memoffset
+          (*スタックは次のようになっている
+          top |関数ポインタ     |
+              |クロージャポインタ|
+              |引数             |
+              |...             |
+          *)
+
+          val call_inst = [I.call_indirect(I.tableidx(I.text_id(generate_dispatch_table_name ft)),I.name_only(I.typeidx(I.text_id(generate_type_id ft)))),I.i32load(I.memarg(0w0,0w4)),I.localget(I.localidx(I.text_id "__fptr")),I.localtee(I.localidx(I.text_id "__fptr"))] in 
             (call_inst@K,module,memoffset)
           end 
-    fun compile declarations= I.emptyModule        
+    (*__start 関数の中に宣言と対応する命令列を積む*)
+    (*compile_declarations Dec list -> (I.local list ,)*)      
+    (*compile_expr:TypedSyntax.typed_exp-> WasmModule instruction list-> WasmModule.module -> int ->(WasmModule.instruction list * WasmModule.module * int ) *)
+    fun compile_declarations [] = ([],[],I.emptyModule,0)
+    | compile_declarations (x::xs) = let
+     val  TS.VAL(name,e) =x
+     val (locals,instructions,module,offset)=compile_declarations xs  
+     in
+      let val (iseq,module,offset)= compile_expr e [] module offset in 
+        ((name,TS.getTy e)::locals,iseq::instructions,module,offset)
+      end 
+    end  
+    (*__start 関数を作る. *)     
+    fun compile declarations =
+     let val (locals,wasm_expr_list,module,_)=compile_declarations declarations in 
+     (* print ( "Compiled to:\n" ^ I.moduleToString module ^ "\n");*)
+     module
+     end 
 end

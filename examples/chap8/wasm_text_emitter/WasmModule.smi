@@ -226,4 +226,5 @@ struct
     type exports =export list
     type module = {ty:types,im:imports,fn_:funcs,ta:tables,me:mems,gl:globals,ex:exports,st:start,el:elems,da:datas}
     val emptyModule:module
+    val moduleToString:module->string
 end

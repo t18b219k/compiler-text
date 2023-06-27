@@ -235,34 +235,33 @@ fun typed_W gamma exp =
       SEnv.insert(gamma, id,  newTy)
     end
     handle Unify => raise TypeError
-    (*  (*型に残っている型変数を型で置き換える*)
-  fun apply_subst(t:Type.ty,subst)=case t of 
-    (*基底ケース　型変数*)
-    TYVARty(string)=>case SEnv.find(subst,string) of
-      NONE=>t
-      |SOME(codom)=>codom 
-    (*合成型　関数型*)
-    | FUNty(t1,t2)=>FUNty(apply_subst(t1,subst),apply_subst(t2,subst))
-    (*合成型　ペア型*)
-    | PAIRty(t1,t2)=>PAIRty(apply_subst(t1,subst),apply_subst(t2,subst))
-    (*型変数のリストから*)
-    | POLYty(tyvars,t)=>
-    let val remain_tyvars =List.filter (fn tyvar => not(SEnv.inDomain(subst,tyvar))) tyvars in 
-      if null remain_tyvars then 
-      apply_subst(t,subst)
-      else   
-      POLYty(remain_tyvars, apply_subst (t,subst))
-    end 
-  (*基底ケース \iota 基底型*)  
-  |_=>t*)
+  (*型に残っている型変数を型で置き換える*)
+
+  fun apply_subst_for_exp(ts,subst)=
+  case ts of 
+    TS.EXPID(string,ty)=>TS.EXPID(string,TypeUtils.substTy subst ty)
+    | TS.INT(int) =>TS.INT(int)
+    | TS.STRING(string)=> TS.STRING(string)
+    | TS.TRUE=>TS.TRUE
+    | TS.FALSE =>TS.FALSE
+    | TS.EXPFN(string,typed_exp,ty)=>TS.EXPFN(string,apply_subst_for_exp(typed_exp,subst),TypeUtils.substTy subst ty)
+    | TS.EXPAPP(typed_exp1,typed_exp2,ty)=>TS.EXPAPP(apply_subst_for_exp(typed_exp1,subst),apply_subst_for_exp(typed_exp2,subst),TypeUtils.substTy subst ty )
+    | TS.EXPPAIR( typed_exp1 , typed_exp2)=>TS.EXPPAIR(apply_subst_for_exp(typed_exp1,subst),apply_subst_for_exp(typed_exp2,subst))
+    | TS.EXPPROJ1( typed_exp) =>TS.EXPPROJ1(apply_subst_for_exp(typed_exp,subst))
+    | TS.EXPPROJ2( typed_exp) =>TS.EXPPROJ2(apply_subst_for_exp(typed_exp,subst))
+    | TS.EXPPRIM(prim , typed_exp1 , typed_exp2)=>TS.EXPPRIM(prim,apply_subst_for_exp(typed_exp1,subst),apply_subst_for_exp(typed_exp2,subst)) 
+    | TS.EXPIF( typed_exp1 , typed_exp2 , typed_exp3)=> TS.EXPIF(apply_subst_for_exp(typed_exp1,subst),apply_subst_for_exp(typed_exp2,subst),apply_subst_for_exp(typed_exp3,subst))
+    | TS.EXPFIX( f , x , typed_exp , ty)=>TS.EXPFIX(f,x,apply_subst_for_exp(typed_exp,subst),TypeUtils.substTy subst ty)
+
   fun typeinf_with_typed_expr gamma (VAL (id, exp)) =
     let
       val (subst, ty,exp) = typed_W gamma exp
+      val exp= apply_subst_for_exp(exp,subst)
       val tids = SSet.listItems (FTV ty)
       val newTy = if null tids then ty else POLYty (tids, ty)
       val _ = print ("Inferred typing:\n"
                      ^ "val " ^ id ^ " : "
-                     ^ Type.tyToString newTy ^ "\n")
+                     ^ TS.expToString exp ^ "\n")
     in
       (SEnv.insert(gamma, id,  newTy),exp)
     end
