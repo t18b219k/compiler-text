@@ -50,10 +50,10 @@ struct
     |reftype(x)=>reftypeToString x 
     datatype param = param of string * valtype 
     fun paramToString x  = case x of
-    param(id,ty)=> "( param "^id^" "^valtypeToString ty^ ")"
+    param(id,ty)=> "(param "^id^" "^valtypeToString ty^ ")"
     datatype result = result of valtype 
     fun resultToString x  = case x of
-    result(ty)=> "( result "^valtypeToString ty^ ")"
+    result(ty)=> "(result "^valtypeToString ty^ ")"
     datatype functype = functype of param list *  result list
     fun functypeToString x  = case x of
     functype(params,results)=> "(func "^(foldr (op ^) "" (map paramToString params) )^" "^(foldr (op ^) "" (map resultToString results) )^  ")"
@@ -249,15 +249,20 @@ struct
     |f64le
     |f64ge
     fun instructionToString inst = case inst of
-    block_i( l , bt , iseq)=>"block " ^ (case l of 
+    block_i( l , bt , iseq)=>
+    "block " ^ (case l of 
     SOME(label(l))=>"$"^l
     |NONE=>"")^foldr (op ^) "" (map instructionToString iseq)  ^"end"
-    |loop ( l , bt , iseq)=>"loop " ^ (case l of 
+    |loop ( l , bt , iseq)=>
+    "loop " ^ (case l of 
     SOME(label(l))=>"$"^l
     |NONE=>"")^foldr (op ^) "" (map instructionToString iseq)  ^"end"
-    |if_ ( l , bt , iseq_true,iseq_false)=>"if " ^ (case l of 
-    SOME(label(l))=>"$"^l
-    |NONE=>"")^foldr (op ^) "" (map instructionToString iseq_true)^"else" ^foldr (op ^) "" (map instructionToString iseq_false)^ "end"
+    |if_ ( l , bt , iseq_true,iseq_false)=>
+    "if " ^ (case l of 
+    SOME(label(l))=>"$"^l^" "
+    |NONE=>"")
+    ^blocktypeToString bt ^"\n"
+    ^foldr (fn (inst,buf)=>inst^"\n"^buf ) "" (map instructionToString iseq_true)^"else\n" ^foldr (fn (inst,buf)=>inst^"\n"^buf) "" (map instructionToString iseq_false)^ "end"
     |i32const(x)=>"i32.const "^ Int.toString x
     |i64const(x)=>"i64.const" ^ Int64.toString x
     |f32const(x)=>"f32.const"^ Real32.toString x
@@ -331,6 +336,7 @@ struct
     |localget (idx)=>"local.get "^IDX.localidxToString idx
     |localset (idx)=>"local.set "^IDX.localidxToString idx
     |localtee (idx)=>"local.tee "^IDX.localidxToString idx
+    |i32eq =>"i32.eq"
 
     type expr =  instruction list
     fun exprToString_bracketted il =  foldl (fn (i,buf)=>buf^(instructionToString i) ^"\n" ) "" il
