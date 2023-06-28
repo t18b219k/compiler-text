@@ -85,7 +85,24 @@ struct
     memarg(offset,align)=>"offset="^Word32.toString offset ^" "^"align="^Word32.toString align
 
     datatype typeuse = name_only of IDX.typeidx | with_functype of IDX.typeidx * param list * result list
-    
+        
+    datatype type_definition = type_definition of string option * functype 
+    fun type_definitionToString definition = case definition of 
+    type_definition(id,ft)=> "(type "^
+    (case id of 
+    SOME(id)=>"$"^id
+    |NONE=>"") ^
+    functypeToString ft
+    ^")" 
+    fun typeuseToString ty_use=case ty_use of 
+    name_only(id) =>"(type "^IDX.typeidxToString id^")"
+    |with_functype(id,params,results)=>"(type "
+    ^IDX.typeidxToString id 
+    ^")"
+    ^(foldr (op ^) "" (map paramToString params) )
+    ^" "
+    ^(foldr (op ^) "" (map resultToString results) )
+
     datatype instruction =
      (*制御構造*)
      block_i of label option * blocktype * instruction list
@@ -93,9 +110,9 @@ struct
     |if_    of label option * blocktype * instruction list* instruction list
     |nop
     |unreachable
-    |br of label
-    |br_if of label
-    |br_table of label list* label
+    |br of IDX.labelidx
+    |br_if of IDX.labelidx
+    |br_table of IDX.labelidx list* IDX.labelidx
     |return
     |call of IDX.funcidx
     |call_indirect of IDX.tableidx * typeuse
@@ -263,6 +280,16 @@ struct
     |NONE=>"")
     ^blocktypeToString bt ^"\n"
     ^foldr (fn (inst,buf)=>inst^"\n"^buf ) "" (map instructionToString iseq_true)^"else\n" ^foldr (fn (inst,buf)=>inst^"\n"^buf) "" (map instructionToString iseq_false)^ "end"
+    |nop=>"nop"
+    |unreachable=>"unreachable"
+    |br(l)=>"br "^IDX.labelidxToString l
+    |br_if(l)=>"br_if "^IDX.labelidxToString l
+    |br_table( label_list,l)=>"br_table "^foldr (fn (l,buf)=> (IDX.labelidxToString l)^"\n"^buf) "" label_list ^ " "^IDX.labelidxToString l  
+    |return=>"return"
+    |call(funcidx)=>"call "^IDX.funcidxToString funcidx
+    |call_indirect(tableidx , typeuse)=>"call_indirect "^IDX.tableidxToString tableidx ^" "^typeuseToString typeuse 
+    |drop=>"drop"
+    |select=>"select"
     |i32const(x)=>"i32.const "^ Int.toString x
     |i64const(x)=>"i64.const" ^ Int64.toString x
     |f32const(x)=>"f32.const"^ Real32.toString x
@@ -337,28 +364,51 @@ struct
     |localset (idx)=>"local.set "^IDX.localidxToString idx
     |localtee (idx)=>"local.tee "^IDX.localidxToString idx
     |i32eq =>"i32.eq"
+    |i32load(ma)=>"i32.load "^memargToString ma 
+    |i64load(ma)=>"i64.load "^memargToString ma 
+    |f32load(ma)=>"f32.load "^memargToString ma 
+    |f64load(ma)=>"f64.load "^memargToString ma 
+    |i32load8_s(ma)=>"i32.load8_s "^memargToString ma 
+    |i32load8_u(ma)=>"i32.load8_u "^memargToString ma 
+    |i32load16_s(ma)=>"i32.load16_s "^memargToString ma 
+    |i32load16_u(ma) =>"i32.load16_u "^memargToString ma 
+    |i64load8_s(ma)=>"i64.load8_s "^memargToString ma 
+    |i64load8_u(ma)=>"i64.load8_u "^memargToString ma 
+    |i64load16_s(ma)=>"i64.load16_s "^memargToString ma 
+    |i64load16_u(ma) =>"i64.load16_u "^memargToString ma 
+    |i64load32_s(ma)=>"i64.load32_s "^memargToString ma 
+    |i64load32_u(ma)=>"i64.load32_u "^memargToString ma 
+    |i32store(ma)=>"i32.store "^memargToString ma 
+    |i64store(ma)=>"i64.store "^memargToString ma 
+    |f32store(ma)=>"f32.store "^memargToString ma 
+    |f64store(ma)=>"f64.store "^memargToString ma 
+    |i32store8(ma)=>"i32.store8 "^memargToString ma 
+    |i32store16(ma)=>"i32.store16 "^memargToString ma 
+    |i64store8(ma)=>"i64.store8 "^memargToString ma 
+    |i64store16(ma)=>"i64.store16 "^memargToString ma 
+    |i64store32(ma)=>"i64.store32 "^memargToString ma 
+    |memorysize=>"memory.size"
+    |memorygrow=>"memory.grow"
+    |memoryfill=>"memory.fill"
+    |memorycopy=>"memory.copy"
+    |memoryinit( dataidx)=>"memory.init "^IDX.dataidxToString dataidx
+    |datadrop(dataidx)=>"datadrop "^IDX.dataidxToString dataidx
+        (*table isntructions*)
+    |tableget(tableidx)=>"table.get "^IDX.tableidxToString tableidx
+    |tableset(tableidx) =>"table.set "^IDX.tableidxToString tableidx
+    |tablesize(tableidx)=>"table.size "^IDX.tableidxToString tableidx
+    |tablegrow(tableidx) =>"table.grow "^IDX.tableidxToString tableidx
+    |tablefill(tableidx)=>"table.fill "^IDX.tableidxToString tableidx
+    |tablecopy(tableidx1,tableidx2)=>"table.copy "^IDX.tableidxToString tableidx1 ^" "^IDX.tableidxToString tableidx2
+    |tableinit(tableidx,elemidx)=>"table.init "^IDX.tableidxToString tableidx^" "^IDX.elemidxToString elemidx
+    |elemdrop(elemidx)=>"elem.drop "^IDX.elemidxToString elemidx 
 
     type expr =  instruction list
     fun exprToString_bracketted il =  foldl (fn (i,buf)=>buf^(instructionToString i) ^"\n" ) "" il
     fun exprToString il =(foldr (op ^)""(map (fn i => instructionToString i ^"\n") il))^"end"
     (*module field elements*)
-    datatype type_definition = type_definition of string option * functype 
-    fun type_definitionToString definition = case definition of 
-    type_definition(id,ft)=> "(type "^
-    (case id of 
-    SOME(id)=>"$"^id
-    |NONE=>"") ^
-    functypeToString ft
-    ^")" 
 
-    fun typeuseToString ty_use=case ty_use of 
-    name_only(id) =>"(type "^IDX.typeidxToString id^")"
-    |with_functype(id,params,results)=>"(type "
-    ^IDX.typeidxToString id 
-    ^")"
-    ^(foldr (op ^) "" (map paramToString params) )
-    ^" "
-    ^(foldr (op ^) "" (map resultToString results) )
+
     datatype import_desc = f of IDX.funcidx option  *typeuse | t of IDX.tableidx  option* tabletype  |m of IDX.memidx option * memtype  |g of IDX.globalidx option* globaltype
     fun import_descToString desc = (case desc of 
     f(id,x)=>"(func" ^(case id of 

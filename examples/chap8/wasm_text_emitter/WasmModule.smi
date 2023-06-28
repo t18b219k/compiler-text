@@ -52,9 +52,9 @@ struct
     |if_    of label option * blocktype * instruction list* instruction list
     |nop
     |unreachable
-    |br of label
-    |br_if of label
-    |br_table of label list* label
+    |br of IDX.labelidx
+    |br_if of IDX.labelidx
+    |br_table of IDX.labelidx list* IDX.labelidx
     |return
     |call of IDX.funcidx
     |call_indirect of IDX.tableidx * typeuse

@@ -40,7 +40,10 @@ struct
 
   (*CoreMLの型からWASMのblocktype に変換*)
   fun CMLTyToblocktype ty =I.blocktype(SOME(I.result(CMLTyTovaltype ty)))
-
+  val internal_local_vars = [
+    (I.local_(SOME(IDX.localidx(IDX.text_id("pair_addr"))),I.i32)),
+    (I.local_(SOME(IDX.localidx(IDX.text_id("closure_ptr"))),I.i32)),
+    (I.local_(SOME(IDX.localidx(IDX.text_id("__fptr"))),I.i32))]
   (*型付き抽象構文木の自由変数を求める*)
   fun fv e=case e of 
     TS.INT(_)=>SEnv.empty
@@ -71,12 +74,12 @@ struct
    end 
 
    fun size_of ty=case ty of 
-   INTty =>8
+   INTty =>4
    |BOOLty=>4 
    |STRINGty=>4 
    |PAIRty(a,b)=>size_of a + size_of b
-   (*4 byte of env ptr and 4byte of function ptr*)
-   |FUNty(a,b)=>8
+   (*4 byte of closure pointer.*)
+   |FUNty(a,b)=>4
   fun getStringCount ctx =length (#strings ctx)
 
   (*compile_expr:TypedSyntax.typed_exp-> WasmModule instruction list-> WasmModule.module -> int ->(WasmModule.instruction list * WasmModule.module * int ) *)
@@ -107,17 +110,22 @@ struct
             |STRINGty=>I.i32store(I.memarg(offset,0w4))
             |PAIRty(a,b)=>I.i32store(I.memarg(offset,0w4))
             |FUNty(a,b)=>I.i32store(I.memarg(offset,0w4)) )
-        val (K,module,memoffset) = compile_expr e2 K module memoffset 
-        val (K,module,memoffset) = compile_expr e1 K module memoffset 
         val pair_addr = IDX.localidx(IDX.text_id("pair_addr"))
-        in  
-        (*after exec e1,e2   call alloc              e1_store         e2_store
-              top|   e1    | =>        top|pair_addr|=> top|pair_addr|      =>|pair_addr|
-                 |   e2    |              |    e1   |      |e2       |        |    ...  |
-                 |   ...   |              |    e2   |      |   ...   |
+                (*after exec e1,e2   call alloc              e1_store         e2_store
+              top|   e2    | =>        top|pair_addr|=> top|pair_addr|      =>|pair_addr|
+                 |   e1    |              |    e2   |      |e1       |        |    ...  |
+                 |   ...   |              |    e1   |      |   ...   |
                                           |    ...  |  *)
-              (
-                I.localget(pair_addr)::e2_store::I.localget(pair_addr)::e1_store::I.localtee(pair_addr)::alloc_call::(I.i32const size_of_pair )::K,module,memoffset)
+        val (K,module,memoffset) = compile_expr e2 (
+                (I.i32const size_of_pair)::
+                alloc_call::
+                I.localtee(pair_addr)::
+                e2_store::
+                I.localget(pair_addr)::
+                e1_store::
+                I.localget(pair_addr)::K) module memoffset in 
+        compile_expr e1 K module memoffset 
+
               end
   |TS.EXPPROJ1 e =>
   let val ty =TS.getTy e 
@@ -128,13 +136,13 @@ struct
       |PAIRty(PAIRty(_,_),_)=>I.i32load(I.memarg(0w0,0w4)) 
       |PAIRty(FUNty(_,_),_)=>I.i32load(I.memarg(0w0,0w4)) 
      in
+     (*スタックのトップはペアのポインタになっている.
+       したがって読みだせばよい.
+      *)
       compile_expr e (i:: K) module memoffset 
     end
     (*pair #2は#1のlinear memory のバイト数オフセットして
-    さしているものがpair,closureならばnop 
-    INTty ならば i32load
-    BOOLty ならば i32load 
-    STRINGty ならば i32laod
+      読みだす.
     *)
     | TS.EXPPROJ2 e =>
     let val ty = TS.getTy e in
@@ -160,9 +168,8 @@ struct
         val p = 
           case prim of S.ADD => I.i32add| S.SUB => I.i32sub | S.MUL => I.i32mul
                        | S.DIV => I.i32div_s | S.EQ => I.i32eq  
-        val (K,module,memoffset)=compile_expr e2 (p::K) module memoffset 
-        val (K,module,memoffset)=compile_expr e1 K module memoffset in       
-        (K,module,memoffset) 
+        val (K,module,memoffset)=compile_expr e2 (p::K) module memoffset in
+        compile_expr e1 K module memoffset 
         end 
       (*
       クロージャを生成するとはメモリ上に関数ポインタと環境へのポインタを置くこと
@@ -202,7 +209,7 @@ struct
         (*クロージャは関数ポインタを含むため 自由変数+ 関数ポインタ4バイトが必要*)
         val closure_size =foldr (op + )  4 (map (fn (v_name,v_ty)=> size_of_valtype v_ty)  prelude) 
         (*クロージャをlinear メモリに保管するための領域を確保*)
-        val alloc_call = I.localtee(IDX.localidx(IDX.text_id("closure_ptr")))::I.call(IDX.funcidx(IDX.text_id("alloc"))) ::I.i32const closure_size::[]  
+        val K =I.i32const closure_size::I.call(IDX.funcidx(IDX.text_id("alloc"))):: I.localtee(IDX.localidx(IDX.text_id("closure_ptr")))::K  
         (*クロージャのデータを保存する.*)
         (*ftbl 関数テーブルのインデックスの保存.*)
         (*あとはprelude の順に詰めていく.*)
@@ -211,35 +218,39 @@ struct
         (*ここで関数の生成を行う.*)
         (*クロージャのコード生成*)
         val function_body = compile_expr e [] module memoffset
-        val locals = map (fn (v_name,v_ty)=>I.local_(SOME(IDX.localidx(IDX.text_id v_name)),v_ty)) prelude
+        val locals =(map (fn (v_name,v_ty)=>I.local_(SOME(IDX.localidx(IDX.text_id v_name)),v_ty)) prelude) @ internal_local_vars
         (*クロージャからローカル変数に展開*)
         (*メモリからオフセット付きでアクセスしてローカル変数に保存*)
         val saves = [] 
         in
-            (saves@alloc_call@K, module ,memoffset)
+            (saves@K, module ,memoffset)
         end 
 
     |TS.EXPAPP(e_1,e_2,ty)=>
     (*スタックにはクロージャptr が積まれている.*)
     (*クロージャptr からftbl ptr を参照.*)
     (*クロージャポインタから関数ポインタを取り出すためにローカル変数 __fptr を使う *)
-      let val ft = FUNty(TS.getTy e_2,ty)  
-          val (K,module,memoffset) =compile_expr e_2 K module memoffset  
-          val (K,module ,memoffset) = compile_expr e_1 K module memoffset
-          (*スタックは次のようになっている
-          top |関数ポインタ     |
-              |クロージャポインタ|
-              |引数             |
-              |...             |
+    (*スタックは次のようになっている
+            |クロージャポインタ |       =>top |関数ポインタ      |
+            |引数               |             |クロージャポインタ|
+            |      ...          |             |引数              |
+                                              |...               |
           *)
 
-          val call_inst = [I.call_indirect(IDX.tableidx(IDX.text_id(generate_dispatch_table_name ft)),I.name_only(IDX.typeidx(IDX.text_id(generate_type_id ft)))),I.i32load(I.memarg(0w0,0w4)),I.localget(IDX.localidx(IDX.text_id "__fptr")),I.localtee(IDX.localidx(IDX.text_id "__fptr"))] in 
-            (call_inst@K,module,memoffset)
+      let val ft = FUNty(TS.getTy e_2,ty)  
+          val (K,module,memoffset) =compile_expr e_2 
+          (I.localtee(IDX.localidx(IDX.text_id "__fptr"))::
+            I.localget(IDX.localidx(IDX.text_id "__fptr"))::
+            I.i32load(I.memarg(0w0,0w4))::
+            I.call_indirect(IDX.tableidx(IDX.text_id(generate_dispatch_table_name ft)),I.name_only(IDX.typeidx(IDX.text_id(generate_type_id ft))))::K) module memoffset  
+          in
+           compile_expr e_1 K module memoffset 
           end 
+
     (*__start 関数の中に宣言と対応する命令列を積む*)
-    (*compile_declarations Dec list -> (I.local list ,)*)      
+    (*compile_declarations Dec list -> (I.local list , expr list , module ,offset)*)      
     (*compile_expr:TypedSyntax.typed_exp-> WasmModule instruction list-> WasmModule.module -> int ->(WasmModule.instruction list * WasmModule.module * int ) *)
-    fun compile_declarations [] = ([],[],I.emptyModule,0)
+    fun compile_declarations [] = (internal_local_vars,[],I.emptyModule,0)
     | compile_declarations (x::xs) = let
      val  TS.VAL(name,e) =x
      val (locals,instructions,module,offset)=compile_declarations xs  
