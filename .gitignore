@@ -18,3 +18,4 @@ examples/chap8/typeinf/TypeUtils.o
 examples/chap8/typeinf/Typeinf.o
 examples/chap8/typeinf/Type.o
 examples/chap8/SECD/Value.o
+examples/chap8/main/Top.o

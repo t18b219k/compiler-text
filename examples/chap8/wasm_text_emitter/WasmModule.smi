@@ -1,21 +1,31 @@
 _require "basis.smi"
-structure ID =
+
+structure IDX =
 struct 
-    datatype idx =int_id of word32 | text_id of string 
-end 
+    datatype idx =int_id of word32|text_id of string 
+    val idxToString: idx->string
+    datatype typeidx  = typeidx of idx  
+    val typeidxToString:typeidx->string
+    datatype funcidx =funcidx of idx 
+    val funcidxToString:funcidx->string
+    datatype tableidx = tableidx of idx
+    val tableidxToString:tableidx->string
+    datatype memidx  =memidx of idx
+    val memidxToString:memidx->string
+    datatype globalidx = globalidx of idx
+    val globalidxToString:globalidx->string
+    datatype elemidx = elemidx of idx
+    val elemidxToString:elemidx->string
+    datatype dataidx = dataidx of idx
+    val dataidxToString:dataidx->string
+    datatype localidx = localidx of idx
+    val localidxToString:localidx->string
+    datatype labelidx = labelidx of idx
+    val labelidxToString:labelidx->string
+end
 
 structure WasmModule=
 struct
-    datatype idx =int_id of word32|text_id of string 
-    datatype typeidx  = typeidx of idx  
-    datatype funcidx =funcidx of idx 
-    datatype tableidx = tableidx of idx
-    datatype memidx  =memidx of idx
-    datatype globalidx = globalidx of idx
-    datatype elemidx = elemidx of idx
-    datatype dataidx = dataidx of idx
-    datatype localidx = localidx of idx
-    datatype labelidx = labelidx of idx
 
     datatype numtype =i32|i64|f32|f64
     datatype limits = min of word32 | minmax of word32*word32
@@ -33,7 +43,7 @@ struct
     datatype tabletype = tabletype of limits*reftype
     datatype blocktype = blocktype of result option 
     
-    datatype typeuse = name_only of typeidx | with_functype of typeidx * param list * result list
+    datatype typeuse = name_only of IDX.typeidx | with_functype of IDX.typeidx * param list * result list
     datatype memarg =memarg of word32 * word32
     datatype instruction =
      (*制御構造*)
@@ -46,26 +56,26 @@ struct
     |br_if of label
     |br_table of label list* label
     |return
-    |call of funcidx
-    |call_indirect of tableidx * typeuse
+    |call of IDX.funcidx
+    |call_indirect of IDX.tableidx * typeuse
     |drop
     |select
     (*local variable instruction*)
-    |localget of localidx
-    |localset of localidx 
-    |localtee of localidx
+    |localget of IDX.localidx
+    |localset of IDX.localidx 
+    |localtee of IDX.localidx
     (*global variable instruction*) 
-    |globalget of globalidx
-    |globalset of globalidx
+    |globalget of IDX.globalidx
+    |globalset of IDX.globalidx
     (*table isntructions*)
-    |tableget of tableidx
-    |tableset of tableidx 
-    |tablesize of tableidx
-    |tablegrow of tableidx 
-    |tablefill of tableidx
-    |tablecopy of tableidx*tableidx
-    |tableinit of tableidx*elemidx
-    |elemdrop of elemidx
+    |tableget of IDX.tableidx
+    |tableset of IDX.tableidx 
+    |tablesize of IDX.tableidx
+    |tablegrow of IDX.tableidx 
+    |tablefill of IDX.tableidx
+    |tablecopy of IDX.tableidx*IDX.tableidx
+    |tableinit of IDX.tableidx*IDX.elemidx
+    |elemdrop of IDX.elemidx
     (*memory instruction*)
     |i32load of memarg
     |i64load of memarg
@@ -94,8 +104,8 @@ struct
     |memorygrow
     |memoryfill
     |memorycopy 
-    |memoryinit of dataidx
-    |datadrop of dataidx
+    |memoryinit of IDX.dataidx
+    |datadrop of IDX.dataidx
     (*数値演算命令*)
     |i32const of int32 | i64const of int64|f32const of real32|f64const of real
     (*count leading zeros*)
@@ -199,22 +209,22 @@ struct
     |f64ge
     type expr = instruction list
     datatype type_definition = type_definition of string option * functype
-    datatype import_desc = f of funcidx option  *typeuse | t of tableidx  option* tabletype  |m of memidx option * memtype  |g of globalidx option* globaltype
+    datatype import_desc = f of IDX.funcidx option  *typeuse | t of IDX.tableidx  option* tabletype  |m of IDX.memidx option * memtype  |g of IDX.globalidx option* globaltype
     datatype import = import of string*string*import_desc
-    datatype local_ = local_ of localidx option * valtype
-    type func =  funcidx option * typeuse * local_ list * instruction list 
-    type table =  tableidx option * tabletype 
-    type mem =  memidx option *memtype
-    type global = globalidx option * globaltype *expr 
-    datatype export_desc =func_e of funcidx | table_e of tableidx |memory_e of memidx | global_e of globalidx 
+    datatype local_ = local_ of IDX.localidx option * valtype
+    type func =  IDX.funcidx option * typeuse * local_ list * instruction list 
+    type table =  IDX.tableidx option * tabletype 
+    type mem =  IDX.memidx option *memtype
+    type global = IDX.globalidx option * globaltype *expr 
+    datatype export_desc =func_e of IDX.funcidx | table_e of IDX.tableidx |memory_e of IDX.memidx | global_e of IDX.globalidx 
     datatype export = export of string * export_desc
-    datatype start = start of funcidx
+    datatype start = start of IDX.funcidx
     datatype elemexpr =elemexpr of expr 
     datatype elemlist =elemlist of reftype * elemexpr list
-    datatype elemmode = passive_elem_mode |active_elem_mode of tableidx * expr | declarative
-    datatype elem = element of elemidx option * elemlist * elemmode
-    datatype datamode = passive_data_mode | active_data_mode of memidx * expr 
-    datatype data = data of dataidx option * datamode *string 
+    datatype elemmode = passive_elem_mode |active_elem_mode of IDX.tableidx * expr | declarative
+    datatype elem = element of IDX.elemidx option * elemlist * elemmode
+    datatype datamode = passive_data_mode | active_data_mode of IDX.memidx * expr 
+    datatype data = data of IDX.dataidx option * datamode *string 
     type types = type_definition list
     type funcs = func list
     type tables = table list
