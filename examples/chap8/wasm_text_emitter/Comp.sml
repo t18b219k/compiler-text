@@ -160,8 +160,9 @@ struct
         val p = 
           case prim of S.ADD => I.i32add| S.SUB => I.i32sub | S.MUL => I.i32mul
                        | S.DIV => I.i32div_s | S.EQ => I.i32eq  
-        val (K,module,memoffset)=compile_expr e2 K module memoffset in       
-        compile_expr e1 K module memoffset 
+        val (K,module,memoffset)=compile_expr e2 (p::K) module memoffset 
+        val (K,module,memoffset)=compile_expr e1 K module memoffset in       
+        (K,module,memoffset) 
         end 
       (*
       クロージャを生成するとはメモリ上に関数ポインタと環境へのポインタを置くこと
@@ -244,13 +245,25 @@ struct
      val (locals,instructions,module,offset)=compile_declarations xs  
      in
       let val (iseq,module,offset)= compile_expr e [] module offset in 
-        ((name,TS.getTy e)::locals,iseq::instructions,module,offset)
+        ((I.local_(SOME(IDX.localidx(IDX.text_id(name))),CMLTyTovaltype( TS.getTy e)))::locals,iseq::instructions,module,offset)
       end 
     end  
-    (*__start 関数を作る. *)     
+    (*__cml_main 関数を作る. *)     
     fun compile declarations =
-     let val (locals,wasm_expr_list,module,_)=compile_declarations declarations in 
-     (* print ( "Compiled to:\n" ^ I.moduleToString module ^ "\n");*)
-     module
+     let
+      val (locals,wasm_expr_list,module,_)=compile_declarations declarations
+      val local_and_exprs=ListPair.zip (locals,wasm_expr_list) 
+      val iseq= foldr (fn ((I.local_(SOME(idx),val_ty),expr),iseq)=>iseq@expr@[(I.localset(idx)
+      )] ) [] local_and_exprs
+      val f =(SOME(IDX.funcidx(IDX.text_id("__cml_main"))),I.with_functype(IDX.typeidx(IDX.text_id("entry_point")),[],[]),locals,iseq) 
+      val new_module={ty = #ty module,fn_ = (f::(#fn_ module)),ta = #ta module,me = #me module,gl = #gl module,el = #el module ,da = #da module,im = #im module,ex= #ex module,st = #st module}
+     in 
+     print(" compiled expressions :\n"
+     ^foldr (fn (declaration,buf) => (buf^TS.typed_decToString declaration ^"\n" )) "" declarations ^ "\n->\n"^I.exprToString iseq 
+      );
+     (*let's build function.!!!! *)
+      print ( "Compiled to:\n" ^ I.moduleToString new_module ^ "\n");
+     
+     new_module
      end 
 end

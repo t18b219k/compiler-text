@@ -212,7 +212,7 @@ struct
     datatype import_desc = f of IDX.funcidx option  *typeuse | t of IDX.tableidx  option* tabletype  |m of IDX.memidx option * memtype  |g of IDX.globalidx option* globaltype
     datatype import = import of string*string*import_desc
     datatype local_ = local_ of IDX.localidx option * valtype
-    type func =  IDX.funcidx option * typeuse * local_ list * instruction list 
+    type func =  IDX.funcidx option * typeuse * (local_ list) * (instruction list) 
     type table =  IDX.tableidx option * tabletype 
     type mem =  IDX.memidx option *memtype
     type global = IDX.globalidx option * globaltype *expr 
@@ -235,6 +235,8 @@ struct
     type imports = import list
     type exports =export list
     type module = {ty:types,im:imports,fn_:funcs,ta:tables,me:mems,gl:globals,ex:exports,st:start,el:elems,da:datas}
+    val exprToString:expr->string 
+    val local_ToString:local_ ->string 
     val emptyModule:module
     val moduleToString:module->string
 end

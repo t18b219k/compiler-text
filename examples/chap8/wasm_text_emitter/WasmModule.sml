@@ -56,7 +56,7 @@ struct
     result(ty)=> "( result "^valtypeToString ty^ ")"
     datatype functype = functype of param list *  result list
     fun functypeToString x  = case x of
-    functype(params,results)=> "( func "^(foldr (op ^) "" (map paramToString params) )^" "^(foldr (op ^) "" (map resultToString results) )^  ")"
+    functype(params,results)=> "(func "^(foldr (op ^) "" (map paramToString params) )^" "^(foldr (op ^) "" (map resultToString results) )^  ")"
     datatype limits = min of word32 | minmax of word32*word32
     fun limitsToString l=case l of 
     min(n)=>Word32.toString n
@@ -327,18 +327,22 @@ struct
     |f64min=>"f64.min"
     |f64max=>"f64.max"
     |f64copysign=>"f64.copysign"
+    (*local variable instruction*)
+    |localget (idx)=>"local.get "^IDX.localidxToString idx
+    |localset (idx)=>"local.set "^IDX.localidxToString idx
+    |localtee (idx)=>"local.tee "^IDX.localidxToString idx
 
     type expr =  instruction list
-    fun exprToString_bracketted il =  foldr (op ^)""(map (fn i => instructionToString i ^"\n") il)
+    fun exprToString_bracketted il =  foldl (fn (i,buf)=>buf^(instructionToString i) ^"\n" ) "" il
     fun exprToString il =(foldr (op ^)""(map (fn i => instructionToString i ^"\n") il))^"end"
     (*module field elements*)
     datatype type_definition = type_definition of string option * functype 
     fun type_definitionToString definition = case definition of 
-    type_definition(id,ft)=> "(type"^
+    type_definition(id,ft)=> "(type "^
     (case id of 
-    SOME(id)=>id
-    |NONE=>"" ^
-    functypeToString ft)
+    SOME(id)=>"$"^id
+    |NONE=>"") ^
+    functypeToString ft
     ^")" 
 
     fun typeuseToString ty_use=case ty_use of 
@@ -385,7 +389,7 @@ struct
     )
     ^" "^valtypeToString vt ^")"
 
-    type func =  IDX.funcidx option * typeuse * local_ list * instruction list 
+    type func =  IDX.funcidx option * typeuse * (local_ list) * (instruction list) 
     fun funcToString (id,type_use,ll,il)= 
      "(func " ^ (case id of
      NONE=>""
@@ -395,7 +399,7 @@ struct
      ^"\n"
      ^(foldr (op ^) ""  (map local_ToString ll) )
      ^"\n"
-     ^(foldr (op ^) "" (map instructionToString il))
+     ^(exprToString_bracketted il)
      ^")"
     type table =  IDX.tableidx option * tabletype 
     fun tableToString (ti,tt) = "(table "^
@@ -488,7 +492,7 @@ struct
     (*Abstract WASM Module *)
     type module = {ty:types,im:imports,fn_:funcs,ta:tables,me:mems,gl:globals,ex:exports,st:start,el:elems,da:datas}
     fun moduleToString {ty:types,im:imports,fn_:funcs,ta:tables,me:mems,gl:globals,ex:exports,st:start,el:elems,da:datas}=
-    "( module "^
+    "(module "^
     typesToString (ty )^
     importsToString (im )^
     funcsToString (fn_ )^
@@ -499,5 +503,5 @@ struct
     startToString (st  )^
     elemsToString (el  )^
     datasToString (da )  ^")"
-    val emptyModule = {ty=[],fn_=[],ta=[],me=[],gl=[],el=[],da=[],im=[],ex=[],st=start (IDX.funcidx(IDX.text_id "__start"))}
+    val emptyModule = {ty=[type_definition(SOME("entry_point"),functype([],[]))],fn_=[],ta=[],me=[],gl=[],el=[],da=[],im=[],ex=[],st=start (IDX.funcidx(IDX.text_id "__cml_main"))}
 end
