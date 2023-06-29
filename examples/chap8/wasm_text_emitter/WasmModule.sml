@@ -520,10 +520,9 @@ struct
     |active_data_mode(id,e)=>IDX.memidxToString id ^ "(offset "^exprToString_bracketted e^")" 
     (*とりあえずは文字列が扱えればよし*)
     datatype data = data of IDX.dataidx option * datamode *string 
-    fun dataToString d=case d of 
-    data(did,dm,s)=>"(data "^(case did of 
+    fun dataToString (data(did,dm,s)) = "(data "^(case did of 
     NONE=>" "
-    |SOME(id)=>IDX.dataidxToString id)^datamodeToString dm ^" "^s^")" 
+    |SOME id=>IDX.dataidxToString id)^datamodeToString dm ^" "^s^")" 
     (*module fields *)
     type types = type_definition list
     fun typesToString tl = foldr (op ^) "" (map type_definitionToString tl)
@@ -549,15 +548,15 @@ struct
     type module = {ty:types,im:imports,fn_:funcs,ta:tables,me:mems,gl:globals,ex:exports,st:start,el:elems,da:datas}
     fun moduleToString {ty:types,im:imports,fn_:funcs,ta:tables,me:mems,gl:globals,ex:exports,st:start,el:elems,da:datas}=
     "(module "^
-    typesToString (ty )^
-    importsToString (im )^
-    funcsToString (fn_ )^
-    tablesToString (ta )^ 
-    memsToString (me )^
-    globalsToString (gl )^
-    exportsToString (ex )^
-    startToString (st  )^
-    elemsToString (el  )^
-    datasToString (da )  ^")"
-    val emptyModule = {ty=[type_definition(SOME("entry_point"),functype([],[]))],fn_=[],ta=[],me=[],gl=[],el=[],da=[],im=[],ex=[],st=start (IDX.funcidx(IDX.text_id "__cml_main"))}
+    typesToString ty ^
+    importsToString im  ^
+    funcsToString fn_ ^
+    tablesToString ta ^ 
+    memsToString me ^
+    globalsToString gl ^
+    exportsToString ex ^
+    startToString st  ^
+    elemsToString el  ^
+    datasToString da   ^")"
+    val emptyModule = {ty=[type_definition(SOME "entry_point",functype([],[]))],fn_=[],ta=[],me=[],gl=[],el=[],da=[],im=[],ex=[],st=start (IDX.funcidx(IDX.text_id "__cml_main"))}
 end

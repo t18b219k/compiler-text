@@ -1,0 +1,10 @@
+Library 
+    structure WasmComp
+is 
+ $/basis.cm
+ $/smlnj-libs.cm
+ ../parser/TypedSyntax.sml
+ ../parser/Syntax.sml
+ ../typeinf/Type.sml
+ WasmModule.cm
+ Comp.sml

@@ -52,10 +52,9 @@ struct
         in
           "prim(" ^ prim ^ "," ^ expToString exp1 ^ "," ^ expToString exp2 ^ ")"
         end
-  and decToString dec =
-      case dec of
-        VAL (x, exp) =>
-        "val " ^ x ^ " = " ^ expToString exp
+  and decToString (VAL(x,exp))=
+        "val " ^ x ^ " = " ^ expToString exp  
+
 (*
   fun printExp exp = print (expToString exp)
   fun printDec dec = print (decToString dec)

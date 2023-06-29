@@ -19,26 +19,29 @@ struct
     | EXPFIX of string * string * typed_exp * ty
   and typed_dec 
     = VAL of string * typed_exp
+  exception UnexpectedType of ty
   fun getTy e =  case e of
-      INT int => INTty
-      | STRING string => STRINGty
-      | TRUE => BOOLty
-      | FALSE => BOOLty
-      | EXPID (string,ty)=> ty
-      | EXPPAIR (exp1, exp2) => PAIRty(getTy exp1,getTy exp2)
-      | EXPAPP (exp1, exp2,ty) =>ty
-      | EXPIF (exp1, exp2, exp3) =>getTy exp2        
-      | EXPFN (string, typed_exp,ty) =>ty
+      INT _ => Type.INTty
+      | STRING _ => Type.STRINGty
+      | TRUE => Type.BOOLty
+      | FALSE => Type.BOOLty
+      | EXPID (_,ty)=> ty
+      | EXPPAIR (exp1, exp2) => Type.PAIRty(getTy exp1,getTy exp2)
+      | EXPAPP (_, _,ty) =>ty
+      | EXPIF (_, exp2, _) =>getTy exp2        
+      | EXPFN (_, _,ty) =>ty
       | EXPPROJ1 typed_exp =>( case (getTy typed_exp) of
-        PAIRty(a,_)=>a
+        Type.PAIRty(a,_)=>a
+        |x=> raise UnexpectedType x   
     )
       | EXPPROJ2 typed_exp =>  (case (getTy typed_exp) of
-        PAIRty(_,b)=>b
+        Type.PAIRty(_,b)=>b
+        |x=> raise UnexpectedType x   
     )
-      | EXPFIX (f, x, typed_exp,ty) =>ty
-      | EXPPRIM (p, exp1, exp2) =>(case p of 
-        EQ=>BOOLty
-        |_=>INTty)
+      | EXPFIX (_, _,_,ty) =>ty
+      | EXPPRIM (p, _, _) =>(case p of 
+        EQ=>Type.BOOLty
+        |_=>Type.INTty)
 
   fun expToString typed_exp =
       case typed_exp of
@@ -58,13 +61,14 @@ struct
          ^ expToString exp2
          ^ " else "
          ^ expToString exp3
-         ^ tyToString (getTy exp2)
       | EXPFN (var_id, typed_exp,ty) =>
         "(fn " ^ var_id ^ " => " ^ expToString typed_exp ^ ") : "^ tyToString ty
       | EXPPROJ1 typed_exp => "#1 " ^ expToString typed_exp ^ " : " ^ tyToString  (case (getTy typed_exp) of
-        PAIRty(a,b)=>a)
+        PAIRty(a,_)=>a
+        |x=> raise UnexpectedType x   )
       | EXPPROJ2 typed_exp => "#2 " ^ expToString typed_exp ^ " : " ^ tyToString  (case (getTy typed_exp) of
-        PAIRty(a,b)=>b)
+        PAIRty(_,b)=>b
+        |x=> raise UnexpectedType x   )
       | EXPFIX (f, x, typed_exp,ty) =>
         "(fix " 
         ^ f 
@@ -82,9 +86,7 @@ struct
           "prim(" ^ prim ^ "," ^ expToString exp1 ^ "," ^ expToString exp2 ^ ") : " ^ (tyToString (case p of EQ => BOOLty
           |_ => INTty))
         end
-  and typed_decToString dec =
-      case dec of
-        VAL (x, typed_exp) =>
+  and typed_decToString (VAL(x,typed_exp)) =
         "val " ^ x ^ " = " ^ expToString typed_exp
   
 

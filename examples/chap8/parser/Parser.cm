@@ -1,0 +1,12 @@
+Library 
+    structure Parser
+    structure TypedSyntax
+    structure Syntax
+is 
+    Parser.sml 
+    CoreML.grm.sig 
+    CoreML.grm.sml 
+    CoreML.lex.sml 
+    Syntax.sml 
+    TypedSyntax.sml 
+    ../typeinf/Type.cm
