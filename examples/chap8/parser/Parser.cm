@@ -4,9 +4,8 @@ Library
     structure Syntax
 is 
     Parser.sml 
-    CoreML.grm.sig 
-    CoreML.grm.sml 
-    CoreML.lex.sml 
-    Syntax.sml 
-    TypedSyntax.sml 
+    CoreML.grm.cm
+    CoreML.lex.cm 
+    Syntax.cm
+    TypedSyntax.cm
     ../typeinf/Type.cm

@@ -1,0 +1,22 @@
+(*
+_require "basis.smi"
+_require "compiler/libs/env/main/SEnv.smi"
+_require "./Instruction.smi"
+structure Value = struct
+  datatype value 
+    = INT of int | BOOL of bool | STRING of string
+    | PAIR of value * value
+    | CLS of E * string * Instruction.C
+    | REC of E * string * string * Instruction.C
+  withtype E = value SEnv.map
+  val emptyEnv : E
+  val valueToString : value -> string
+end
+
+*)
+Library
+    structure Value 
+is 
+    $/basis.cm
+    Instruction.cm  
+    Value.sml     

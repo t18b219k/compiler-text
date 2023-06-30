@@ -1,0 +1,36 @@
+(*
+_require "basis.smi"
+_require "./Syntax.smi"
+_require "../typeinf/Type.smi"
+structure TypedSyntax = 
+struct
+  type ty = Type.ty
+  type prim = Syntax.prim
+  datatype typed_exp
+    = EXPID of  string*ty 
+    | INT of int 
+    | STRING of string 
+    | TRUE | FALSE 
+    | EXPFN of string * typed_exp *ty
+    | EXPAPP of typed_exp * typed_exp *ty 
+    | EXPPAIR of typed_exp * typed_exp
+    | EXPPROJ1 of typed_exp 
+    | EXPPROJ2 of typed_exp 
+    | EXPPRIM of prim *  typed_exp * typed_exp 
+    | EXPIF of typed_exp * typed_exp * typed_exp 
+    | EXPFIX of string * string * typed_exp * ty
+  and typed_dec 
+    = VAL of string * typed_exp
+  val expToString : typed_exp -> string
+  val typed_decToString : typed_dec -> string
+  val getTy : typed_exp -> ty
+end
+
+*)
+Library
+    structure TypedSyntax
+is 
+    $/basis.cm
+    ../typeinf/Type.cm
+    Syntax.cm 
+    TypedSyntax.sml 

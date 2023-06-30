@@ -1,0 +1,17 @@
+version = 1
+[workspace]
+root = "main/Main.cm"
+[diagnostics]
+5011.severity = "warning"
+4015.severity = "error"
+5029.severity = "ignore"
+[language]
+fixity-across-files = true
+[language.exp]
+while = false
+[language.dec]
+functor = true
+[language.val]
+
+[language.structure]
+"Ref" = false

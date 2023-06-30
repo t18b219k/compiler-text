@@ -2,4 +2,5 @@ Library
     structure WasmModule
     structure IDX
 is 
+    $/basis.cm
     WasmModule.sml

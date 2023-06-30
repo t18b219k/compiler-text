@@ -1,0 +1,9 @@
+Library
+    structure CoreMLLrVals
+    structure CoreMLLrVals.Parser
+is 
+    $/basis.cm
+    $/ml-yacc-lib.cm
+    Syntax.cm
+    CoreML.grm.sig 
+    CoreML.grm.sml 

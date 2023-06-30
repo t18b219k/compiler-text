@@ -1,9 +1,4 @@
-Group 
-
+Group
 is 
-Top.sml
-Main.sml
-../parser/Parser.cm
-../SECD/SECD.cm
-../typeinf/Type.cm
-../wasm_text_emitter/Comp.cm
+    Main.sml 
+    Top.cm  

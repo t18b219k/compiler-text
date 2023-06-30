@@ -1,0 +1,36 @@
+(*
+_require "basis.smi"
+_require "compiler/libs/env/main/SEnv.smi"
+_require "compiler/libs/env/main/SSet.smi"
+_require "../parser/Parser.smi"
+_require "../parser/Syntax.smi"
+_require "../parser/TypedSyntax.smi"
+_require "../typeinf/Typeinf.smi"
+_require "../typeinf/TypeUtils.smi"
+_require "../SECD/Comp.smi"
+_require "../SECD/Exec.smi"
+_require "../SECD/Value.smi"
+_require "../wasm_text_emitter/WasmModule.smi"
+_require "../wasm_text_emitter/Comp.smi"
+
+structure Top =
+struct
+  val top : string -> unit
+end
+
+*)
+Library 
+    structure Top 
+is
+    $/basis.cm 
+    ../parser/Parser.cm 
+    ../parser/Syntax.cm 
+    ../parser/TypedSyntax.cm 
+    ../typeinf/Typeinf.cm 
+    ../typeinf/TypeUtils.cm 
+    ../SECD/Comp.cm 
+    ../SECD/Exec.cm 
+    ../SECD/Value.cm 
+    ../wasm_text_emitter/WasmModule.cm 
+    ../wasm_text_emitter/Comp.cm 
+    Top.sml 

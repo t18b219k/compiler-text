@@ -1,0 +1,28 @@
+(*
+_require "basis.smi"
+_require "compiler/libs/env/main/SEnv.smi"
+_require "compiler/libs/env/main/SSet.smi"
+_require "../parser/Syntax.smi"
+_require "../parser/TypedSyntax.smi"
+_require "./Type.smi"
+_require "./TypeUtils.smi"
+_require "./UnifyTy.smi"
+
+structure Typeinf = 
+struct
+  exception TypeError
+  val typeinf : TypeUtils.tyEnv -> Syntax.dec -> TypeUtils.tyEnv
+  val typeinf_with_typed_expr : TypeUtils.tyEnv -> Syntax.dec -> TypeUtils.tyEnv * TypedSyntax.typed_exp
+end
+
+*)
+Library
+    structure Typeinf 
+is 
+$/basis.cm 
+../parser/Syntax.cm 
+../parser/TypedSyntax.cm 
+Type.cm  
+TypeUtils.cm 
+UnifyTy.cm 
+Typeinf.sml 
