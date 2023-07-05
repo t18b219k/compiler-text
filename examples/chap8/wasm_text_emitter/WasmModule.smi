@@ -1,5 +1,4 @@
 _require "basis.smi"
-
 structure IDX =
 struct 
     datatype idx =int_id of word32|text_id of string 
@@ -207,6 +206,10 @@ struct
     |f64gt
     |f64le
     |f64ge
+    |refis_null
+    |refnull
+    |reffunc of IDX.funcidx
+    
     type expr = instruction list
     datatype type_definition = type_definition of string option * functype
     datatype import_desc = f of IDX.funcidx option  *typeuse | t of IDX.tableidx  option* tabletype  |m of IDX.memidx option * memtype  |g of IDX.globalidx option* globaltype

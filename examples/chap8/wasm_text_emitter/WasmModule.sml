@@ -92,7 +92,7 @@ structure WasmModule = struct
 
     datatype param = param of string * valtype
 
-    fun paramToString (param (id, ty)) = "(param " ^ id ^ " " ^ valtypeToString ty ^ ")"
+    fun paramToString (param (id, ty)) = "(param $" ^ id ^ " " ^ valtypeToString ty ^ ")"
 
     datatype result = result of valtype
 
@@ -318,7 +318,9 @@ structure WasmModule = struct
     | f64gt
     | f64le
     | f64ge
-
+    |refis_null
+    |refnull
+    |reffunc of IDX.funcidx
     (*制御構造*)
     fun instructionToString inst =
         case inst of
@@ -485,7 +487,9 @@ structure WasmModule = struct
         | f64gt => "f64.gt"
         | f64le => "f64.le"
         | f64ge => "f64.ge"
-
+    |refis_null=>"ref.is_null"
+    |refnull=>"ref.null"
+    |reffunc idx=>"ref.func "^IDX.funcidxToString idx 
     (*| x => raise DumpInstruction x*)
     type expr = instruction list
 
@@ -653,5 +657,6 @@ structure WasmModule = struct
 
     fun moduleToString { ty : types, im : imports, fn_ : funcs, ta : tables, me : mems, gl : globals, ex : exports, st : start, el : elems, da : datas } = "(module " ^ typesToString ty ^ importsToString im ^ funcsToString fn_ ^ tablesToString ta ^ memsToString me ^ globalsToString gl ^ exportsToString ex ^ startToString st ^ elemsToString el ^ datasToString da ^ ")"
 
-    val emptyModule = { ty = [type_definition (SOME "entry_point", functype ([], []))], fn_ = [], ta = [], me = [], gl = [], el = [], da = [], im = [], ex = [], st = start (IDX.funcidx (IDX.text_id "__cml_main")) }
+    val emptyModule =
+     { ty = [type_definition (SOME "entry_point", functype ([], []))], fn_ = [], ta = [], me = [], gl = [], el = [], da = [], im = [], ex = [], st = start (IDX.funcidx (IDX.text_id "__cml_main")) }
 end

@@ -4,6 +4,7 @@ _require "../parser/TypedSyntax.smi"
 _require "../parser/Syntax.smi"
 _require "../typeinf/Type.smi"
 _require "./WasmModule.smi"
+_require "./Debug.smi"
 structure WasmComp = 
 struct
     val compile:TypedSyntax.typed_dec list-> WasmModule.module

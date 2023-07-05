@@ -1,10 +1,23 @@
+(*
+_require "basis.smi"
+_require "compiler/libs/env/main/SEnv.smi"
+_require "../parser/TypedSyntax.smi"
+_require "../parser/Syntax.smi"
+_require "../typeinf/Type.smi"
+_require "./WasmModule.smi"
+structure WasmComp = 
+struct
+    val compile:TypedSyntax.typed_dec list-> WasmModule.module
+end 
+*)
 Library 
     structure WasmComp
 is 
  $/basis.cm
  $/smlnj-libs.cm
- ../parser/TypedSyntax.sml
- ../parser/Syntax.sml
- ../typeinf/Type.sml
+ ../parser/TypedSyntax.cm
+ ../parser/Syntax.cm
+ ../typeinf/Type.cm 
  WasmModule.cm
+ Debug.cm 
  Comp.sml

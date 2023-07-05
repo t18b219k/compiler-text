@@ -1,0 +1,7 @@
+Library
+    structure Debug 
+is 
+    $/basis.cm 
+    WasmModule.cm 
+    ../typeinf/Type.cm
+    Debug.sml 

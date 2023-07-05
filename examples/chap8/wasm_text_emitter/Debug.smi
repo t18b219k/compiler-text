@@ -1,0 +1,7 @@
+_require "WasmModule.smi"
+_require "../typeinf/Type.smi"
+_require "basis.smi"
+structure Debug =
+    struct 
+    val insert_debug_instructions: string * Type.ty*WasmModule.module*int -> WasmModule.module*WasmModule.expr*int  
+    end
