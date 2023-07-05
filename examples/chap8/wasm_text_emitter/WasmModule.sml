@@ -318,9 +318,10 @@ structure WasmModule = struct
     | f64gt
     | f64le
     | f64ge
-    |refis_null
-    |refnull
-    |reffunc of IDX.funcidx
+    | refis_null
+    | refnull
+    | reffunc of IDX.funcidx
+
     (*制御構造*)
     fun instructionToString inst =
         case inst of
@@ -487,9 +488,10 @@ structure WasmModule = struct
         | f64gt => "f64.gt"
         | f64le => "f64.le"
         | f64ge => "f64.ge"
-    |refis_null=>"ref.is_null"
-    |refnull=>"ref.null"
-    |reffunc idx=>"ref.func "^IDX.funcidxToString idx 
+        | refis_null => "ref.is_null"
+        | refnull => "ref.null"
+        | reffunc idx => "ref.func " ^ IDX.funcidxToString idx
+
     (*| x => raise DumpInstruction x*)
     type expr = instruction list
 
@@ -506,22 +508,22 @@ structure WasmModule = struct
 
     fun import_descToString desc =
         (case desc of
-            f (id, x) => "(func" ^ (case id of
+            f (id, x) => "(func " ^ (case id of
             NONE => ""
-        | SOME id => IDX.funcidxToString id) ^ typeuseToString x ^ ")"
-        | t (id, tt) => "(table" ^ (case id of
+        | SOME id => IDX.funcidxToString id) ^ " " ^ typeuseToString x ^ ")"
+        | t (id, tt) => "(table " ^ (case id of
             NONE => " "
-        | SOME id => IDX.tableidxToString id) ^ tabletypeToString tt
-        | m (id, mt) => "(memory" ^ (case id of
+        | SOME id => IDX.tableidxToString id) ^ " " ^ tabletypeToString tt
+        | m (id, mt) => "(memory " ^ (case id of
             NONE => " "
-        | SOME id => IDX.memidxToString id) ^ memtypeToString mt ^ ")"
-        | g (id, gt) => "(global" ^ (case id of
+        | SOME id => IDX.memidxToString id) ^ " " ^ memtypeToString mt ^ ")"
+        | g (id, gt) => "(global " ^ (case id of
             NONE => " "
-        | SOME id => IDX.globalidxToString id) ^ globaltypeToString gt ^ ")")
+        | SOME id => IDX.globalidxToString id) ^ " " ^ globaltypeToString gt ^ ")")
 
     datatype import = import of string * string * import_desc
 
-    fun importToString (import (module, nm, d)) = "(import" ^ module ^ " " ^ nm ^ " " ^ import_descToString d ^ ")"
+    fun importToString (import (module, nm, d)) = "(import \"" ^ module ^ "\" \"" ^ nm ^ "\" " ^ import_descToString d ^ ")"
 
     datatype local_ = local_ of IDX.localidx option * valtype
 
@@ -608,12 +610,15 @@ structure WasmModule = struct
             passive_data_mode => " "
         | active_data_mode (id, e) => IDX.memidxToString id ^ "(offset " ^ exprToString_bracketted e ^ ")"
 
-    (*とりあえずは文字列が扱えればよし*)
+    (*
+    とりあえずは文字列が扱えればよし
+    どうせ文字列しか埋め込まないから.
+    *)
     datatype data = data of IDX.dataidx option * datamode * string
 
     fun dataToString (data (did, dm, s)) = "(data " ^ (case did of
         NONE => " "
-    | SOME id => IDX.dataidxToString id) ^ datamodeToString dm ^ " " ^ s ^ ")"
+    | SOME id => IDX.dataidxToString id) ^ datamodeToString dm ^ " \"" ^ s ^ "\")"
 
     (*module fields *)
     type types = type_definition list
@@ -657,6 +662,5 @@ structure WasmModule = struct
 
     fun moduleToString { ty : types, im : imports, fn_ : funcs, ta : tables, me : mems, gl : globals, ex : exports, st : start, el : elems, da : datas } = "(module " ^ typesToString ty ^ importsToString im ^ funcsToString fn_ ^ tablesToString ta ^ memsToString me ^ globalsToString gl ^ exportsToString ex ^ startToString st ^ elemsToString el ^ datasToString da ^ ")"
 
-    val emptyModule =
-     { ty = [type_definition (SOME "entry_point", functype ([], []))], fn_ = [], ta = [], me = [], gl = [], el = [], da = [], im = [], ex = [], st = start (IDX.funcidx (IDX.text_id "__cml_main")) }
+    val emptyModule = { ty = [type_definition (SOME "entry_point", functype ([], []))], fn_ = [], ta = [], me = [], gl = [], el = [], da = [], im = [], ex = [], st = start (IDX.funcidx (IDX.text_id "__cml_main")) }
 end

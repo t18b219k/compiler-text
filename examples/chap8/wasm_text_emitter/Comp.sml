@@ -51,6 +51,8 @@ struct
   fun CMLTyToblocktype ty =I.blocktype(SOME(I.result(CMLTyTovaltype ty)))
   val internal_local_vars = [
     (I.local_(SOME(IDX.localidx(IDX.text_id "pair_addr")),I.numtype I.i32)),
+    (I.local_(SOME(IDX.localidx(IDX.text_id "old_pair_addr")),I.numtype I.i32)),
+    (I.local_(SOME(IDX.localidx(IDX.text_id "str_ptr")),I.numtype I.i32)),
     (I.local_(SOME(IDX.localidx(IDX.text_id "closure_ptr")),I.numtype I.i32)),
     (I.local_(SOME(IDX.localidx(IDX.text_id "__fptr")),I.numtype I.i32))]
   (*型付き抽象構文木の自由変数を求める*)
@@ -86,33 +88,57 @@ struct
    (*4 byte of closure pointer.*)
    |FUNty(_,_)=>4
    |_=>raise CantCalicurateSizeOfCMLType ty
-  fun getStringCount ctx=length (#strings ctx)
   (*Kは継続　(後に続く計算.)*)
   fun compile_expr e K module memoffset= case e of 
   TS.INT i =>((I.i32const i) ::K,module,memoffset)
+  (*文字列はヒープのポインタとサイズのペア*)
   |TS.STRING s =>
   let val data_count = length (#da module) 
      val string_data = I.data(SOME(IDX.dataidx(IDX.text_id("string_"^Int.toString data_count))),I.active_data_mode(IDX.memidx(IDX.text_id "linear_memory"),[I.i32const memoffset]),s ) 
      val new_module = {ty = #ty module,im = #im module,fn_ = #fn_ module ,ta = #ta module ,me = #me module ,gl = #gl module,ex = #ex module,st = #st module,el= #el module ,da = (string_data::  #da module) }in 
-    ((I.i32const memoffset)::K,new_module,memoffset + (size s) + 1  )
+    (*
+    0 top ,... bottom
+    1 top str_ptr,... bottom
+    2 top ptr,str_ptr,... bottom
+    3 top ,... bottom
+    4 top str_ptr,... bottom 
+    5 top size,str_ptr,... bottom
+    6 top ,... bottom 
+    7 top str_ptr,... bottom
+    *)
+    ([
+      (I.i32const 8),
+      (I.call (IDX.funcidx(IDX.text_id "alloc"))),
+      (I.localtee(IDX.localidx(IDX.text_id "str_ptr"))),
+      (I.i32const memoffset),
+      (I.i32store(I.memarg(0w0,0w4))),
+      (I.localget(IDX.localidx(IDX.text_id "str_ptr"))),
+      (I.i32const (size s)),
+      (I.i32store(I.memarg(0w4,0w4))),
+      (I.localget(IDX.localidx(IDX.text_id "str_ptr")))
+      ]@K,new_module,memoffset + (size s)   )
   end  
-  (* *)
+  
   |TS.TRUE=>((I.i32const 1) ::K,module ,memoffset)
-  (**)
+  
   |TS.FALSE=>((I.i32const 0) ::K,module ,memoffset)
-  (**)
+
   |TS.EXPID(id,_)=>(I.localget (IDX.localidx(IDX.text_id id))::K,module,memoffset)
   (*
         計算の順序, この計算が終わった後にはスタックにはペアのポインタのみが残る.
+        ネストしたペアについて考えなければならない.
+        ネストしたペアではpair_addr は適切に保存されなければならない.
         e1 ,e2 はスタックにただ一つ表すその計算結果を表す値を積む.
         0 top ... bottom
+        1 pair_addr ローカル変数を退避 top ,... bottom 
         1 ヒープを割り当てる. top pair_addr,... bottom
         2 要素1を計算.        top v1 ,pair_addr,... bottom
-        3 ヒープに要素1を保存 top　... bottom 
+        3 ヒープに要素1を保存 top　old_pair_addr,... bottom 
         4 ペアのアドレスをスタックに積む top pair_addr,... bottom
         5 要素2を計算         top v2,pair_addr,... bottom 
-        6 ヒープに要素2を保存 top ... bottom      
-        7 ペアのアドレスをスタックに積む top pair_addr ,... bottom        
+        6 ヒープに要素2を保存 top ,... bottom      
+        7 ペアのアドレスをスタックに積む top pair_addr ,... bottom       
+        8 pair_addr ローカル変数を復元 top pair_addr,...bottom 
   *)
   |TS.EXPPAIR (e1, e2) =>
     let val size_of_pair = size_of (PAIRty(TS.getTy e1 ,TS.getTy e2))
@@ -132,14 +158,14 @@ struct
             |FUNty(_,_)=>I.i32store(I.memarg(offset,0w4))
             |t=>raise CantCalicurateSizeOfCMLType t )
         val pair_addr = IDX.localidx(IDX.text_id "pair_addr")
-
+        val old_pair_addr = IDX.localidx(IDX.text_id "old_pair_addr")
 
         val (K2,module,memoffset)
-         = compile_expr e2 ([e2_store,I.localget pair_addr]@K) module memoffset
+         = compile_expr e2 ([e2_store,I.localget pair_addr,I.localget old_pair_addr,I.localset pair_addr]@K) module memoffset
         val (K1,module,memoffset) 
         = compile_expr e1 ([e1_store,I.localget pair_addr]@K2)  module memoffset
         in 
-            ((I.i32const size_of_pair)::alloc_call::K1,module,memoffset)
+            ([I.localget pair_addr,I.localset old_pair_addr,I.i32const size_of_pair]@alloc_call::K1,module,memoffset)
         end 
     (*pair #1は (pair_addr)->#1して読みだす.
        0 top pair_addr,... bottom
@@ -371,40 +397,34 @@ struct
       val (locals,wasm_expr_list,module,memoffset)=compile_declarations declarations
       val alloc_sig = I.type_definition (SOME "alloc_sig", I.functype ([I.param("size",I.numtype I.i32)], [(I.result(I.numtype I.i32))]))
       val alloc_ptr = (SOME (IDX.globalidx(IDX.text_id "alloc_ptr")),I.mutable(I.numtype I.i32),[I.i32const 0])
-      val mem =(SOME(IDX.memidx(IDX.text_id "linear_memory")),I.memtype(I.minmax(0w1,0w2)))
+      val mem =I.import("env","linear_memory",I.m(SOME (IDX.memidx(IDX.text_id "linear_memory")),I.memtype(I.min 0w2)))
 
-      val module = { ty = alloc_sig::(#ty module), im = #im module, fn_ = alloc::(#fn_ module) , ta = #ta module , me = [mem], gl = alloc_ptr::(#gl module) , ex = #ex module, st = #st module, el = #el module, da = #da module  }
+      val module = { ty = alloc_sig::(#ty module), im = mem::(#im module), fn_ = alloc::(#fn_ module) , ta = #ta module , me = #me module, gl = alloc_ptr::(#gl module) , ex = #ex module, st = #st module, el = #el module, da = #da module  }
       val local_and_exprs=ListPair.zip (locals,wasm_expr_list) 
-      val (module,iseq,memoffset)= foldr (fn ((I.local_(SOME idx,val_ty),expr),iseq)=>
-      let 
-      val SOME (id,ty)=List.find (fn elem=> case idx of 
-      IDX.localidx(IDX.text_id id)=> id = #1 elem
-      |_=>raise Unreachable 
-      ) ty_env
-      val (module,print,meoffset)=Debug.insert_debug_instructions(id,ty,module,memoffset) 
-      in 
-        (module,iseq@expr@(I.localset(idx))::print,memoffset)
-      end
-      ) (module,[],memoffset) local_and_exprs
-      val f =(SOME(IDX.funcidx(IDX.text_id "__cml_main" )),I.with_functype(IDX.typeidx(IDX.text_id "entry_point" ),[],[]),locals,iseq) 
-     
-      val module={ty = #ty module,fn_ = (f::(#fn_ module)),ta = #ta module,me = #me module,gl = #gl module,el = #el module ,da = #da module,im = #im module,ex= #ex module,st = #st module}
-      (*table から型定義の生成*)
 
+      val (module,iseq,memoffset)= foldr (fn ((I.local_(SOME idx,val_ty),expr),(module,iseq,memoffset))=>
+        let 
+          val SOME (id,ty)=List.find (fn elem=> case idx of IDX.localidx(IDX.text_id id)=> id = #1 elem|_=>raise Unreachable ) ty_env
+          val (module,print,memoffset)=Debug.insert_debug_instructions(id,ty,module,memoffset) 
+        in 
+          (module,iseq@expr@(I.localset(idx))::print,memoffset)
+        end
+      ) (module,[],memoffset) local_and_exprs
+      (*WASM32 では4バイトアラインであるからこのようにする.*)
+      (*初めにグローバル変数 alloc_ptr の初期化を行う.*)
+      val aligned_initial_alloc_ptr = ((memoffset div 4)+1)*4
+      val iseq  = [I.i32const aligned_initial_alloc_ptr ,I.globalset(IDX.globalidx(IDX.text_id "alloc_ptr"))]@iseq
+      val f =(SOME(IDX.funcidx(IDX.text_id "__cml_main" )),I.with_functype(IDX.typeidx(IDX.text_id "entry_point" ),[],[]),locals,iseq) 
+      val module={ty = #ty module,fn_ = (f::(#fn_ module)),ta = #ta module,me = #me module,gl = #gl module,el = #el module ,da = #da module,im = #im module,ex= #ex module,st = #st module}
       val types = foldr (fn ((SOME (IDX.tableidx (IDX.text_id tid)),t_type),other)=>
       let val SOME f_sig_in_cml =SEnv.find(!function_sigs,tid)in 
        I.type_definition (SOME tid,I.functype(#1 f_sig_in_cml,#2 f_sig_in_cml))::other
       end ) [] (#ta module)
-      (*table の要素から element を生成.*)
-      val _ =print " generated types\n" 
-      (*怪しい*)
       fun f_names f_prefix 0 = [f_prefix^ "0"]
       | f_names f_prefix i =if i <0 then raise Unreachable else  (f_prefix ^ (Int.toString i))::(f_names f_prefix (i-1))
-
       val elements =
        foldr (fn ((SOME(IDX.tableidx (IDX.text_id tid)),tt),xs)=>
        let 
-       
        val SOME count = SEnv.find(!function_ids,tid) 
        val f_names =(f_names tid count)  
        val _ = print "successfully generate f_names"
@@ -419,14 +439,10 @@ struct
         ),
         I.active_elem_mode(IDX.tableidx (IDX.text_id tid),[I.i32const 0])
       )::xs) end ) [] (#ta module)
-      val _ = print "generated elements"
       val module
-      ={ty = types@(#ty module),fn_ = #fn_ module,ta = #ta module,me = #me module,gl = #gl module,el = elements ,da = #da module,im = #im module,ex= #ex module,st = #st module}
-     
+      =Debug.install_system_functions {ty = types@(#ty module),fn_ = #fn_ module,ta = #ta module,me = #me module,gl = #gl module,el = elements ,da = #da module,im = #im module,ex= #ex module,st = #st module}
      in 
-     (*let's build function.!!!! *)
       print ( "Compiled to:\n" ^ I.moduleToString module ^ "\n");
-     
      module
     end 
   end
