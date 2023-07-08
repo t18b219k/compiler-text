@@ -408,6 +408,7 @@ struct
       val function_sigs =SEnv.empty 
       val function_ids = SEnv.empty
       val pc_table = SEnv.empty
+      val pp_table = SEnv.empty
       val ty_env = foldr (fn (decl,ty_env)=> 
         let val TypedSyntax.VAL(id,expr)=decl in
           (id,TypedSyntax.getTy expr)
@@ -418,29 +419,32 @@ struct
       val alloc_ptr = (SOME (IDX.globalidx(IDX.text_id "alloc_ptr")),I.mutable(I.numtype I.i32),[I.i32const 0])
       val mem =I.import("env","linear_memory",I.m(SOME (IDX.memidx(IDX.text_id "linear_memory")),I.memtype(I.min 0w2)))
       val pair_constructions=SEnv.listItemsi pc_table
+
       (*
       pair_constructions = (fn_name_pc,function,signature) list 
       *)
       val pc_sigs = foldr (fn ((name,(_,s)),l)=>s::l) [] pair_constructions 
       val pc_fns = foldr (fn ((name,(f,_)),l)=>f::l) [] pair_constructions
-
       val module = { ty = alloc_sig::pc_sigs @(#ty module), im = mem::(#im module), fn_ = alloc::pc_fns@(#fn_ module) , ta = #ta module , me = #me module, gl = alloc_ptr::(#gl module) , ex = #ex module, st = #st module, el = #el module, da = #da module  }
       val local_and_exprs=ListPair.zip (locals,wasm_expr_list) 
 
-      val (module,iseq,memoffset)= foldr (fn ((I.local_(SOME idx,val_ty),expr),(module,iseq,memoffset))=>
+      val (module,iseq,memoffset,pp_table)= foldr (fn ((I.local_(SOME idx,val_ty),expr),(module,iseq,memoffset,pp_table))=>
         let 
           val SOME (id,ty)=List.find (fn elem=> case idx of IDX.localidx(IDX.text_id id)=> id = #1 elem|_=>raise Unreachable ) ty_env
-          val (module,print,memoffset)=Debug.insert_debug_instructions(id,ty,module,memoffset) 
+          val (module,print,memoffset,pp_table)=Debug.insert_debug_instructions(id,ty,module,memoffset,pp_table) 
         in 
-          (module,iseq@expr@(I.localset(idx))::print,memoffset)
+          (module,iseq@expr@(I.localset(idx))::print,memoffset,pp_table)
         end
-      ) (module,[],memoffset) local_and_exprs
+      ) (module,[],memoffset,pp_table) local_and_exprs
+      val pair_debugs =SEnv.listItemsi pp_table
+      val pp_sigs  =foldr (fn ((name,(_,s)),l)=>s::l) [] pair_debugs
+      val pp_fns = foldr (fn ((name,(f,_)),l)=>f::l) [] pair_debugs
       (*WASM32 では4バイトアラインであるからこのようにする.*)
       (*初めにグローバル変数 alloc_ptr の初期化を行う.*)
       val aligned_initial_alloc_ptr = ((memoffset div 4)+1)*4
       val iseq  = [I.i32const aligned_initial_alloc_ptr ,I.globalset(IDX.globalidx(IDX.text_id "alloc_ptr"))]@iseq
       val f =(SOME(IDX.funcidx(IDX.text_id "__cml_main" )),I.with_functype(IDX.typeidx(IDX.text_id "entry_point" ),[],[]),locals,iseq) 
-      val module={ty = #ty module,fn_ = (f::(#fn_ module)),ta = #ta module,me = #me module,gl = #gl module,el = #el module ,da = #da module,im = #im module,ex= #ex module,st = #st module}
+      val module={ty = pp_sigs @ (#ty module),fn_ = pp_fns@(f::(#fn_ module)),ta = #ta module,me = #me module,gl = #gl module,el = #el module ,da = #da module,im = #im module,ex= #ex module,st = #st module}
       val types = foldr (fn ((SOME (IDX.tableidx (IDX.text_id tid)),t_type),other)=>
       let val SOME f_sig_in_cml =SEnv.find(function_sigs,tid)in 
        I.type_definition (SOME tid,I.functype(#1 f_sig_in_cml,#2 f_sig_in_cml))::other

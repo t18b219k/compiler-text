@@ -89,6 +89,14 @@ structure Debug = struct
     }
     }
     *)
+    fun gen_pp_sig ty = (case ty of 
+    Type.INTty=>"i"
+    |Type.BOOLty=>"b"
+    |Type.STRINGty=>"s"
+    |Type.FUNty(a,b)=>(gen_pp_sig a)^"_->_"^ (gen_pp_sig b)
+    |Type.PAIRty(a,b)=>(gen_pp_sig a)^"_x_"^(gen_pp_sig b)
+    ):string
+
     val call_print_int = WasmModule.call (IDX.funcidx (IDX.text_id "print_int"))
 
     val call_print_bool = WasmModule.call (IDX.funcidx (IDX.text_id "print_bool"))
@@ -115,10 +123,10 @@ structure Debug = struct
 
     val call_print_new_line = WasmModule.call (IDX.funcidx (IDX.text_id "print_new_line"))
     (*スタック上のデータをプリントする.*)
-    fun generate_stack_debug (id, ty, module, memoffset) =
+    fun generate_stack_debug ( ty, module, memoffset,pp_table) =
         case ty of
-            Type.INTty => (module, [call_print_int], memoffset)
-        | Type.BOOLty => (module, [call_print_bool], memoffset)
+            Type.INTty => (module, [call_print_int], memoffset,pp_table)
+        | Type.BOOLty => (module, [call_print_bool], memoffset,pp_table)
         | Type.STRINGty => (module, [
             WasmModule.localtee(IDX.localidx(IDX.text_id "str_ptr")),
             WasmModule.i32load (WasmModule.memarg(0w0,0w4)),(*fetch ptr (str)->ptr*)
@@ -126,28 +134,32 @@ structure Debug = struct
             WasmModule.i32load(WasmModule.memarg(0w4,0w4)),(*fetch size (str)->size*)
             call_print_double_quote,
             call_print_string,
-            call_print_double_quote], memoffset)
+            call_print_double_quote], memoffset,pp_table)
         | Type.PAIRty (ty1, ty2) =>
                 let
-                    val (module, print_v1, memoffset) = generate_stack_debug (id, ty1, module, memoffset)
-                    val (module, print_v2, memoffset) = generate_stack_debug (id, ty2, module, memoffset)
+                    val (module, print_v1, memoffset,pp_table) = generate_stack_debug ( ty1, module, memoffset,pp_table)
+                    val (module, print_v2, memoffset,pp_table) = generate_stack_debug ( ty2, module, memoffset,pp_table)
                     (*ペアの表示関数名.これをキーとして使う.*)
-                    val pair_print_sig = "pp_"^Type.tyToString ty1^"_"^Type.tyToString ty2
-
-                in
-                    (module, [
+                    val pp_fn_name = "pair_print_"^gen_pp_sig ty
+                    val pp_ty_def = WasmModule.type_definition(SOME pp_fn_name,WasmModule.functype([WasmModule.param ("__pair_addr", WasmModule.numtype WasmModule.i32)],[]))
+                    val iseq =[
                         call_print_lparen,
+                        WasmModule.localget(IDX.localidx (IDX.int_id 0w0)),
                         WasmModule.i32load (WasmModule.memarg (0w0, 0w4))]
                         @
                         print_v1
                         @
                         [call_print_comma,
-                        WasmModule.localget (IDX.localidx (IDX.text_id id)),(*これだとスタック上の値を引っ張れない. 何らかの関数を埋め込まないとネストしたペアで問題が起きる?*)
+                        WasmModule.localget (IDX.localidx (IDX.int_id 0w0)),
                         WasmModule.i32load (WasmModule.memarg (0w4, 0w4))]
                         @ 
                         print_v2 
                         @ 
-                        [call_print_rparen], memoffset)
+                        [call_print_rparen]
+                    val debug_fun =((SOME(IDX.funcidx(IDX.text_id pp_fn_name)),WasmModule.name_only(IDX.typeidx(IDX.text_id pp_fn_name)),[(WasmModule.local_(SOME (IDX.localidx(IDX.text_id "str_ptr")),(WasmModule.numtype WasmModule.i32)))],iseq),pp_ty_def)
+                    val pp_table = SEnv.insert(pp_table,pp_fn_name,debug_fun)
+                in
+                    (module, [WasmModule.call (IDX.funcidx (IDX.text_id pp_fn_name)) ], memoffset,pp_table)
                 end
         | _ => raise Unreachable
 
@@ -156,49 +168,49 @@ structure Debug = struct
     (*
     sig:val insert_debug_instructions: string * Type.ty*module*word32 -> WasmModule.module*WasmModule.expr*word32
     *)
-    fun insert_debug_instructions (id, ty, module, memoffset) =
+    fun insert_debug_instructions (id, ty, module, memoffset,pp_table) =
         case ty of
         Type.INTty =>
                 let
                     val (module, call_print_id, memoffset) = generate_identifier_print (id, module, memoffset)
-                    val (module, iseq, memoffset) = generate_stack_debug (id, ty, module, memoffset)
+                    val (module, iseq, memoffset,pp_table) = generate_stack_debug (ty, module, memoffset,pp_table)
                     val (module, print_type, memoffset) = generate_text_print(module,Type.tyToString ty, memoffset)
                 in
-                    (module, [call_print_val, call_print_space] @ call_print_id @ [call_print_equal , WasmModule.localget (IDX.localidx (IDX.text_id id)) ]@ iseq@call_print_colon::print_type@[call_print_new_line], memoffset)
+                    (module, [call_print_val, call_print_space] @ call_print_id @ [call_print_equal , WasmModule.localget (IDX.localidx (IDX.text_id id)) ]@ iseq@call_print_colon::print_type@[call_print_new_line], memoffset,pp_table)
                 end
         | Type.BOOLty =>
                 let
                     (*print_boolは実行環境から与えられ,0=false ,1=true とコンソールに表示する関数である.*)
                     val (module, call_print_id, memoffset) = generate_identifier_print (id, module, memoffset)
-                    val (module, iseq, memoffset) = generate_stack_debug (id, ty, module, memoffset)
+                    val (module, iseq, memoffset,pp_table) = generate_stack_debug ( ty, module, memoffset,pp_table)
                     val (module, print_type, memoffset) = generate_text_print(module,Type.tyToString ty, memoffset)
                 in
-                    (module, [call_print_val, call_print_space] @ call_print_id @ [call_print_equal , WasmModule.localget (IDX.localidx (IDX.text_id id))]@ iseq@call_print_colon::print_type@[call_print_new_line], memoffset)
+                    (module, [call_print_val, call_print_space] @ call_print_id @ [call_print_equal , WasmModule.localget (IDX.localidx (IDX.text_id id))]@ iseq@call_print_colon::print_type@[call_print_new_line], memoffset,pp_table)
                 end
         | Type.STRINGty =>
                 let
                     (*print_stringは実行環境から与えられ,linear memory のポインタが与えられた時ポインタがさす先のデータをUTF-8の文字列として表示する関数である.*)
                     val (module, call_print_id, memoffset) = generate_identifier_print (id, module, memoffset)
-                    val (module, iseq, memoffset) = generate_stack_debug (id, ty, module, memoffset)                    
+                    val (module, iseq, memoffset,pp_table) = generate_stack_debug ( ty, module, memoffset,pp_table)                    
                     val (module, print_type, memoffset) = generate_text_print(module,Type.tyToString ty, memoffset)
                 in
-                    (module, [call_print_val, call_print_space] @ call_print_id @ [call_print_equal, WasmModule.localget (IDX.localidx (IDX.text_id id))] @ iseq@call_print_colon::print_type@[call_print_new_line], memoffset)
+                    (module, [call_print_val, call_print_space] @ call_print_id @ [call_print_equal, WasmModule.localget (IDX.localidx (IDX.text_id id))] @ iseq@call_print_colon::print_type@[call_print_new_line], memoffset,pp_table)
                 end
         | Type.PAIRty (_, _) =>
                 let
                     (*PAIR の要素はptr かi32しかないので*)
                     val (module, call_print_id, memoffset) = generate_identifier_print (id, module, memoffset)
-                    val (module, iseq, memoffset) = generate_stack_debug (id, ty, module, memoffset)
+                    val (module, iseq, memoffset,pp_table) = generate_stack_debug ( ty, module, memoffset,pp_table)
                     val (module, print_type, memoffset) = generate_text_print(module,Type.tyToString ty, memoffset)
                 in
-                    (module, [call_print_val, call_print_space] @ call_print_id @ [call_print_equal , WasmModule.localget (IDX.localidx (IDX.text_id id)) ]@ iseq@call_print_colon::print_type@[call_print_new_line], memoffset)
+                    (module, [call_print_val, call_print_space] @ call_print_id @ [call_print_equal , WasmModule.localget (IDX.localidx (IDX.text_id id)) ]@ iseq@call_print_colon::print_type@[call_print_new_line], memoffset,pp_table)
                 end
         | Type.FUNty (arg_ty, ret_ry) =>
                 let
                     val (module, call_print_id, memoffset) = generate_identifier_print (id, module, memoffset)
                     val (module, print_type, memoffset) = generate_text_print(module,Type.tyToString ty, memoffset)
                 in
-                    (module, [call_print_val, call_print_space] @ call_print_id @ call_print_colon:: print_type@[call_print_new_line], memoffset)
+                    (module, [call_print_val, call_print_space] @ call_print_id @ call_print_colon:: print_type@[call_print_new_line], memoffset,pp_table)
                 end
         |_ => raise Unreachable (*スタックにあるものはペア,関数,定数であるからここには到達しない*)
 end

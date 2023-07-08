@@ -1,8 +1,9 @@
 _require "WasmModule.smi"
 _require "../typeinf/Type.smi"
+_require "compiler/libs/env/main/SEnv.smi"
 _require "basis.smi"
 structure Debug =
     struct 
-    val insert_debug_instructions: string * Type.ty*WasmModule.module*int -> WasmModule.module*WasmModule.expr*int  
+    val insert_debug_instructions: string * Type.ty*WasmModule.module*int* ((WasmModule.func*WasmModule.type_definition) SEnv.map) -> WasmModule.module*WasmModule.expr*int* ((WasmModule.func*WasmModule.type_definition) SEnv.map)
     val install_system_functions:WasmModule.module -> WasmModule.module
     end
