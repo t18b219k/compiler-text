@@ -1,0 +1,1400 @@
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module (type $alloc_sig(func (param $size i32) (result i32)))(type $pair_con_i32_i32(func (param $e1 i32)(param $e2 i32) (result i32)))(type $entry_point(func  ))(type $print_int(func (param $value i32) ))(type $print_bool(func (param $value i32) ))(type $print_string(func (param $ptr i32)(param $size i32) ))(type $print_token(func  ))(import "env" "linear_memory" (memory $linear_memory 2))(import "env" "print_int" (func $print_int (type $print_int)))(import "env" "print_bool" (func $print_bool (type $print_bool)))(import "env" "print_string" (func $print_string (type $print_string)))(import "env" "print_lparen" (func $print_lparen (type $print_token)))(import "env" "print_rparen" (func $print_rparen (type $print_token)))(import "env" "print_val" (func $print_val (type $print_token)))(import "env" "print_comma" (func $print_comma (type $print_token)))(import "env" "print_equal" (func $print_equal (type $print_token)))(import "env" "print_colon" (func $print_colon (type $print_token)))(import "env" "print_arrow" (func $print_arrow (type $print_token)))(import "env" "print_space" (func $print_space (type $print_token)))(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))(import "env" "print_new_line" (func $print_new_line (type $print_token)))(func $__cml_main (type $entry_point) 
+(local $it i32)(local $str_ptr i32)(local $closure_ptr i32)(local $__fptr i32)
+i32.const 32
+global.set $alloc_ptr
+i32.const 31
+i32.const 43
+call $pair_con_i32_i32
+i32.const 67
+i32.const 93
+call $pair_con_i32_i32
+call $pair_con_i32_i32
+local.set $it
+call $print_val
+call $print_space
+i32.const 0
+i32.const 2
+call $print_string
+call $print_equal
+local.get $it
+call $pair_print_(int * int)_(int * int)
+call $print_colon
+i32.const 2
+i32.const 27
+call $print_string
+call $print_new_line
+)(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+(local $old i32)
+global.get $alloc_ptr
+local.set $old
+local.get $old
+local.get $size
+i32.add
+global.set $alloc_ptr
+local.get $old
+)(func $pair_con_i32_i32 (type $pair_con_i32_i32)
+(local $pair_addr i32)
+i32.const 8
+call $alloc
+local.tee $pair_addr
+local.get 0
+i32.store offset=0 align=4
+local.get $pair_addr
+local.get 1
+i32.store offset=4 align=4
+local.get $pair_addr
+)(global $alloc_ptr(mut i32 ) i32.const 0
+)(export "__cml_main" (func $__cml_main))(start $__cml_main)(data  $linear_memory(offset i32.const 2
+) "((int * int) * (int * int))")(data  $linear_memory(offset i32.const 0
+) "it"))
+Failed to compile Wasm WebAssembly translation error: Error when converting wat: unknown operator or unexpected token
+     --> <anon>:20:19
+      |
+   20 | call $pair_print_(int * int)_(int * int)
+      |                   ^
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module (type $alloc_sig(func (param $size i32) (result i32)))(type $pair_con_i32_i32(func (param $e1 i32)(param $e2 i32) (result i32)))(type $entry_point(func  ))(type $print_int(func (param $value i32) ))(type $print_bool(func (param $value i32) ))(type $print_string(func (param $ptr i32)(param $size i32) ))(type $print_token(func  ))(import "env" "linear_memory" (memory $linear_memory 2))(import "env" "print_int" (func $print_int (type $print_int)))(import "env" "print_bool" (func $print_bool (type $print_bool)))(import "env" "print_string" (func $print_string (type $print_string)))(import "env" "print_lparen" (func $print_lparen (type $print_token)))(import "env" "print_rparen" (func $print_rparen (type $print_token)))(import "env" "print_val" (func $print_val (type $print_token)))(import "env" "print_comma" (func $print_comma (type $print_token)))(import "env" "print_equal" (func $print_equal (type $print_token)))(import "env" "print_colon" (func $print_colon (type $print_token)))(import "env" "print_arrow" (func $print_arrow (type $print_token)))(import "env" "print_space" (func $print_space (type $print_token)))(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))(import "env" "print_new_line" (func $print_new_line (type $print_token)))(func $__cml_main (type $entry_point) 
+(local $it i32)(local $str_ptr i32)(local $closure_ptr i32)(local $__fptr i32)
+i32.const 32
+global.set $alloc_ptr
+i32.const 31
+i32.const 43
+call $pair_con_i32_i32
+i32.const 71
+i32.const 97
+call $pair_con_i32_i32
+call $pair_con_i32_i32
+local.set $it
+call $print_val
+call $print_space
+i32.const 0
+i32.const 2
+call $print_string
+call $print_equal
+local.get $it
+call $pair_print_(int * int)_(int * int)
+call $print_colon
+i32.const 2
+i32.const 27
+call $print_string
+call $print_new_line
+)(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+(local $old i32)
+global.get $alloc_ptr
+local.set $old
+local.get $old
+local.get $size
+i32.add
+global.set $alloc_ptr
+local.get $old
+)(func $pair_con_i32_i32 (type $pair_con_i32_i32)
+(local $pair_addr i32)
+i32.const 8
+call $alloc
+local.tee $pair_addr
+local.get 0
+i32.store offset=0 align=4
+local.get $pair_addr
+local.get 1
+i32.store offset=4 align=4
+local.get $pair_addr
+)(global $alloc_ptr(mut i32 ) i32.const 0
+)(export "__cml_main" (func $__cml_main))(start $__cml_main)(data  $linear_memory(offset i32.const 2
+) "((int * int) * (int * int))")(data  $linear_memory(offset i32.const 0
+) "it"))
+Failed to compile Wasm WebAssembly translation error: Error when converting wat: unknown operator or unexpected token
+     --> <anon>:20:19
+      |
+   20 | call $pair_print_(int * int)_(int * int)
+      |                   ^
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module (type $alloc_sig(func (param $size i32) (result i32)))(type $pair_con_i32_i32(func (param $e1 i32)(param $e2 i32) (result i32)))(type $entry_point(func  ))(type $print_int(func (param $value i32) ))(type $print_bool(func (param $value i32) ))(type $print_string(func (param $ptr i32)(param $size i32) ))(type $print_token(func  ))(import "env" "linear_memory" (memory $linear_memory 2))(import "env" "print_int" (func $print_int (type $print_int)))(import "env" "print_bool" (func $print_bool (type $print_bool)))(import "env" "print_string" (func $print_string (type $print_string)))(import "env" "print_lparen" (func $print_lparen (type $print_token)))(import "env" "print_rparen" (func $print_rparen (type $print_token)))(import "env" "print_val" (func $print_val (type $print_token)))(import "env" "print_comma" (func $print_comma (type $print_token)))(import "env" "print_equal" (func $print_equal (type $print_token)))(import "env" "print_colon" (func $print_colon (type $print_token)))(import "env" "print_arrow" (func $print_arrow (type $print_token)))(import "env" "print_space" (func $print_space (type $print_token)))(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))(import "env" "print_new_line" (func $print_new_line (type $print_token)))(func $__cml_main (type $entry_point) 
+(local $it i32)(local $str_ptr i32)(local $closure_ptr i32)(local $__fptr i32)
+i32.const 32
+global.set $alloc_ptr
+i32.const 13
+i32.const 43
+call $pair_con_i32_i32
+i32.const 81
+i32.const 79
+call $pair_con_i32_i32
+call $pair_con_i32_i32
+local.set $it
+call $print_val
+call $print_space
+i32.const 0
+i32.const 2
+call $print_string
+call $print_equal
+local.get $it
+call $pair_print_(int * int)_(int * int)
+call $print_colon
+i32.const 2
+i32.const 27
+call $print_string
+call $print_new_line
+)(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+(local $old i32)
+global.get $alloc_ptr
+local.set $old
+local.get $old
+local.get $size
+i32.add
+global.set $alloc_ptr
+local.get $old
+)(func $pair_con_i32_i32 (type $pair_con_i32_i32)
+(local $pair_addr i32)
+i32.const 8
+call $alloc
+local.tee $pair_addr
+local.get 0
+i32.store offset=0 align=4
+local.get $pair_addr
+local.get 1
+i32.store offset=4 align=4
+local.get $pair_addr
+)(global $alloc_ptr(mut i32 ) i32.const 0
+)(export "__cml_main" (func $__cml_main))(start $__cml_main)(data  $linear_memory(offset i32.const 2
+) "((int * int) * (int * int))")(data  $linear_memory(offset i32.const 0
+) "it"))
+Failed to compile Wasm WebAssembly translation error: Error when converting wat: unknown operator or unexpected token
+     --> <anon>:20:19
+      |
+   20 | call $pair_print_(int * int)_(int * int)
+      |                   ^
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module (type $alloc_sig(func (param $size i32) (result i32)))(type $pair_con_i32_i32(func (param $e1 i32)(param $e2 i32) (result i32)))(type $entry_point(func  ))(type $print_int(func (param $value i32) ))(type $print_bool(func (param $value i32) ))(type $print_string(func (param $ptr i32)(param $size i32) ))(type $print_token(func  ))(import "env" "linear_memory" (memory $linear_memory 2))(import "env" "print_int" (func $print_int (type $print_int)))(import "env" "print_bool" (func $print_bool (type $print_bool)))(import "env" "print_string" (func $print_string (type $print_string)))(import "env" "print_lparen" (func $print_lparen (type $print_token)))(import "env" "print_rparen" (func $print_rparen (type $print_token)))(import "env" "print_val" (func $print_val (type $print_token)))(import "env" "print_comma" (func $print_comma (type $print_token)))(import "env" "print_equal" (func $print_equal (type $print_token)))(import "env" "print_colon" (func $print_colon (type $print_token)))(import "env" "print_arrow" (func $print_arrow (type $print_token)))(import "env" "print_space" (func $print_space (type $print_token)))(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))(import "env" "print_new_line" (func $print_new_line (type $print_token)))(func $__cml_main (type $entry_point) 
+(local $it i32)(local $str_ptr i32)(local $closure_ptr i32)(local $__fptr i32)
+i32.const 32
+global.set $alloc_ptr
+i32.const 31
+i32.const 23
+call $pair_con_i32_i32
+i32.const 45
+i32.const 67
+call $pair_con_i32_i32
+call $pair_con_i32_i32
+local.set $it
+call $print_val
+call $print_space
+i32.const 0
+i32.const 2
+call $print_string
+call $print_equal
+local.get $it
+call $pair_print_(int * int)_(int * int)
+call $print_colon
+i32.const 2
+i32.const 27
+call $print_string
+call $print_new_line
+)(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+(local $old i32)
+global.get $alloc_ptr
+local.set $old
+local.get $old
+local.get $size
+i32.add
+global.set $alloc_ptr
+local.get $old
+)(func $pair_con_i32_i32 (type $pair_con_i32_i32)
+(local $pair_addr i32)
+i32.const 8
+call $alloc
+local.tee $pair_addr
+local.get 0
+i32.store offset=0 align=4
+local.get $pair_addr
+local.get 1
+i32.store offset=4 align=4
+local.get $pair_addr
+)(global $alloc_ptr(mut i32 ) i32.const 0
+)(export "__cml_main" (func $__cml_main))(start $__cml_main)(data  $linear_memory(offset i32.const 2
+) "((int * int) * (int * int))")(data  $linear_memory(offset i32.const 0
+) "it"))
+Failed to compile Wasm WebAssembly translation error: Error when converting wat: unknown operator or unexpected token
+     --> <anon>:20:19
+      |
+   20 | call $pair_print_(int * int)_(int * int)
+      |                   ^
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module (type $pair_print_(int * int)_(int * int)(func (param $__pair i32) ))(type $pair_print_int_int(func (param $__pair i32) ))(type $alloc_sig(func (param $size i32) (result i32)))(type $pair_con_i32_i32(func (param $e1 i32)(param $e2 i32) (result i32)))(type $entry_point(func  ))(type $print_int(func (param $value i32) ))(type $print_bool(func (param $value i32) ))(type $print_string(func (param $ptr i32)(param $size i32) ))(type $print_token(func  ))(import "env" "linear_memory" (memory $linear_memory 2))(import "env" "print_int" (func $print_int (type $print_int)))(import "env" "print_bool" (func $print_bool (type $print_bool)))(import "env" "print_string" (func $print_string (type $print_string)))(import "env" "print_lparen" (func $print_lparen (type $print_token)))(import "env" "print_rparen" (func $print_rparen (type $print_token)))(import "env" "print_val" (func $print_val (type $print_token)))(import "env" "print_comma" (func $print_comma (type $print_token)))(import "env" "print_equal" (func $print_equal (type $print_token)))(import "env" "print_colon" (func $print_colon (type $print_token)))(import "env" "print_arrow" (func $print_arrow (type $print_token)))(import "env" "print_space" (func $print_space (type $print_token)))(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))(import "env" "print_new_line" (func $print_new_line (type $print_token)))(func $pair_print_(int * int)_(int * int) (type $pair_print_(int * int)_(int * int))
+(local $pair_addr i32)
+call $print_lparen
+i32.load offset=0 align=4
+call $pair_print_int_int
+call $print_comma
+local.get $__pair
+i32.load offset=4 align=4
+call $pair_print_int_int
+call $print_rparen
+)(func $pair_print_int_int (type $pair_print_int_int)
+(local $pair_addr i32)
+call $print_lparen
+i32.load offset=0 align=4
+call $print_int
+call $print_comma
+local.get $__pair
+i32.load offset=4 align=4
+call $print_int
+call $print_rparen
+)(func $__cml_main (type $entry_point) 
+(local $it i32)(local $str_ptr i32)(local $closure_ptr i32)(local $__fptr i32)
+i32.const 32
+global.set $alloc_ptr
+i32.const 123
+i32.const 431
+call $pair_con_i32_i32
+i32.const 6779
+i32.const 5467
+call $pair_con_i32_i32
+call $pair_con_i32_i32
+local.set $it
+call $print_val
+call $print_space
+i32.const 0
+i32.const 2
+call $print_string
+call $print_equal
+local.get $it
+call $pair_print_(int * int)_(int * int)
+call $print_colon
+i32.const 2
+i32.const 27
+call $print_string
+call $print_new_line
+)(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+(local $old i32)
+global.get $alloc_ptr
+local.set $old
+local.get $old
+local.get $size
+i32.add
+global.set $alloc_ptr
+local.get $old
+)(func $pair_con_i32_i32 (type $pair_con_i32_i32)
+(local $pair_addr i32)
+i32.const 8
+call $alloc
+local.tee $pair_addr
+local.get 0
+i32.store offset=0 align=4
+local.get $pair_addr
+local.get 1
+i32.store offset=4 align=4
+local.get $pair_addr
+)(global $alloc_ptr(mut i32 ) i32.const 0
+)(export "__cml_main" (func $__cml_main))(start $__cml_main)(data  $linear_memory(offset i32.const 2
+) "((int * int) * (int * int))")(data  $linear_memory(offset i32.const 0
+) "it"))
+Failed to compile Wasm WebAssembly translation error: Error when converting wat: unexpected token, expected one of: `func`, `struct`, `array`
+     --> <anon>:1:28
+      |
+    1 | (module (type $pair_print_(int * int)_(int * int)(func (param $__pair i32) ))(type $pair_print_int_int(func (param $__pair i32) ))(type $alloc_sig(func (param $size i32) (result i32)))(type $pair_con_i32_i32(func (param $e1 i32)(param $e2 i32) (result i32)))(type $entry_point(func  ))(type $print_int(func (param $value i32) ))(type $print_bool(func (param $value i32) ))(type $print_string(func (param $ptr i32)(param $size i32) ))(type $print_token(func  ))(import "env" "linear_memory" (memory $linear_memory 2))(import "env" "print_int" (func $print_int (type $print_int)))(import "env" "print_bool" (func $print_bool (type $print_bool)))(import "env" "print_string" (func $print_string (type $print_string)))(import "env" "print_lparen" (func $print_lparen (type $print_token)))(import "env" "print_rparen" (func $print_rparen (type $print_token)))(import "env" "print_val" (func $print_val (type $print_token)))(import "env" "print_comma" (func $print_comma (type $print_token)))(import "env" "print_equal" (func $print_equal (type $print_token)))(import "env" "print_colon" (func $print_colon (type $print_token)))(import "env" "print_arrow" (func $print_arrow (type $print_token)))(import "env" "print_space" (func $print_space (type $print_token)))(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))(import "env" "print_new_line" (func $print_new_line (type $print_token)))(func $pair_print_(int * int)_(int * int) (type $pair_print_(int * int)_(int * int))
+      |                            ^
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module (type $pair_print_i_x_i(func (param $__pair i32) ))(type $pair_print_i_x_i_x_i_x_i(func (param $__pair i32) ))(type $alloc_sig(func (param $size i32) (result i32)))(type $pair_con_i32_i32(func (param $e1 i32)(param $e2 i32) (result i32)))(type $entry_point(func  ))(type $print_int(func (param $value i32) ))(type $print_bool(func (param $value i32) ))(type $print_string(func (param $ptr i32)(param $size i32) ))(type $print_token(func  ))(import "env" "linear_memory" (memory $linear_memory 2))(import "env" "print_int" (func $print_int (type $print_int)))(import "env" "print_bool" (func $print_bool (type $print_bool)))(import "env" "print_string" (func $print_string (type $print_string)))(import "env" "print_lparen" (func $print_lparen (type $print_token)))(import "env" "print_rparen" (func $print_rparen (type $print_token)))(import "env" "print_val" (func $print_val (type $print_token)))(import "env" "print_comma" (func $print_comma (type $print_token)))(import "env" "print_equal" (func $print_equal (type $print_token)))(import "env" "print_colon" (func $print_colon (type $print_token)))(import "env" "print_arrow" (func $print_arrow (type $print_token)))(import "env" "print_space" (func $print_space (type $print_token)))(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))(import "env" "print_new_line" (func $print_new_line (type $print_token)))(func $pair_print_i_x_i (type $pair_print_i_x_i)
+(local $__pair i32)
+call $print_lparen
+local.get $__ptr
+i32.load offset=0 align=4
+call $print_int
+call $print_comma
+local.get $__pair
+i32.load offset=4 align=4
+call $print_int
+call $print_rparen
+)(func $pair_print_i_x_i_x_i_x_i (type $pair_print_i_x_i_x_i_x_i)
+(local $__pair i32)
+call $print_lparen
+local.get $__ptr
+i32.load offset=0 align=4
+call $pair_print_i_x_i
+call $print_comma
+local.get $__pair
+i32.load offset=4 align=4
+call $pair_print_i_x_i
+call $print_rparen
+)(func $__cml_main (type $entry_point) 
+(local $it i32)(local $str_ptr i32)(local $closure_ptr i32)(local $__fptr i32)
+i32.const 32
+global.set $alloc_ptr
+i32.const 13
+i32.const 41
+call $pair_con_i32_i32
+i32.const 75
+i32.const 93
+call $pair_con_i32_i32
+call $pair_con_i32_i32
+local.set $it
+call $print_val
+call $print_space
+i32.const 0
+i32.const 2
+call $print_string
+call $print_equal
+local.get $it
+call $pair_print_i_x_i_x_i_x_i
+call $print_colon
+i32.const 2
+i32.const 27
+call $print_string
+call $print_new_line
+)(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+(local $old i32)
+global.get $alloc_ptr
+local.set $old
+local.get $old
+local.get $size
+i32.add
+global.set $alloc_ptr
+local.get $old
+)(func $pair_con_i32_i32 (type $pair_con_i32_i32)
+(local $pair_addr i32)
+i32.const 8
+call $alloc
+local.tee $pair_addr
+local.get 0
+i32.store offset=0 align=4
+local.get $pair_addr
+local.get 1
+i32.store offset=4 align=4
+local.get $pair_addr
+)(global $alloc_ptr(mut i32 ) i32.const 0
+)(export "__cml_main" (func $__cml_main))(start $__cml_main)(data  $linear_memory(offset i32.const 2
+) "((int * int) * (int * int))")(data  $linear_memory(offset i32.const 0
+) "it"))
+Failed to compile Wasm WebAssembly translation error: Error when converting wat: unknown local: failed to find name `$__ptr`
+     --> <anon>:4:11
+      |
+    4 | local.get $__ptr
+      |           ^
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module (type $pair_print_i_x_i(func (param $__pair i32) ))(type $pair_print_i_x_i_x_i_x_i(func (param $__pair i32) ))(type $alloc_sig(func (param $size i32) (result i32)))(type $pair_con_i32_i32(func (param $e1 i32)(param $e2 i32) (result i32)))(type $entry_point(func  ))(type $print_int(func (param $value i32) ))(type $print_bool(func (param $value i32) ))(type $print_string(func (param $ptr i32)(param $size i32) ))(type $print_token(func  ))(import "env" "linear_memory" (memory $linear_memory 2))(import "env" "print_int" (func $print_int (type $print_int)))(import "env" "print_bool" (func $print_bool (type $print_bool)))(import "env" "print_string" (func $print_string (type $print_string)))(import "env" "print_lparen" (func $print_lparen (type $print_token)))(import "env" "print_rparen" (func $print_rparen (type $print_token)))(import "env" "print_val" (func $print_val (type $print_token)))(import "env" "print_comma" (func $print_comma (type $print_token)))(import "env" "print_equal" (func $print_equal (type $print_token)))(import "env" "print_colon" (func $print_colon (type $print_token)))(import "env" "print_arrow" (func $print_arrow (type $print_token)))(import "env" "print_space" (func $print_space (type $print_token)))(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))(import "env" "print_new_line" (func $print_new_line (type $print_token)))(func $pair_print_i_x_i (type $pair_print_i_x_i)
+(local $__pair i32)
+call $print_lparen
+local.get $__ptr
+i32.load offset=0 align=4
+call $print_int
+call $print_comma
+local.get $__pair
+i32.load offset=4 align=4
+call $print_int
+call $print_rparen
+)(func $pair_print_i_x_i_x_i_x_i (type $pair_print_i_x_i_x_i_x_i)
+(local $__pair i32)
+call $print_lparen
+local.get $__ptr
+i32.load offset=0 align=4
+call $pair_print_i_x_i
+call $print_comma
+local.get $__pair
+i32.load offset=4 align=4
+call $pair_print_i_x_i
+call $print_rparen
+)(func $__cml_main (type $entry_point) 
+(local $it i32)(local $str_ptr i32)(local $closure_ptr i32)(local $__fptr i32)
+i32.const 32
+global.set $alloc_ptr
+i32.const 21
+i32.const 43
+call $pair_con_i32_i32
+i32.const 75
+i32.const 97
+call $pair_con_i32_i32
+call $pair_con_i32_i32
+local.set $it
+call $print_val
+call $print_space
+i32.const 0
+i32.const 2
+call $print_string
+call $print_equal
+local.get $it
+call $pair_print_i_x_i_x_i_x_i
+call $print_colon
+i32.const 2
+i32.const 27
+call $print_string
+call $print_new_line
+)(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+(local $old i32)
+global.get $alloc_ptr
+local.set $old
+local.get $old
+local.get $size
+i32.add
+global.set $alloc_ptr
+local.get $old
+)(func $pair_con_i32_i32 (type $pair_con_i32_i32)
+(local $pair_addr i32)
+i32.const 8
+call $alloc
+local.tee $pair_addr
+local.get 0
+i32.store offset=0 align=4
+local.get $pair_addr
+local.get 1
+i32.store offset=4 align=4
+local.get $pair_addr
+)(global $alloc_ptr(mut i32 ) i32.const 0
+)(export "__cml_main" (func $__cml_main))(start $__cml_main)(data  $linear_memory(offset i32.const 2
+) "((int * int) * (int * int))")(data  $linear_memory(offset i32.const 0
+) "it"))
+Failed to compile Wasm WebAssembly translation error: Error when converting wat: unknown local: failed to find name `$__ptr`
+     --> <anon>:4:11
+      |
+    4 | local.get $__ptr
+      |           ^
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module (type $pair_print_i_x_i(func (param $__pair i32) ))(type $pair_print_i_x_i_x_i_x_i(func (param $__pair i32) ))(type $alloc_sig(func (param $size i32) (result i32)))(type $pair_con_i32_i32(func (param $e1 i32)(param $e2 i32) (result i32)))(type $entry_point(func  ))(type $print_int(func (param $value i32) ))(type $print_bool(func (param $value i32) ))(type $print_string(func (param $ptr i32)(param $size i32) ))(type $print_token(func  ))(import "env" "linear_memory" (memory $linear_memory 2))(import "env" "print_int" (func $print_int (type $print_int)))(import "env" "print_bool" (func $print_bool (type $print_bool)))(import "env" "print_string" (func $print_string (type $print_string)))(import "env" "print_lparen" (func $print_lparen (type $print_token)))(import "env" "print_rparen" (func $print_rparen (type $print_token)))(import "env" "print_val" (func $print_val (type $print_token)))(import "env" "print_comma" (func $print_comma (type $print_token)))(import "env" "print_equal" (func $print_equal (type $print_token)))(import "env" "print_colon" (func $print_colon (type $print_token)))(import "env" "print_arrow" (func $print_arrow (type $print_token)))(import "env" "print_space" (func $print_space (type $print_token)))(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))(import "env" "print_new_line" (func $print_new_line (type $print_token)))(func $pair_print_i_x_i (type $pair_print_i_x_i)
+(local $__pair i32)
+call $print_lparen
+local.get $__pair
+i32.load offset=0 align=4
+call $print_int
+call $print_comma
+local.get $__pair
+i32.load offset=4 align=4
+call $print_int
+call $print_rparen
+)(func $pair_print_i_x_i_x_i_x_i (type $pair_print_i_x_i_x_i_x_i)
+(local $__pair i32)
+call $print_lparen
+local.get $__pair
+i32.load offset=0 align=4
+call $pair_print_i_x_i
+call $print_comma
+local.get $__pair
+i32.load offset=4 align=4
+call $pair_print_i_x_i
+call $print_rparen
+)(func $__cml_main (type $entry_point) 
+(local $it i32)(local $str_ptr i32)(local $closure_ptr i32)(local $__fptr i32)
+i32.const 32
+global.set $alloc_ptr
+i32.const 31
+i32.const 23
+call $pair_con_i32_i32
+i32.const 67
+i32.const 83
+call $pair_con_i32_i32
+call $pair_con_i32_i32
+local.set $it
+call $print_val
+call $print_space
+i32.const 0
+i32.const 2
+call $print_string
+call $print_equal
+local.get $it
+call $pair_print_i_x_i_x_i_x_i
+call $print_colon
+i32.const 2
+i32.const 27
+call $print_string
+call $print_new_line
+)(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+(local $old i32)
+global.get $alloc_ptr
+local.set $old
+local.get $old
+local.get $size
+i32.add
+global.set $alloc_ptr
+local.get $old
+)(func $pair_con_i32_i32 (type $pair_con_i32_i32)
+(local $pair_addr i32)
+i32.const 8
+call $alloc
+local.tee $pair_addr
+local.get 0
+i32.store offset=0 align=4
+local.get $pair_addr
+local.get 1
+i32.store offset=4 align=4
+local.get $pair_addr
+)(global $alloc_ptr(mut i32 ) i32.const 0
+)(export "__cml_main" (func $__cml_main))(start $__cml_main)(data  $linear_memory(offset i32.const 2
+) "((int * int) * (int * int))")(data  $linear_memory(offset i32.const 0
+) "it"))
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module (type $pair_print_i_x_i(func (param $__pair i32) ))(type $pair_print_i_x_i_x_i_x_i(func (param $__pair i32) ))(type $alloc_sig(func (param $size i32) (result i32)))(type $pair_con_i32_i32(func (param $e1 i32)(param $e2 i32) (result i32)))(type $entry_point(func  ))(type $print_int(func (param $value i32) ))(type $print_bool(func (param $value i32) ))(type $print_string(func (param $ptr i32)(param $size i32) ))(type $print_token(func  ))(import "env" "linear_memory" (memory $linear_memory 2))(import "env" "print_int" (func $print_int (type $print_int)))(import "env" "print_bool" (func $print_bool (type $print_bool)))(import "env" "print_string" (func $print_string (type $print_string)))(import "env" "print_lparen" (func $print_lparen (type $print_token)))(import "env" "print_rparen" (func $print_rparen (type $print_token)))(import "env" "print_val" (func $print_val (type $print_token)))(import "env" "print_comma" (func $print_comma (type $print_token)))(import "env" "print_equal" (func $print_equal (type $print_token)))(import "env" "print_colon" (func $print_colon (type $print_token)))(import "env" "print_arrow" (func $print_arrow (type $print_token)))(import "env" "print_space" (func $print_space (type $print_token)))(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))(import "env" "print_new_line" (func $print_new_line (type $print_token)))(func $pair_print_i_x_i (type $pair_print_i_x_i)
+(local $__pair i32)
+call $print_lparen
+local.get $__pair
+i32.load offset=0 align=4
+call $print_int
+call $print_comma
+local.get $__pair
+i32.load offset=4 align=4
+call $print_int
+call $print_rparen
+)(func $pair_print_i_x_i_x_i_x_i (type $pair_print_i_x_i_x_i_x_i)
+(local $__pair i32)
+call $print_lparen
+local.get $__pair
+i32.load offset=0 align=4
+call $pair_print_i_x_i
+call $print_comma
+local.get $__pair
+i32.load offset=4 align=4
+call $pair_print_i_x_i
+call $print_rparen
+)(func $__cml_main (type $entry_point) 
+(local $k i32)(local $it i32)(local $str_ptr i32)(local $closure_ptr i32)(local $__fptr i32)
+i32.const 44
+global.set $alloc_ptr
+i32.const 31
+i32.const 23
+call $pair_con_i32_i32
+i32.const 67
+i32.const 83
+call $pair_con_i32_i32
+call $pair_con_i32_i32
+local.set $it
+call $print_val
+call $print_space
+i32.const 0
+i32.const 2
+call $print_string
+call $print_equal
+local.get $it
+call $pair_print_i_x_i_x_i_x_i
+call $print_colon
+i32.const 2
+i32.const 27
+call $print_string
+call $print_new_line
+i32.const 31
+i32.const 45
+call $pair_con_i32_i32
+local.set $k
+call $print_val
+call $print_space
+i32.const 29
+i32.const 1
+call $print_string
+call $print_equal
+local.get $k
+call $pair_print_i_x_i
+call $print_colon
+i32.const 30
+i32.const 11
+call $print_string
+call $print_new_line
+)(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+(local $old i32)
+global.get $alloc_ptr
+local.set $old
+local.get $old
+local.get $size
+i32.add
+global.set $alloc_ptr
+local.get $old
+)(func $pair_con_i32_i32 (type $pair_con_i32_i32)
+(local $pair_addr i32)
+i32.const 8
+call $alloc
+local.tee $pair_addr
+local.get 0
+i32.store offset=0 align=4
+local.get $pair_addr
+local.get 1
+i32.store offset=4 align=4
+local.get $pair_addr
+)(global $alloc_ptr(mut i32 ) i32.const 0
+)(export "__cml_main" (func $__cml_main))(start $__cml_main)(data  $linear_memory(offset i32.const 30
+) "(int * int)")(data  $linear_memory(offset i32.const 29
+) "k")(data  $linear_memory(offset i32.const 2
+) "((int * int) * (int * int))")(data  $linear_memory(offset i32.const 0
+) "it"))
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module (type $pair_print_i_x_i(func (param $__pair i32) ))(type $pair_print_i_x_i_x_i_x_i(func (param $__pair i32) ))(type $alloc_sig(func (param $size i32) (result i32)))(type $pair_con_i32_i32(func (param $e1 i32)(param $e2 i32) (result i32)))(type $entry_point(func  ))(type $print_int(func (param $value i32) ))(type $print_bool(func (param $value i32) ))(type $print_string(func (param $ptr i32)(param $size i32) ))(type $print_token(func  ))(import "env" "linear_memory" (memory $linear_memory 2))(import "env" "print_int" (func $print_int (type $print_int)))(import "env" "print_bool" (func $print_bool (type $print_bool)))(import "env" "print_string" (func $print_string (type $print_string)))(import "env" "print_lparen" (func $print_lparen (type $print_token)))(import "env" "print_rparen" (func $print_rparen (type $print_token)))(import "env" "print_val" (func $print_val (type $print_token)))(import "env" "print_comma" (func $print_comma (type $print_token)))(import "env" "print_equal" (func $print_equal (type $print_token)))(import "env" "print_colon" (func $print_colon (type $print_token)))(import "env" "print_arrow" (func $print_arrow (type $print_token)))(import "env" "print_space" (func $print_space (type $print_token)))(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))(import "env" "print_new_line" (func $print_new_line (type $print_token)))(func $pair_print_i_x_i (type $pair_print_i_x_i)
+(local $__pair i32)
+call $print_lparen
+local.get $__pair
+i32.load offset=0 align=4
+call $print_int
+call $print_comma
+local.get $__pair
+i32.load offset=4 align=4
+call $print_int
+call $print_rparen
+)(func $pair_print_i_x_i_x_i_x_i (type $pair_print_i_x_i_x_i_x_i)
+(local $__pair i32)
+call $print_lparen
+local.get $__pair
+i32.load offset=0 align=4
+call $pair_print_i_x_i
+call $print_comma
+local.get $__pair
+i32.load offset=4 align=4
+call $pair_print_i_x_i
+call $print_rparen
+)(func $__cml_main (type $entry_point) 
+(local $j i32)(local $k i32)(local $it i32)(local $str_ptr i32)(local $closure_ptr i32)(local $__fptr i32)
+i32.const 48
+global.set $alloc_ptr
+i32.const 31
+i32.const 23
+call $pair_con_i32_i32
+i32.const 67
+i32.const 83
+call $pair_con_i32_i32
+call $pair_con_i32_i32
+local.set $it
+call $print_val
+call $print_space
+i32.const 0
+i32.const 2
+call $print_string
+call $print_equal
+local.get $it
+call $pair_print_i_x_i_x_i_x_i
+call $print_colon
+i32.const 2
+i32.const 27
+call $print_string
+call $print_new_line
+i32.const 31
+i32.const 45
+call $pair_con_i32_i32
+local.set $k
+call $print_val
+call $print_space
+i32.const 29
+i32.const 1
+call $print_string
+call $print_equal
+local.get $k
+call $pair_print_i_x_i
+call $print_colon
+i32.const 30
+i32.const 11
+call $print_string
+call $print_new_line
+i32.const 0
+local.set $j
+call $print_val
+call $print_space
+i32.const 41
+i32.const 1
+call $print_string
+call $print_equal
+local.get $j
+call $print_int
+call $print_colon
+i32.const 42
+i32.const 3
+call $print_string
+call $print_new_line
+)(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+(local $old i32)
+global.get $alloc_ptr
+local.set $old
+local.get $old
+local.get $size
+i32.add
+global.set $alloc_ptr
+local.get $old
+)(func $pair_con_i32_i32 (type $pair_con_i32_i32)
+(local $pair_addr i32)
+i32.const 8
+call $alloc
+local.tee $pair_addr
+local.get 0
+i32.store offset=0 align=4
+local.get $pair_addr
+local.get 1
+i32.store offset=4 align=4
+local.get $pair_addr
+)(global $alloc_ptr(mut i32 ) i32.const 0
+)(export "__cml_main" (func $__cml_main))(start $__cml_main)(data  $linear_memory(offset i32.const 42
+) "int")(data  $linear_memory(offset i32.const 41
+) "j")(data  $linear_memory(offset i32.const 30
+) "(int * int)")(data  $linear_memory(offset i32.const 29
+) "k")(data  $linear_memory(offset i32.const 2
+) "((int * int) * (int * int))")(data  $linear_memory(offset i32.const 0
+) "it"))
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module (type $pair_print_b_x_b(func (param $__pair i32) ))(type $pair_print_i_x_i(func (param $__pair i32) ))(type $pair_print_i_x_i_x_i_x_i(func (param $__pair i32) ))(type $alloc_sig(func (param $size i32) (result i32)))(type $pair_con_i32_i32(func (param $e1 i32)(param $e2 i32) (result i32)))(type $entry_point(func  ))(type $print_int(func (param $value i32) ))(type $print_bool(func (param $value i32) ))(type $print_string(func (param $ptr i32)(param $size i32) ))(type $print_token(func  ))(import "env" "linear_memory" (memory $linear_memory 2))(import "env" "print_int" (func $print_int (type $print_int)))(import "env" "print_bool" (func $print_bool (type $print_bool)))(import "env" "print_string" (func $print_string (type $print_string)))(import "env" "print_lparen" (func $print_lparen (type $print_token)))(import "env" "print_rparen" (func $print_rparen (type $print_token)))(import "env" "print_val" (func $print_val (type $print_token)))(import "env" "print_comma" (func $print_comma (type $print_token)))(import "env" "print_equal" (func $print_equal (type $print_token)))(import "env" "print_colon" (func $print_colon (type $print_token)))(import "env" "print_arrow" (func $print_arrow (type $print_token)))(import "env" "print_space" (func $print_space (type $print_token)))(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))(import "env" "print_new_line" (func $print_new_line (type $print_token)))(func $pair_print_b_x_b (type $pair_print_b_x_b)
+(local $__pair i32)
+call $print_lparen
+local.get $__pair
+i32.load offset=0 align=4
+call $print_bool
+call $print_comma
+local.get $__pair
+i32.load offset=4 align=4
+call $print_bool
+call $print_rparen
+)(func $pair_print_i_x_i (type $pair_print_i_x_i)
+(local $__pair i32)
+call $print_lparen
+local.get $__pair
+i32.load offset=0 align=4
+call $print_int
+call $print_comma
+local.get $__pair
+i32.load offset=4 align=4
+call $print_int
+call $print_rparen
+)(func $pair_print_i_x_i_x_i_x_i (type $pair_print_i_x_i_x_i_x_i)
+(local $__pair i32)
+call $print_lparen
+local.get $__pair
+i32.load offset=0 align=4
+call $pair_print_i_x_i
+call $print_comma
+local.get $__pair
+i32.load offset=4 align=4
+call $pair_print_i_x_i
+call $print_rparen
+)(func $__cml_main (type $entry_point) 
+(local $y i32)(local $j i32)(local $k i32)(local $it i32)(local $str_ptr i32)(local $closure_ptr i32)(local $__fptr i32)
+i32.const 60
+global.set $alloc_ptr
+i32.const 31
+i32.const 23
+call $pair_con_i32_i32
+i32.const 67
+i32.const 83
+call $pair_con_i32_i32
+call $pair_con_i32_i32
+local.set $it
+call $print_val
+call $print_space
+i32.const 0
+i32.const 2
+call $print_string
+call $print_equal
+local.get $it
+call $pair_print_i_x_i_x_i_x_i
+call $print_colon
+i32.const 2
+i32.const 27
+call $print_string
+call $print_new_line
+i32.const 31
+i32.const 45
+call $pair_con_i32_i32
+local.set $k
+call $print_val
+call $print_space
+i32.const 29
+i32.const 1
+call $print_string
+call $print_equal
+local.get $k
+call $pair_print_i_x_i
+call $print_colon
+i32.const 30
+i32.const 11
+call $print_string
+call $print_new_line
+i32.const 0
+local.set $j
+call $print_val
+call $print_space
+i32.const 41
+i32.const 1
+call $print_string
+call $print_equal
+local.get $j
+call $print_int
+call $print_colon
+i32.const 42
+i32.const 3
+call $print_string
+call $print_new_line
+i32.const 1
+i32.const 0
+call $pair_con_i32_i32
+local.set $y
+call $print_val
+call $print_space
+i32.const 45
+i32.const 1
+call $print_string
+call $print_equal
+local.get $y
+call $pair_print_b_x_b
+call $print_colon
+i32.const 46
+i32.const 13
+call $print_string
+call $print_new_line
+)(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+(local $old i32)
+global.get $alloc_ptr
+local.set $old
+local.get $old
+local.get $size
+i32.add
+global.set $alloc_ptr
+local.get $old
+)(func $pair_con_i32_i32 (type $pair_con_i32_i32)
+(local $pair_addr i32)
+i32.const 8
+call $alloc
+local.tee $pair_addr
+local.get 0
+i32.store offset=0 align=4
+local.get $pair_addr
+local.get 1
+i32.store offset=4 align=4
+local.get $pair_addr
+)(global $alloc_ptr(mut i32 ) i32.const 0
+)(export "__cml_main" (func $__cml_main))(start $__cml_main)(data  $linear_memory(offset i32.const 46
+) "(bool * bool)")(data  $linear_memory(offset i32.const 45
+) "y")(data  $linear_memory(offset i32.const 42
+) "int")(data  $linear_memory(offset i32.const 41
+) "j")(data  $linear_memory(offset i32.const 30
+) "(int * int)")(data  $linear_memory(offset i32.const 29
+) "k")(data  $linear_memory(offset i32.const 2
+) "((int * int) * (int * int))")(data  $linear_memory(offset i32.const 0
+) "it"))
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module (type $pair_print_b_x_b(func (param $__pair_addr i32) ))(type $alloc_sig(func (param $size i32) (result i32)))(type $pair_con_i32_i32(func (param $e1 i32)(param $e2 i32) (result i32)))(type $entry_point(func  ))(type $print_int(func (param $value i32) ))(type $print_bool(func (param $value i32) ))(type $print_string(func (param $ptr i32)(param $size i32) ))(type $print_token(func  ))(import "env" "linear_memory" (memory $linear_memory 2))(import "env" "print_int" (func $print_int (type $print_int)))(import "env" "print_bool" (func $print_bool (type $print_bool)))(import "env" "print_string" (func $print_string (type $print_string)))(import "env" "print_lparen" (func $print_lparen (type $print_token)))(import "env" "print_rparen" (func $print_rparen (type $print_token)))(import "env" "print_val" (func $print_val (type $print_token)))(import "env" "print_comma" (func $print_comma (type $print_token)))(import "env" "print_equal" (func $print_equal (type $print_token)))(import "env" "print_colon" (func $print_colon (type $print_token)))(import "env" "print_arrow" (func $print_arrow (type $print_token)))(import "env" "print_space" (func $print_space (type $print_token)))(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))(import "env" "print_new_line" (func $print_new_line (type $print_token)))(func $pair_print_b_x_b (type $pair_print_b_x_b)
+(local $__pair i32)
+call $print_lparen
+local.get $__pair_addr
+i32.load offset=0 align=4
+call $print_bool
+call $print_comma
+local.get $__pair_addr
+i32.load offset=4 align=4
+call $print_bool
+call $print_rparen
+)(func $__cml_main (type $entry_point) 
+(local $y i32)(local $str_ptr i32)(local $closure_ptr i32)(local $__fptr i32)
+i32.const 16
+global.set $alloc_ptr
+i32.const 1
+i32.const 0
+call $pair_con_i32_i32
+local.set $y
+call $print_val
+call $print_space
+i32.const 0
+i32.const 1
+call $print_string
+call $print_equal
+local.get $y
+call $pair_print_b_x_b
+call $print_colon
+i32.const 1
+i32.const 13
+call $print_string
+call $print_new_line
+)(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+(local $old i32)
+global.get $alloc_ptr
+local.set $old
+local.get $old
+local.get $size
+i32.add
+global.set $alloc_ptr
+local.get $old
+)(func $pair_con_i32_i32 (type $pair_con_i32_i32)
+(local $pair_addr i32)
+i32.const 8
+call $alloc
+local.tee $pair_addr
+local.get 0
+i32.store offset=0 align=4
+local.get $pair_addr
+local.get 1
+i32.store offset=4 align=4
+local.get $pair_addr
+)(global $alloc_ptr(mut i32 ) i32.const 0
+)(export "__cml_main" (func $__cml_main))(start $__cml_main)(data  $linear_memory(offset i32.const 1
+) "(bool * bool)")(data  $linear_memory(offset i32.const 0
+) "y"))
+Failed to compile Wasm WebAssembly translation error: Error when converting wat: unknown local: failed to find name `$__pair_addr`
+     --> <anon>:4:11
+      |
+    4 | local.get $__pair_addr
+      |           ^
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module (type $pair_print_b_x_b(func (param $__pair_addr i32) ))(type $alloc_sig(func (param $size i32) (result i32)))(type $pair_con_i32_i32(func (param $e1 i32)(param $e2 i32) (result i32)))(type $entry_point(func  ))(type $print_int(func (param $value i32) ))(type $print_bool(func (param $value i32) ))(type $print_string(func (param $ptr i32)(param $size i32) ))(type $print_token(func  ))(import "env" "linear_memory" (memory $linear_memory 2))(import "env" "print_int" (func $print_int (type $print_int)))(import "env" "print_bool" (func $print_bool (type $print_bool)))(import "env" "print_string" (func $print_string (type $print_string)))(import "env" "print_lparen" (func $print_lparen (type $print_token)))(import "env" "print_rparen" (func $print_rparen (type $print_token)))(import "env" "print_val" (func $print_val (type $print_token)))(import "env" "print_comma" (func $print_comma (type $print_token)))(import "env" "print_equal" (func $print_equal (type $print_token)))(import "env" "print_colon" (func $print_colon (type $print_token)))(import "env" "print_arrow" (func $print_arrow (type $print_token)))(import "env" "print_space" (func $print_space (type $print_token)))(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))(import "env" "print_new_line" (func $print_new_line (type $print_token)))(func $pair_print_b_x_b (type $pair_print_b_x_b)
+(local $__pair_addr i32)
+call $print_lparen
+local.get $__pair_addr
+i32.load offset=0 align=4
+call $print_bool
+call $print_comma
+local.get $__pair_addr
+i32.load offset=4 align=4
+call $print_bool
+call $print_rparen
+)(func $__cml_main (type $entry_point) 
+(local $y i32)(local $str_ptr i32)(local $closure_ptr i32)(local $__fptr i32)
+i32.const 16
+global.set $alloc_ptr
+i32.const 1
+i32.const 0
+call $pair_con_i32_i32
+local.set $y
+call $print_val
+call $print_space
+i32.const 0
+i32.const 1
+call $print_string
+call $print_equal
+local.get $y
+call $pair_print_b_x_b
+call $print_colon
+i32.const 1
+i32.const 13
+call $print_string
+call $print_new_line
+)(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+(local $old i32)
+global.get $alloc_ptr
+local.set $old
+local.get $old
+local.get $size
+i32.add
+global.set $alloc_ptr
+local.get $old
+)(func $pair_con_i32_i32 (type $pair_con_i32_i32)
+(local $pair_addr i32)
+i32.const 8
+call $alloc
+local.tee $pair_addr
+local.get 0
+i32.store offset=0 align=4
+local.get $pair_addr
+local.get 1
+i32.store offset=4 align=4
+local.get $pair_addr
+)(global $alloc_ptr(mut i32 ) i32.const 0
+)(export "__cml_main" (func $__cml_main))(start $__cml_main)(data  $linear_memory(offset i32.const 1
+) "(bool * bool)")(data  $linear_memory(offset i32.const 0
+) "y"))
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module (type $pair_print_b_x_b(func (param $__pair_addr i32) ))(type $alloc_sig(func (param $size i32) (result i32)))(type $pair_con_i32_i32(func (param $e1 i32)(param $e2 i32) (result i32)))(type $entry_point(func  ))(type $print_int(func (param $value i32) ))(type $print_bool(func (param $value i32) ))(type $print_string(func (param $ptr i32)(param $size i32) ))(type $print_token(func  ))(import "env" "linear_memory" (memory $linear_memory 2))(import "env" "print_int" (func $print_int (type $print_int)))(import "env" "print_bool" (func $print_bool (type $print_bool)))(import "env" "print_string" (func $print_string (type $print_string)))(import "env" "print_lparen" (func $print_lparen (type $print_token)))(import "env" "print_rparen" (func $print_rparen (type $print_token)))(import "env" "print_val" (func $print_val (type $print_token)))(import "env" "print_comma" (func $print_comma (type $print_token)))(import "env" "print_equal" (func $print_equal (type $print_token)))(import "env" "print_colon" (func $print_colon (type $print_token)))(import "env" "print_arrow" (func $print_arrow (type $print_token)))(import "env" "print_space" (func $print_space (type $print_token)))(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))(import "env" "print_new_line" (func $print_new_line (type $print_token)))(func $pair_print_b_x_b (type $pair_print_b_x_b)
+(local $__pair_addr i32)
+call $print_lparen
+local.get $__pair_addr
+i32.load offset=0 align=4
+call $print_bool
+call $print_comma
+local.get $__pair_addr
+i32.load offset=4 align=4
+call $print_bool
+call $print_rparen
+)(func $__cml_main (type $entry_point) 
+(local $h i32)(local $y i32)(local $str_ptr i32)(local $closure_ptr i32)(local $__fptr i32)
+i32.const 28
+global.set $alloc_ptr
+i32.const 1
+i32.const 0
+call $pair_con_i32_i32
+local.set $y
+call $print_val
+call $print_space
+i32.const 4
+i32.const 1
+call $print_string
+call $print_equal
+local.get $y
+call $pair_print_b_x_b
+call $print_colon
+i32.const 5
+i32.const 13
+call $print_string
+call $print_new_line
+i32.const 8
+call $alloc
+local.tee $str_ptr
+i32.const 0
+i32.store offset=0 align=4
+local.get $str_ptr
+i32.const 4
+i32.store offset=4 align=4
+local.get $str_ptr
+local.set $h
+call $print_val
+call $print_space
+i32.const 18
+i32.const 1
+call $print_string
+call $print_equal
+local.get $h
+local.tee $str_ptr
+i32.load offset=0 align=4
+local.get $str_ptr
+i32.load offset=4 align=4
+call $print_double_quote
+call $print_string
+call $print_double_quote
+call $print_colon
+i32.const 19
+i32.const 6
+call $print_string
+call $print_new_line
+)(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+(local $old i32)
+global.get $alloc_ptr
+local.set $old
+local.get $old
+local.get $size
+i32.add
+global.set $alloc_ptr
+local.get $old
+)(func $pair_con_i32_i32 (type $pair_con_i32_i32)
+(local $pair_addr i32)
+i32.const 8
+call $alloc
+local.tee $pair_addr
+local.get 0
+i32.store offset=0 align=4
+local.get $pair_addr
+local.get 1
+i32.store offset=4 align=4
+local.get $pair_addr
+)(global $alloc_ptr(mut i32 ) i32.const 0
+)(export "__cml_main" (func $__cml_main))(start $__cml_main)(data  $linear_memory(offset i32.const 19
+) "string")(data  $linear_memory(offset i32.const 18
+) "h")(data  $linear_memory(offset i32.const 5
+) "(bool * bool)")(data  $linear_memory(offset i32.const 4
+) "y")(data  $linear_memory(offset i32.const 0
+) "true"))
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module (type $pair_print_b_x_b(func (param $__pair_addr i32) ))(type $pair_print_s_x_s(func (param $__pair_addr i32) ))(type $alloc_sig(func (param $size i32) (result i32)))(type $pair_con_i32_i32(func (param $e1 i32)(param $e2 i32) (result i32)))(type $entry_point(func  ))(type $print_int(func (param $value i32) ))(type $print_bool(func (param $value i32) ))(type $print_string(func (param $ptr i32)(param $size i32) ))(type $print_token(func  ))(import "env" "linear_memory" (memory $linear_memory 2))(import "env" "print_int" (func $print_int (type $print_int)))(import "env" "print_bool" (func $print_bool (type $print_bool)))(import "env" "print_string" (func $print_string (type $print_string)))(import "env" "print_lparen" (func $print_lparen (type $print_token)))(import "env" "print_rparen" (func $print_rparen (type $print_token)))(import "env" "print_val" (func $print_val (type $print_token)))(import "env" "print_comma" (func $print_comma (type $print_token)))(import "env" "print_equal" (func $print_equal (type $print_token)))(import "env" "print_colon" (func $print_colon (type $print_token)))(import "env" "print_arrow" (func $print_arrow (type $print_token)))(import "env" "print_space" (func $print_space (type $print_token)))(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))(import "env" "print_new_line" (func $print_new_line (type $print_token)))(func $pair_print_b_x_b (type $pair_print_b_x_b)
+(local $__pair_addr i32)
+call $print_lparen
+local.get $__pair_addr
+i32.load offset=0 align=4
+call $print_bool
+call $print_comma
+local.get $__pair_addr
+i32.load offset=4 align=4
+call $print_bool
+call $print_rparen
+)(func $pair_print_s_x_s (type $pair_print_s_x_s)
+(local $__pair_addr i32)
+call $print_lparen
+local.get $__pair_addr
+i32.load offset=0 align=4
+local.tee $str_ptr
+i32.load offset=0 align=4
+local.get $str_ptr
+i32.load offset=4 align=4
+call $print_double_quote
+call $print_string
+call $print_double_quote
+call $print_comma
+local.get $__pair_addr
+i32.load offset=4 align=4
+local.tee $str_ptr
+i32.load offset=0 align=4
+local.get $str_ptr
+i32.load offset=4 align=4
+call $print_double_quote
+call $print_string
+call $print_double_quote
+call $print_rparen
+)(func $__cml_main (type $entry_point) 
+(local $b i32)(local $h i32)(local $y i32)(local $str_ptr i32)(local $closure_ptr i32)(local $__fptr i32)
+i32.const 56
+global.set $alloc_ptr
+i32.const 1
+i32.const 0
+call $pair_con_i32_i32
+local.set $y
+call $print_val
+call $print_space
+i32.const 13
+i32.const 1
+call $print_string
+call $print_equal
+local.get $y
+call $pair_print_b_x_b
+call $print_colon
+i32.const 14
+i32.const 13
+call $print_string
+call $print_new_line
+i32.const 8
+call $alloc
+local.tee $str_ptr
+i32.const 0
+i32.store offset=0 align=4
+local.get $str_ptr
+i32.const 4
+i32.store offset=4 align=4
+local.get $str_ptr
+local.set $h
+call $print_val
+call $print_space
+i32.const 27
+i32.const 1
+call $print_string
+call $print_equal
+local.get $h
+local.tee $str_ptr
+i32.load offset=0 align=4
+local.get $str_ptr
+i32.load offset=4 align=4
+call $print_double_quote
+call $print_string
+call $print_double_quote
+call $print_colon
+i32.const 28
+i32.const 6
+call $print_string
+call $print_new_line
+i32.const 8
+call $alloc
+local.tee $str_ptr
+i32.const 9
+i32.store offset=0 align=4
+local.get $str_ptr
+i32.const 4
+i32.store offset=4 align=4
+local.get $str_ptr
+i32.const 8
+call $alloc
+local.tee $str_ptr
+i32.const 4
+i32.store offset=0 align=4
+local.get $str_ptr
+i32.const 5
+i32.store offset=4 align=4
+local.get $str_ptr
+call $pair_con_i32_i32
+local.set $b
+call $print_val
+call $print_space
+i32.const 34
+i32.const 1
+call $print_string
+call $print_equal
+local.get $b
+call $pair_print_s_x_s
+call $print_colon
+i32.const 35
+i32.const 17
+call $print_string
+call $print_new_line
+)(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+(local $old i32)
+global.get $alloc_ptr
+local.set $old
+local.get $old
+local.get $size
+i32.add
+global.set $alloc_ptr
+local.get $old
+)(func $pair_con_i32_i32 (type $pair_con_i32_i32)
+(local $pair_addr i32)
+i32.const 8
+call $alloc
+local.tee $pair_addr
+local.get 0
+i32.store offset=0 align=4
+local.get $pair_addr
+local.get 1
+i32.store offset=4 align=4
+local.get $pair_addr
+)(global $alloc_ptr(mut i32 ) i32.const 0
+)(export "__cml_main" (func $__cml_main))(start $__cml_main)(data  $linear_memory(offset i32.const 35
+) "(string * string)")(data  $linear_memory(offset i32.const 34
+) "b")(data  $linear_memory(offset i32.const 28
+) "string")(data  $linear_memory(offset i32.const 27
+) "h")(data  $linear_memory(offset i32.const 14
+) "(bool * bool)")(data  $linear_memory(offset i32.const 13
+) "y")(data  $linear_memory(offset i32.const 9
+) "true")(data  $linear_memory(offset i32.const 4
+) "false")(data  $linear_memory(offset i32.const 0
+) "true"))
+Failed to compile Wasm WebAssembly translation error: Error when converting wat: unknown local: failed to find name `$str_ptr`
+     --> <anon>:17:11
+      |
+   17 | local.tee $str_ptr
+      |           ^
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module (type $pair_print_s_x_b(func (param $__pair_addr i32) ))(type $alloc_sig(func (param $size i32) (result i32)))(type $pair_con_i32_i32(func (param $e1 i32)(param $e2 i32) (result i32)))(type $entry_point(func  ))(type $print_int(func (param $value i32) ))(type $print_bool(func (param $value i32) ))(type $print_string(func (param $ptr i32)(param $size i32) ))(type $print_token(func  ))(import "env" "linear_memory" (memory $linear_memory 2))(import "env" "print_int" (func $print_int (type $print_int)))(import "env" "print_bool" (func $print_bool (type $print_bool)))(import "env" "print_string" (func $print_string (type $print_string)))(import "env" "print_lparen" (func $print_lparen (type $print_token)))(import "env" "print_rparen" (func $print_rparen (type $print_token)))(import "env" "print_val" (func $print_val (type $print_token)))(import "env" "print_comma" (func $print_comma (type $print_token)))(import "env" "print_equal" (func $print_equal (type $print_token)))(import "env" "print_colon" (func $print_colon (type $print_token)))(import "env" "print_arrow" (func $print_arrow (type $print_token)))(import "env" "print_space" (func $print_space (type $print_token)))(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))(import "env" "print_new_line" (func $print_new_line (type $print_token)))(func $pair_print_s_x_b (type $pair_print_s_x_b)
+(local $str_ptr i32)
+call $print_lparen
+local.get $__pair_addr
+i32.load offset=0 align=4
+local.tee $str_ptr
+i32.load offset=0 align=4
+local.get $str_ptr
+i32.load offset=4 align=4
+call $print_double_quote
+call $print_string
+call $print_double_quote
+call $print_comma
+local.get $__pair_addr
+i32.load offset=4 align=4
+call $print_bool
+call $print_rparen
+)(func $__cml_main (type $entry_point) 
+(local $it i32)(local $str_ptr i32)(local $closure_ptr i32)(local $__fptr i32)
+i32.const 24
+global.set $alloc_ptr
+i32.const 8
+call $alloc
+local.tee $str_ptr
+i32.const 0
+i32.store offset=0 align=4
+local.get $str_ptr
+i32.const 4
+i32.store offset=4 align=4
+local.get $str_ptr
+i32.const 0
+call $pair_con_i32_i32
+local.set $it
+call $print_val
+call $print_space
+i32.const 4
+i32.const 2
+call $print_string
+call $print_equal
+local.get $it
+call $pair_print_s_x_b
+call $print_colon
+i32.const 6
+i32.const 15
+call $print_string
+call $print_new_line
+)(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+(local $old i32)
+global.get $alloc_ptr
+local.set $old
+local.get $old
+local.get $size
+i32.add
+global.set $alloc_ptr
+local.get $old
+)(func $pair_con_i32_i32 (type $pair_con_i32_i32)
+(local $pair_addr i32)
+i32.const 8
+call $alloc
+local.tee $pair_addr
+local.get 0
+i32.store offset=0 align=4
+local.get $pair_addr
+local.get 1
+i32.store offset=4 align=4
+local.get $pair_addr
+)(global $alloc_ptr(mut i32 ) i32.const 0
+)(export "__cml_main" (func $__cml_main))(start $__cml_main)(data  $linear_memory(offset i32.const 6
+) "(string * bool)")(data  $linear_memory(offset i32.const 4
+) "it")(data  $linear_memory(offset i32.const 0
+) "true"))
+Failed to compile Wasm WebAssembly translation error: Error when converting wat: unknown local: failed to find name `$__pair_addr`
+     --> <anon>:4:11
+      |
+    4 | local.get $__pair_addr
+      |           ^
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module (type $pair_print_s_x_b(func (param $__pair_addr i32) ))(type $alloc_sig(func (param $size i32) (result i32)))(type $pair_con_i32_i32(func (param $e1 i32)(param $e2 i32) (result i32)))(type $entry_point(func  ))(type $print_int(func (param $value i32) ))(type $print_bool(func (param $value i32) ))(type $print_string(func (param $ptr i32)(param $size i32) ))(type $print_token(func  ))(import "env" "linear_memory" (memory $linear_memory 2))(import "env" "print_int" (func $print_int (type $print_int)))(import "env" "print_bool" (func $print_bool (type $print_bool)))(import "env" "print_string" (func $print_string (type $print_string)))(import "env" "print_lparen" (func $print_lparen (type $print_token)))(import "env" "print_rparen" (func $print_rparen (type $print_token)))(import "env" "print_val" (func $print_val (type $print_token)))(import "env" "print_comma" (func $print_comma (type $print_token)))(import "env" "print_equal" (func $print_equal (type $print_token)))(import "env" "print_colon" (func $print_colon (type $print_token)))(import "env" "print_arrow" (func $print_arrow (type $print_token)))(import "env" "print_space" (func $print_space (type $print_token)))(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))(import "env" "print_new_line" (func $print_new_line (type $print_token)))(func $pair_print_s_x_b (type $pair_print_s_x_b)
+(local $str_ptr i32)
+call $print_lparen
+local.get 0
+i32.load offset=0 align=4
+local.tee $str_ptr
+i32.load offset=0 align=4
+local.get $str_ptr
+i32.load offset=4 align=4
+call $print_double_quote
+call $print_string
+call $print_double_quote
+call $print_comma
+local.get 0
+i32.load offset=4 align=4
+call $print_bool
+call $print_rparen
+)(func $__cml_main (type $entry_point) 
+(local $it i32)(local $str_ptr i32)(local $closure_ptr i32)(local $__fptr i32)
+i32.const 24
+global.set $alloc_ptr
+i32.const 8
+call $alloc
+local.tee $str_ptr
+i32.const 0
+i32.store offset=0 align=4
+local.get $str_ptr
+i32.const 4
+i32.store offset=4 align=4
+local.get $str_ptr
+i32.const 0
+call $pair_con_i32_i32
+local.set $it
+call $print_val
+call $print_space
+i32.const 4
+i32.const 2
+call $print_string
+call $print_equal
+local.get $it
+call $pair_print_s_x_b
+call $print_colon
+i32.const 6
+i32.const 15
+call $print_string
+call $print_new_line
+)(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+(local $old i32)
+global.get $alloc_ptr
+local.set $old
+local.get $old
+local.get $size
+i32.add
+global.set $alloc_ptr
+local.get $old
+)(func $pair_con_i32_i32 (type $pair_con_i32_i32)
+(local $pair_addr i32)
+i32.const 8
+call $alloc
+local.tee $pair_addr
+local.get 0
+i32.store offset=0 align=4
+local.get $pair_addr
+local.get 1
+i32.store offset=4 align=4
+local.get $pair_addr
+)(global $alloc_ptr(mut i32 ) i32.const 0
+)(export "__cml_main" (func $__cml_main))(start $__cml_main)(data  $linear_memory(offset i32.const 6
+) "(string * bool)")(data  $linear_memory(offset i32.const 4
+) "it")(data  $linear_memory(offset i32.const 0
+) "true"))
+generated imports
+Execute finished
