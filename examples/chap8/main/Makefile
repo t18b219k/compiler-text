@@ -1,6 +1,6 @@
 SMLSHARP = smlsharp
 SMLFLAGS = -O2
-LIBS =
+LIBS = ../coreml_env/target/release/libcoreml_env.a
 all: Main
 Main: ../parser/Syntax.smi ../parser/CoreML.grm.sig ../parser/CoreML.grm.smi \
  ../parser/CoreML.lex.smi ../parser/Parser.smi ../typeinf/Type.smi \
@@ -13,7 +13,7 @@ Main: ../parser/Syntax.smi ../parser/CoreML.grm.sig ../parser/CoreML.grm.smi \
  ../typeinf/TypeUtils.o ../typeinf/UnifyTy.o ../typeinf/Typeinf.o \
  ../SECD/Instruction.o ../SECD/Comp.o ../SECD/Value.o ../SECD/Exec.o \
  ../wasm_text_emitter/WasmModule.o ../wasm_text_emitter/Debug.o \
- ../wasm_text_emitter/Comp.o Top.o Main.o
+ ../wasm_text_emitter/Comp.o Top.o Main.o libcoreml_env.a
 	$(SMLSHARP) $(LDFLAGS) -o Main Main.smi $(LIBS)
 ../parser/Syntax.o: ../parser/Syntax.sml ../parser/Syntax.smi
 	$(SMLSHARP) $(SMLFLAGS) -o ../parser/Syntax.o -c ../parser/Syntax.sml
@@ -89,3 +89,5 @@ Main.o: Main.sml ../parser/Syntax.smi ../parser/CoreML.grm.sig \
  ../wasm_text_emitter/WasmModule.smi ../wasm_text_emitter/Debug.smi \
  ../wasm_text_emitter/Comp.smi Top.smi Main.smi
 	$(SMLSHARP) $(SMLFLAGS) -o Main.o -c Main.sml
+libcoreml_env.a: 
+	cd ../coreml_env && cargo build --release 

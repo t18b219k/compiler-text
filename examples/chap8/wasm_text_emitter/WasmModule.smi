@@ -242,4 +242,5 @@ struct
     val local_ToString:local_ ->string 
     val emptyModule:module
     val moduleToString:module->string
+    val valtypeToString: valtype->string
 end

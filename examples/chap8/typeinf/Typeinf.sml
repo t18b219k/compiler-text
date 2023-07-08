@@ -239,7 +239,7 @@ structure Typeinf = struct
           ty
         else
           POLYty (tids, ty)
-      val _ = print ("Inferred typing:\n" ^ "val " ^ id ^ " : " ^ TS.expToString exp ^ "\n")
+      val _ = print ("Inferred typing:\n" ^ "val " ^ id ^ " : " ^ tyToString ty ^ "\n")
     in
       (SEnv.insert (gamma, id, newTy), exp)
     end handle

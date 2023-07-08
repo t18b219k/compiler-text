@@ -1,0 +1,199 @@
+<!doctype html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>CoreML Wasm WebRT</title>
+    <script type="text/javascript" src="https://unpkg.com/wabt@1.0.32/index.js"></script>
+    <script>
+        function arrayBufferToBase64(buffer) {
+            let binary = '';
+            const bytes = new Uint8Array(buffer);
+            const len = bytes.byteLength;
+            for (let i = 0; i < len; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            return window.btoa(binary);
+        }
+    </script>
+    <script>
+        async function run() {
+            var memory = new WebAssembly.Memory({
+                initial: 2,
+                maximum: 100
+            });
+            // 実行開始時にterminal は初期化する.
+            const term = document.getElementById("terminal");
+            term.value = ""
+            const src = document.getElementById("src").value;
+            const source = (new TextEncoder('utf-8')).encode(src).buffer;
+            let wabt = await WabtModule()
+            const parsed = wabt.parseWat("test", source, { log: true });
+            const buffer = parsed.toBinary({ log: true }).buffer;
+            console.log("compiled to binary");
+
+            const binary_string = String.fromCharCode.apply(null, buffer);
+            var blob = new Blob(buffer);
+
+            console.log(binary_string);
+            let url = "data:application/wasm;base64;" + btoa(binary_string);
+            console.log(url);
+            await WebAssembly.instantiateStreaming(
+                fetch(url),
+                {
+                    env: {
+                        linear_memory: memory,
+                        print_int: function (i) {
+                            const term = document.getElementById("terminal");
+                            term.value += i.toString
+                        },
+                        print_bool: function (i) {
+                            if (i == 0) {
+                                const term = document.getElementById("terminal");
+                                term.value += "false"
+                            } else if (i == 0) {
+                                const term = document.getElementById("terminal");
+                                term.value += "true"
+                            } else {
+                                const term = document.getElementById("terminal");
+                                term.value += "non bool value passed"
+                            }
+                        },
+                        print_string: function (ptr, len) {
+                            /*
+            Rust スタイルの文字列が渡ってくる.
+            */
+                            var bytes = new Uint8Array(memory.buffer, offset, length);
+                            var string = new TextDecoder('utf8').decode(bytes);
+                            console.log(string);
+                            const term = document.getElementById("terminal");
+                            term.value += string
+                        },
+                        print_lparen: function () {
+
+                            const term = document.getElementById("terminal");
+                            term.value += "("
+                        },
+                        print_rparen: function () {
+
+                            const term = document.getElementById("terminal");
+                            term.value += ")"
+                        },
+                        print_val: function () {
+
+                            const term = document.getElementById("terminal");
+                            term.value += "val"
+                        },
+                        print_comma: function () {
+
+                            const term = document.getElementById("terminal");
+                            term.value += ","
+                        },
+                        print_equal: function () {
+
+                            const term = document.getElementById("terminal");
+                            term.value += "="
+                        },
+                        print_colon: function () {
+
+                            const term = document.getElementById("terminal");
+                            term.value += ":"
+                        },
+                        print_arrow: function () {
+
+                            const term = document.getElementById("terminal");
+                            term.value += "->"
+                        },
+                        print_space: function () {
+
+                            const term = document.getElementById("terminal");
+                            term.value += " "
+                        },
+                        print_double_quote: function () {
+
+                            const term = document.getElementById("terminal");
+                            term.value += "\""
+                        },
+                        print_new_line: function () {
+
+                            const term = document.getElementById("terminal");
+                            term.value += "\n"
+                        }
+                    }
+                }
+            );
+        }
+    </script>
+    <script>
+        var url = "{%wasm-url%}";
+        var memory = new WebAssembly.Memory({
+            initial: 2,
+            maximum: 100
+        });
+        await WebAssembly.instantiateStreaming(
+            fetch(url),
+            {
+                env: {
+                    linear_memory: memory,
+                    print_int: function (i) {
+                        console.log(i);
+                    },
+                    print_bool: function (i) {
+                        if (i == 0) {
+                            console.log("false");
+                        } else {
+                            console.log("true");
+                        }
+                    },
+                    print_string: function (ptr) {
+                        console.log(ptr);
+                    },
+                    print_lparen: function () {
+                        console.log("(");
+                    },
+                    print_rparen: function () {
+                        console.log(")");
+                    },
+                    print_val: function () {
+                        console.log("val");
+                    },
+                    print_comma: function () {
+                        console.log(",");
+                    },
+                    print_equal: function () {
+                        console.log("=");
+                    },
+                    print_colon: function () {
+                        console.log(":");
+                    },
+                    print_arrow: function () {
+                        console.log("->");
+                    },
+                    print_space: function () {
+                        console.log(" ");
+                    },
+                    print_double_quote: function () {
+                        console.log("\"");
+                    },
+                    print_new_line: function () {
+                        console.log("\n");
+                    }
+                }
+            }
+    </script>
+</head>
+
+
+
+
+<body>
+    <textarea id="src"></textarea>
+    <button id="run" onclick="run().then(obj=>{
+
+    })">Compile and Exec</button>
+    <textarea id="terminal"></textarea>
+
+</body>
+
+</html>

@@ -19,7 +19,16 @@ structure Debug = struct
 
     val import_list = [WasmModule.import ("env", "print_int", WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_int")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_int")))), WasmModule.import ("env", "print_bool", WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_bool")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_bool")))),
     WasmModule.import ("env", "print_string", WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_string")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_string")))),
-    WasmModule.import ("env", "print_lparen", WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_lparen")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_token")))), WasmModule.import ("env", "print_rparen", WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_rparen")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_token")))), WasmModule.import ("env", "print_val", WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_val")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_token")))), WasmModule.import ("env", "print_comma", WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_comma")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_token")))), WasmModule.import ("env", "print_equal", WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_equal")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_token")))), WasmModule.import ("env", "print_colon", WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_colon")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_token")))), WasmModule.import ("env", "print_arrow", WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_arrow")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_token")))), WasmModule.import ("env", "print_space", WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_space")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_token"))))]
+    WasmModule.import ("env", "print_lparen", WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_lparen")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_token")))),
+    WasmModule.import ("env", "print_rparen", WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_rparen")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_token")))), 
+    WasmModule.import ("env", "print_val", WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_val")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_token")))), 
+    WasmModule.import ("env", "print_comma", WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_comma")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_token")))), WasmModule.import ("env", "print_equal", WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_equal")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_token")))), WasmModule.import ("env", "print_colon", WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_colon")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_token")))),
+    WasmModule.import ("env", "print_arrow", WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_arrow")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_token")))),
+    WasmModule.import ("env", "print_space",WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_space")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_token")))),
+    WasmModule.import ("env", "print_double_quote",WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_double_quote")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_token")))),
+    WasmModule.import ("env", "print_new_line",WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_new_line")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_token"))))
+    
+    ]
 
     fun install_system_functions module : WasmModule.module = { ty = (#ty module) @ type_list, im = (#im module) @ import_list, fn_ = #fn_ module, ta = #ta module, me = #me module, gl = #gl module, ex = #ex module, st = #st module, el = #el module, da = #da module }
 
@@ -71,6 +80,12 @@ structure Debug = struct
     print_space: function() {
         console.log(" ");
     },
+    print_double_quote: function () {
+        console.log("\"");
+    },
+    print_new_line: function () {
+        console.log("\n");
+    }
     }
     }
     *)
@@ -96,21 +111,43 @@ structure Debug = struct
 
     val call_print_space = WasmModule.call (IDX.funcidx (IDX.text_id "print_space"))
 
+    val call_print_double_quote = WasmModule.call (IDX.funcidx (IDX.text_id "print_double_quote"))
+
+    val call_print_new_line = WasmModule.call (IDX.funcidx (IDX.text_id "print_new_line"))
+    (*スタック上のデータをプリントする.*)
     fun generate_stack_debug (id, ty, module, memoffset) =
         case ty of
             Type.INTty => (module, [call_print_int], memoffset)
         | Type.BOOLty => (module, [call_print_bool], memoffset)
         | Type.STRINGty => (module, [
+            WasmModule.localtee(IDX.localidx(IDX.text_id "str_ptr")),
             WasmModule.i32load (WasmModule.memarg(0w0,0w4)),(*fetch ptr (str)->ptr*)
-            WasmModule.localget(IDX.localidx(IDX.text_id id )),(*fetch &str*)
+            WasmModule.localget(IDX.localidx(IDX.text_id "str_ptr" )),(*fetch &str*)
             WasmModule.i32load(WasmModule.memarg(0w4,0w4)),(*fetch size (str)->size*)
-            call_print_string], memoffset)
+            call_print_double_quote,
+            call_print_string,
+            call_print_double_quote], memoffset)
         | Type.PAIRty (ty1, ty2) =>
                 let
                     val (module, print_v1, memoffset) = generate_stack_debug (id, ty1, module, memoffset)
                     val (module, print_v2, memoffset) = generate_stack_debug (id, ty2, module, memoffset)
+                    (*ペアの表示関数名.これをキーとして使う.*)
+                    val pair_print_sig = "pp_"^Type.tyToString ty1^"_"^Type.tyToString ty2
+
                 in
-                    (module, [call_print_lparen, WasmModule.i32load (WasmModule.memarg (0w0, 0w4))] @ print_v1 @ [call_print_comma, WasmModule.localget (IDX.localidx (IDX.text_id id)), WasmModule.i32load (WasmModule.memarg (0w4, 0w4))] @ print_v2 @ [call_print_rparen], memoffset)
+                    (module, [
+                        call_print_lparen,
+                        WasmModule.i32load (WasmModule.memarg (0w0, 0w4))]
+                        @
+                        print_v1
+                        @
+                        [call_print_comma,
+                        WasmModule.localget (IDX.localidx (IDX.text_id id)),(*これだとスタック上の値を引っ張れない. 何らかの関数を埋め込まないとネストしたペアで問題が起きる?*)
+                        WasmModule.i32load (WasmModule.memarg (0w4, 0w4))]
+                        @ 
+                        print_v2 
+                        @ 
+                        [call_print_rparen], memoffset)
                 end
         | _ => raise Unreachable
 
@@ -121,38 +158,47 @@ structure Debug = struct
     *)
     fun insert_debug_instructions (id, ty, module, memoffset) =
         case ty of
-            Type.POLYty (tids, ty) => (module, [], memoffset)
-        | Type.INTty =>
+        Type.INTty =>
                 let
                     val (module, call_print_id, memoffset) = generate_identifier_print (id, module, memoffset)
                     val (module, iseq, memoffset) = generate_stack_debug (id, ty, module, memoffset)
+                    val (module, print_type, memoffset) = generate_text_print(module,Type.tyToString ty, memoffset)
                 in
-                    (module, [call_print_val, call_print_space] @ call_print_id @ call_print_equal :: WasmModule.localget (IDX.localidx (IDX.text_id id)) :: iseq, memoffset)
+                    (module, [call_print_val, call_print_space] @ call_print_id @ [call_print_equal , WasmModule.localget (IDX.localidx (IDX.text_id id)) ]@ iseq@call_print_colon::print_type@[call_print_new_line], memoffset)
                 end
         | Type.BOOLty =>
                 let
                     (*print_boolは実行環境から与えられ,0=false ,1=true とコンソールに表示する関数である.*)
                     val (module, call_print_id, memoffset) = generate_identifier_print (id, module, memoffset)
                     val (module, iseq, memoffset) = generate_stack_debug (id, ty, module, memoffset)
+                    val (module, print_type, memoffset) = generate_text_print(module,Type.tyToString ty, memoffset)
                 in
-                    (module, [call_print_val, call_print_space] @ call_print_id @ call_print_equal :: WasmModule.localget (IDX.localidx (IDX.text_id id)) :: iseq, memoffset)
+                    (module, [call_print_val, call_print_space] @ call_print_id @ [call_print_equal , WasmModule.localget (IDX.localidx (IDX.text_id id))]@ iseq@call_print_colon::print_type@[call_print_new_line], memoffset)
                 end
         | Type.STRINGty =>
                 let
                     (*print_stringは実行環境から与えられ,linear memory のポインタが与えられた時ポインタがさす先のデータをUTF-8の文字列として表示する関数である.*)
                     val (module, call_print_id, memoffset) = generate_identifier_print (id, module, memoffset)
-                    val (module, iseq, memoffset) = generate_stack_debug (id, ty, module, memoffset)
+                    val (module, iseq, memoffset) = generate_stack_debug (id, ty, module, memoffset)                    
+                    val (module, print_type, memoffset) = generate_text_print(module,Type.tyToString ty, memoffset)
                 in
-                    (module, [call_print_val, call_print_space] @ call_print_id @ [call_print_equal, WasmModule.localget (IDX.localidx (IDX.text_id id))] @ iseq, memoffset)
+                    (module, [call_print_val, call_print_space] @ call_print_id @ [call_print_equal, WasmModule.localget (IDX.localidx (IDX.text_id id))] @ iseq@call_print_colon::print_type@[call_print_new_line], memoffset)
                 end
         | Type.PAIRty (_, _) =>
                 let
                     (*PAIR の要素はptr かi32しかないので*)
                     val (module, call_print_id, memoffset) = generate_identifier_print (id, module, memoffset)
                     val (module, iseq, memoffset) = generate_stack_debug (id, ty, module, memoffset)
+                    val (module, print_type, memoffset) = generate_text_print(module,Type.tyToString ty, memoffset)
                 in
-                    (module, [call_print_val, call_print_space] @ call_print_id @ call_print_equal :: WasmModule.localget (IDX.localidx (IDX.text_id id)) :: iseq, memoffset)
+                    (module, [call_print_val, call_print_space] @ call_print_id @ [call_print_equal , WasmModule.localget (IDX.localidx (IDX.text_id id)) ]@ iseq@call_print_colon::print_type@[call_print_new_line], memoffset)
                 end
-        | Type.FUNty (arg_ty, ret_ry) => (module, [], memoffset)
-        | Type.TYVARty _ => (module, [], memoffset)
+        | Type.FUNty (arg_ty, ret_ry) =>
+                let
+                    val (module, call_print_id, memoffset) = generate_identifier_print (id, module, memoffset)
+                    val (module, print_type, memoffset) = generate_text_print(module,Type.tyToString ty, memoffset)
+                in
+                    (module, [call_print_val, call_print_space] @ call_print_id @ call_print_colon:: print_type@[call_print_new_line], memoffset)
+                end
+        |_ => raise Unreachable (*スタックにあるものはペア,関数,定数であるからここには到達しない*)
 end

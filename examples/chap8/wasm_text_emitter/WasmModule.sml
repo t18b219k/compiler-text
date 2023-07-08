@@ -570,7 +570,7 @@ structure WasmModule = struct
 
     datatype export = export of string * export_desc
 
-    fun exportToString (export (name, desc)) = "(export " ^ name ^ export_descToString desc ^ ")"
+    fun exportToString (export (name, desc)) = "(export \"" ^ name ^ "\" " ^ export_descToString desc ^ ")"
 
     datatype start = start of IDX.funcidx
 
