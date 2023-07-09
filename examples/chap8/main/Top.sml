@@ -5,7 +5,7 @@ structure Top = struct
       val (newGamma, typed_expr) = Typeinf.typeinf_with_typed_expr gamma dec
       val Syntax.VAL (name, _) = dec
       val new_declarations = TypedSyntax.VAL (name, typed_expr) :: declarations
-      val wasmCode = WasmComp.compile new_declarations
+      val wasmCode = WasmComp.compile true new_declarations
       val compile_and_execute = _import "build_and_execute":string->()
       val exec = compile_and_execute (WasmModule.moduleToString wasmCode)
     in

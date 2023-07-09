@@ -402,7 +402,7 @@ struct
         (SOME(IDX.funcidx(IDX.text_id "alloc")),I.with_functype(IDX.typeidx(IDX.text_id "alloc_sig"),[(I.param ("size",I.numtype I.i32))],[(I.result (I.numtype I.i32))]),[(I.local_(SOME (IDX.localidx(IDX.text_id "old")),(I.numtype I.i32)))],alloc_iseq) 
       end 
     (*__cml_main 関数を作る. *)     
-    fun compile declarations =
+    fun compile is_debug declarations =
      
      let
       val function_sigs =SEnv.empty 
@@ -420,9 +420,6 @@ struct
       val mem =I.import("env","linear_memory",I.m(SOME (IDX.memidx(IDX.text_id "linear_memory")),I.memtype(I.min 0w2)))
       val pair_constructions=SEnv.listItemsi pc_table
 
-      (*
-      pair_constructions = (fn_name_pc,function,signature) list 
-      *)
       val pc_sigs = foldr (fn ((name,(_,s)),l)=>s::l) [] pair_constructions 
       val pc_fns = foldr (fn ((name,(f,_)),l)=>f::l) [] pair_constructions
       val module = { ty = alloc_sig::pc_sigs @(#ty module), im = mem::(#im module), fn_ = alloc::pc_fns@(#fn_ module) , ta = #ta module , me = #me module, gl = alloc_ptr::(#gl module) , ex = #ex module, st = #st module, el = #el module, da = #da module  }
@@ -436,6 +433,7 @@ struct
           (module,iseq@expr@(I.localset(idx))::print,memoffset,pp_table)
         end
       ) (module,[],memoffset,pp_table) local_and_exprs
+
       val pair_debugs =SEnv.listItemsi pp_table
       val pp_sigs  =foldr (fn ((name,(_,s)),l)=>s::l) [] pair_debugs
       val pp_fns = foldr (fn ((name,(f,_)),l)=>f::l) [] pair_debugs
@@ -470,7 +468,8 @@ struct
       )::xs) end ) [] (#ta module)
       val module
       =Debug.install_system_functions {ty = types@(#ty module),fn_ = #fn_ module,ta = #ta module,me = #me module,gl = #gl module,el = elements ,da = #da module,im = #im module,ex= main_export::(#ex module),st = #st module}
-     in 
+     in  
+     print ((I.moduleToString module)^"\n") ;
      module
     end 
   end
