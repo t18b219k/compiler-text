@@ -10,8 +10,16 @@ use wasmer::{
 #[no_mangle]
 extern "C" fn start_logger() {
     fern::Dispatch::new()
-        .level(log::LevelFilter::Info)
-        .chain(fern::log_file("wasmer.log").unwrap())
+        .chain(
+            fern::Dispatch::new()
+                .level(log::LevelFilter::Info)
+                .chain(fern::log_file("coreml.log").unwrap()),
+        )
+        .chain(
+            fern::Dispatch::new()
+                .level(log::LevelFilter::Warn)
+                .chain(std::io::stdout()),
+        )
         .apply()
         .unwrap();
 }
@@ -153,11 +161,19 @@ extern "C" fn build_and_execute(src: *const c_char) {
                     struct Env {
                         memory: Memory,
                     }
-                    fn print_string(mut env: FunctionEnvMut<Env>, ptr: i32, len: i32) {
+                    fn print_string(mut env: FunctionEnvMut<Env>, ptr_: i32, str_len_: i32) {
                         let (data, store) = env.data_and_store_mut();
                         if let Ok(memory_image) = data.memory.view(&store).copy_to_vec() {
-                            let str = &memory_image[ptr as usize..(ptr + len) as usize];
-                            print!("{}", String::from_utf8_lossy(str));
+                            let len = memory_image.len();
+                            let ptr = ptr_ as usize;
+                            let str_len = str_len_ as usize;
+                            let end = ptr + str_len;
+                            if end < len && ptr < len {
+                                let str = &memory_image[ptr as usize..end as usize];
+                                print!("{}", String::from_utf8_lossy(str));
+                            } else {
+                                log::error!("Invalid string passed to runtime! {ptr_:} {str_len_:}")
+                            }
                         }
                     }
                     let env = FunctionEnv::new(

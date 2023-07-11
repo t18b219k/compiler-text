@@ -502,47 +502,40 @@ structure WasmModule = struct
 
     fun pp_instruction ctx inst =
         case inst of
-            block_i (l, bt, iseq) => (ctx, generate_tabs ctx ^ "block " ^ (case l of
+            block_i (l, bt, iseq) =>  generate_tabs ctx ^ "block " ^ (case l of
             SOME (label l) => "$" ^ l ^ " "
         | NONE => "") ^ blocktypeToString bt ^ "\n" ^ let
             val context { nest_level } = ctx
             val ctx = context { nest_level = nest_level + 1 }
-            val (_, asm) = pp_expr_bracketted ctx iseq
         in
-            asm
-        end ^ "\n" ^ generate_tabs ctx ^ "end")
-        | loop (l, bt, iseq) => (ctx, generate_tabs ctx ^ "loop " ^ (case l of
+            pp_expr_bracketted ctx iseq
+        end ^ "\n" ^ generate_tabs ctx ^ "end"
+        | loop (l, bt, iseq) =>  generate_tabs ctx ^ "loop " ^ (case l of
             SOME (label l) => "$" ^ l ^ " "
         | NONE => "") ^ blocktypeToString bt ^ "\n" ^ let
             val context { nest_level } = ctx
             val ctx = context { nest_level = nest_level + 1 }
-            val (_, asm) = pp_expr_bracketted ctx iseq
         in
-            asm
-        end ^ "\n" ^ generate_tabs ctx ^ "end")
-        | if_ (l, bt, iseq_true, iseq_false) => (ctx, generate_tabs ctx ^ "if " ^ (case l of
+           pp_expr_bracketted ctx iseq
+        end ^ "\n" ^ generate_tabs ctx ^ "end"
+        | if_ (l, bt, iseq_true, iseq_false) =>  generate_tabs ctx ^ "if " ^ (case l of
             SOME (label l) => "$" ^ l ^ " "
         | NONE => "") ^ blocktypeToString bt ^ "\n" ^ let
             val context { nest_level } = ctx
             val ctx = context { nest_level = nest_level + 1 }
-            val (_, asm) = pp_expr_bracketted ctx iseq_true
         in
-            asm
+             pp_expr_bracketted ctx iseq_true
         end ^ "\n" ^ generate_tabs ctx ^ "else\n" ^ let
             val context { nest_level } = ctx
             val ctx = context { nest_level = nest_level + 1 }
-            val (_, asm) = pp_expr_bracketted ctx iseq_false
         in
-            asm
-        end ^ "\n" ^ generate_tabs ctx ^ "end")
-        | inst => (ctx, generate_tabs ctx ^ instructionToString inst)
+             pp_expr_bracketted ctx iseq_false
+        end ^ "\n" ^ generate_tabs ctx ^ "end"
+        | inst =>  generate_tabs ctx ^ instructionToString inst
     and pp_expr_bracketted ctx [inst] = pp_instruction ctx inst
-        | pp_expr_bracketted ctx il = (ctx, foldr (fn (x, K) =>
-            let
-                val (ctx, instruction) = pp_instruction ctx x
-            in
-                instruction ^ "\n" ^ K
-            end) "" il)
+        | pp_expr_bracketted ctx il =  foldr (fn (x, K) =>
+             pp_instruction ctx x ^ "\n" ^ K
+        ) "" il
 
     (*| x => raise DumpInstruction x*)
     type expr = instruction list
@@ -592,11 +585,14 @@ structure WasmModule = struct
 
     fun pp_func ctx (id, type_use, ll, il) =
         let
-            val (ctx, instructions) = pp_expr_bracketted ctx il
+            val context{nest_level}= ctx
+            val ctx = context{nest_level= nest_level+1}
+            val locals= foldr (fn (x, K) => (generate_tabs ctx ^ local_ToString x ^ "\n" ^ K)) "" ll
+            val  instructions = pp_expr_bracketted ctx il
         in
-            (ctx, "(func " ^ (case id of
+            "(func " ^ (case id of
                 NONE => ""
-            | SOME idx => IDX.funcidxToString idx ^ " ") ^ typeuseToString type_use ^ "\n" ^ (foldr (fn (x, K) => (generate_tabs ctx ^ local_ToString x ^ "\n" ^ K)) "" ll ^ instructions ^ ")"))
+            | SOME idx => IDX.funcidxToString idx ^ " ") ^ typeuseToString type_use ^ "\n" ^ locals ^ instructions ^ ")"
         end
 
     type table = IDX.tableidx option * tabletype
@@ -638,7 +634,7 @@ structure WasmModule = struct
 
     fun startToString (start fid) = "(start " ^ IDX.funcidxToString fid ^ ")"
 
-    fun pp_start ctx (start fid) = (ctx, generate_tabs ctx ^ "(start " ^ IDX.funcidxToString fid ^ ")")
+    fun pp_start ctx (start fid) =  generate_tabs ctx ^ "(start " ^ IDX.funcidxToString fid ^ ")"
 
     datatype elemexpr = elemexpr of expr
 
@@ -689,78 +685,75 @@ structure WasmModule = struct
 
     fun typesToString tl = foldr (fn (x, xs) => (x ^ "\n" ^ xs)) "" (map type_definitionToString tl)
 
-    fun pp_types ctx tl = (ctx, foldr (fn (x, K) => (generate_tabs ctx ^ type_definitionToString x ^ "\n" ^ K)) "" tl)
+    fun pp_types ctx tl =  foldr (fn (x, K) => (generate_tabs ctx ^ type_definitionToString x ^ "\n" ^ K)) "" tl
 
     type funcs = func list
 
     fun funcsToString tl = foldr (fn (x, xs) => (x ^ "\n" ^ xs)) "" (map funcToString tl)
 
-    fun pp_funcs ctx funcs = foldr (fn (x, (c, K)) =>
-            let
-                val (ctx, function) = pp_func c x
-            in
-                (ctx, generate_tabs ctx ^ function ^ "\n" ^ K)
-            end) (ctx, "") funcs
+    fun pp_funcs ctx funcs = foldr (fn (x,  K) =>
+
+                (generate_tabs ctx ^ pp_func ctx x ^ "\n" ^ K)
+            ) "" funcs
 
     type tables = table list
 
     fun tablesToString tl = foldr (fn (x, xs) => (x ^ "\n" ^ xs)) "" (map tableToString tl)
 
-    fun pp_tables ctx tables = (ctx, foldr (fn (x, K) => generate_tabs ctx ^ tableToString x ^ "\n" ^ K) "" tables)
+    fun pp_tables ctx tables = foldr (fn (x, K) => generate_tabs ctx ^ tableToString x ^ "\n" ^ K) "" tables
 
     type mems = mem list
 
     fun memsToString tl = foldr (fn (x, xs) => (x ^ "\n" ^ xs)) "" (map memToString tl)
 
-    fun pp_mems ctx mems = (ctx, foldr (fn (x, K) => generate_tabs ctx ^ memToString x ^ "\n" ^ K) "" mems)
+    fun pp_mems ctx mems =  foldr (fn (x, K) => generate_tabs ctx ^ memToString x ^ "\n" ^ K) "" mems
 
     type globals = global list
 
     fun globalsToString tl = foldr (fn (x, xs) => (x ^ "\n" ^ xs)) "" (map globalToString tl)
 
-    fun pp_globals ctx globals = (ctx, foldr (fn (x, K) => generate_tabs ctx ^ globalToString x ^ "\n" ^ K) "" globals)
+    fun pp_globals ctx globals =  (foldr (fn (x, K) => generate_tabs ctx ^ globalToString x ^ "\n" ^ K) "" globals )
 
     type elems = elem list
 
     fun elemsToString tl = foldr (fn (x, xs) => (x ^ "\n" ^ xs)) "" (map elementToString tl)
 
-    fun pp_elems ctx elems = (ctx, foldr (fn (x, K) => generate_tabs ctx ^ elementToString x ^ "\n" ^ K) "" elems)
+    fun pp_elems ctx elems =  foldr (fn (x, K) => generate_tabs ctx ^ elementToString x ^ "\n" ^ K) "" elems
 
     type datas = data list
 
     fun datasToString tl = foldr (fn (x, xs) => (x ^ "\n" ^ xs)) "" (map dataToString tl)
 
-    fun pp_datas ctx datas = (ctx, foldr (fn (x, K) => generate_tabs ctx ^ dataToString x ^ "\n" ^ K) "" datas)
-
-    fun pp_globals ctx globals = (ctx, foldr (fn (x, K) => generate_tabs ctx ^ globalToString x ^ "\n" ^ K) "" globals)
+    fun pp_datas ctx datas =  foldr (fn (x, K) => generate_tabs ctx ^ dataToString x ^ "\n" ^ K) "" datas
 
     type imports = import list
 
     fun importsToString tl = foldr (fn (x, xs) => (x ^ "\n" ^ xs)) "" (map importToString tl)
 
-    fun pp_imports ctx imports = (ctx, foldr (fn (x, K) => generate_tabs ctx ^ importToString x ^ "\n" ^ K) "" imports)
+    fun pp_imports ctx imports =  foldr (fn (x, K) => generate_tabs ctx ^ importToString x ^ "\n" ^ K) "" imports
 
     type exports = export list
 
     fun exportsToString tl = foldr (fn (x, xs) => (x ^ "\n" ^ xs)) "" (map exportToString tl)
 
-    fun pp_exports ctx exports = (ctx, foldr (fn (x, K) => generate_tabs ctx ^ exportToString x ^ "\n" ^ K) "" exports)
+    fun pp_exports ctx exports =  foldr (fn (x, K) => generate_tabs ctx ^ exportToString x ^ "\n" ^ K) "" exports
 
     (*Abstract WASM Module *)
     type module = { ty : types, im : imports, fn_ : funcs, ta : tables, me : mems, gl : globals, ex : exports, st : start, el : elems, da : datas }
 
     fun pp_module module =
         let
-            val (ctx, types) = pp_types (context { nest_level = 1 }) (#ty module)
-            val (ctx, imports) = pp_imports ctx (#im module)
-            val (ctx, functions) = pp_funcs ctx (#fn_ module)
-            val (ctx, tables) = pp_tables ctx (#ta module)
-            val (ctx, mems) = pp_mems ctx (#me module)
-            val (ctx, globals) = pp_globals ctx (#gl module)
-            val (ctx, exports) = pp_exports ctx (#ex module)
-            val (ctx, start_segment) = pp_start ctx (#st module)
-            val (ctx, elems) = pp_elems ctx (#el module)
-            val (ctx, datas) = pp_datas ctx (#da module)
+            val ctx = context{nest_level=1}
+            val  types = pp_types (context { nest_level = 1 }) (#ty module)
+            val imports = pp_imports ctx (#im module)
+            val  functions = pp_funcs ctx (#fn_ module)
+            val  tables = pp_tables ctx (#ta module)
+            val  mems = pp_mems ctx (#me module)
+            val  globals = pp_globals ctx (#gl module)
+            val  exports = pp_exports ctx (#ex module)
+            val  start_segment = pp_start ctx (#st module)
+            val  elems = pp_elems ctx (#el module)
+            val  datas = pp_datas ctx (#da module)
         in
             "(module\n" ^ types ^ imports ^ functions ^ tables ^ mems ^ globals ^ exports ^ start_segment ^ elems ^ datas ^ ")"
         end
