@@ -89,5 +89,5 @@ Main.o: Main.sml ../parser/Syntax.smi ../parser/CoreML.grm.sig \
  ../wasm_text_emitter/WasmModule.smi ../wasm_text_emitter/Debug.smi \
  ../wasm_text_emitter/Comp.smi Top.smi Main.smi
 	$(SMLSHARP) $(SMLFLAGS) -o Main.o -c Main.sml
-libcoreml_env.a: 
+libcoreml_env.a: ../coreml_env/src/lib.rs ../coreml_env/Cargo.toml 
 	cd ../coreml_env && cargo build --release 

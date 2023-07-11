@@ -21,9 +21,11 @@ struct
     |BOOLty=>"b"
     |STRINGty=>"s"
     |FUNty(t1,t2)=> generate_dispatch_table_name t1 ^"->"^ generate_dispatch_table_name t2 
-    |PAIRty(t1,t2)=>"("^generate_dispatch_table_name t1^","^generate_dispatch_table_name t2^")"
-    |_=>raise CantMapToDispatchTableName ty
-  fun generate_type_id ty  ="fun"^generate_dispatch_table_name ty
+    |PAIRty(t1,t2)=>generate_dispatch_table_name t1^"*"^generate_dispatch_table_name t2
+    |POLYty(tyvars,ty)=>"<"^(foldr (fn (tyvar ,K)=>tyvar^"."^K) ">" tyvars )^generate_dispatch_table_name ty 
+    |TYVARty _=>"i"
+  (*fun generate_type_id ty  ="fun"^generate_dispatch_table_name ty*)
+  fun generate_type_id ty ="function"
   exception CantMapToWasmValType of Type.ty 
   (*CoreMLの型からWASMのvaltype に変換*)
   fun CMLTyTovaltype ty = I.numtype( case ty of 
@@ -32,7 +34,8 @@ struct
   |STRINGty=>I.i32
   |PAIRty(_,_)=>I.i32
   |FUNty(_,_)=>I.i32
-  |_=>raise CantMapToWasmValType ty
+  |TYVARty _=>I.i32 
+  |POLYty(_,_)=>I.i32 (*多相関数にしかならないのでポインタにしかならない*)
   )
   fun size_of_numtype t =case t of 
   I.i32=>4
@@ -51,15 +54,21 @@ struct
     (I.local_(SOME(IDX.localidx(IDX.text_id "closure_ptr")),I.numtype I.i32)),
     (I.local_(SOME(IDX.localidx(IDX.text_id "__fptr")),I.numtype I.i32))]
   (*型付き抽象構文木の自由変数を求める*)
+
   fun fv e=case e of 
     TS.EXPID(x,ty)=>SEnv.singleton (x,ty)
     |TS.EXPFN(x,e,_)=>
-    let val (m,_)= SEnv.remove (fv e,x)in
+    let 
+    val m=fv e
+    val m= #1 (SEnv.remove(m,x)) handle _=>m    
+    in
      m 
     end 
     |TS.EXPFIX(f,x,e,_)=>
-    let val (m,_)=SEnv.remove (fv e ,x)
-        val (m,_)=SEnv.remove(m,f)in 
+    let 
+        val m = fv e 
+        val m= #1 (SEnv.remove (m ,x)) handle _=> m
+        val m= #1 (SEnv.remove(m,f)) handle _ => m in 
       m
     end
     |TS.EXPAPP(e1,e2,_)=>SEnv.unionWith (fn (a,_)=>a)(fv e1,fv e2)
@@ -106,22 +115,39 @@ struct
         6 ヒープに要素2を保存 top ,... bottom      
         7 ペアのアドレスをスタックに積む　top pair_addr,... bottom
   *)
-     fun generate_pair_construction_call(pc_table,vt1,vt2)=
+     fun generate_pair_construction_call(pc_table,t1,t2)=
       let 
-      val pc_fn_name = "pair_con_"^ I.valtypeToString vt1^"_"^I.valtypeToString vt2
+      
+      fun need_to_gc t = case t of 
+      INTty =>false 
+      |BOOLty => false 
+      |STRINGty=>false 
+      |FUNty(a,b)=>true (*キャプチャした環境をGC対象にする*)
+      |POLYty(_,_)=>true 
+      |TYVARty(_)=>false 
+      |PAIRty(_,_)=>true
+      val vt1 = CMLTyTovaltype t1 
+      val vt2 = CMLTyTovaltype t2 
+      val gc_e1 = need_to_gc t1
+      val gc_e2 = need_to_gc t2 
+      (*関数名　これによって過剰に関数が生成されるのを抑制する.*)
+      val pc_fn_name ="pair_con"^(if gc_e1 then "_gc_"else "_nogc_") ^ I.valtypeToString vt1^(if gc_e2 then "_gc_"else "_nogc_" )^I.valtypeToString vt2
       in case SEnv.find(pc_table,pc_fn_name) of 
       SOME _=>(pc_table,I.call(IDX.funcidx (IDX.text_id pc_fn_name))) 
-      |NONE=>let 
+      |NONE=>let
+
       val (sti1,offset) =case vt1 of 
         I.numtype I.i32=>(I.i32store(I.memarg(0w0,0w4)),0w4)
         |I.numtype I.i64=>(I.i64store(I.memarg(0w0,0w4)),0w8)
         |I.numtype I.f32=>(I.f32store(I.memarg(0w0,0w4)),0w4)
         |I.numtype I.f64=>(I.f64store(I.memarg(0w0,0w4)),0w8)
+        |_=>raise Unreachable
       val sti2=case vt2 of 
         I.numtype I.i32=>I.i32store(I.memarg(offset,0w4))
         |I.numtype I.i64=>I.i64store(I.memarg(offset,0w4))
         |I.numtype I.f32=>I.f32store(I.memarg(offset,0w4))
         |I.numtype I.f64=>I.f64store(I.memarg(offset,0w4))
+        |_=>raise Unreachable
       val iseq = [
       I.i32const (size_of_valtype vt1+size_of_valtype vt2),
       I.call (IDX.funcidx (IDX.text_id "alloc") ) ,
@@ -142,7 +168,6 @@ struct
       (pc_table,I.call(IDX.funcidx (IDX.text_id pc_fn_name)))
       end
     end 
-
   (*Kは継続　(後に続く計算.)*)
   fun compile_expr e K module memoffset (function_ids,function_sigs,pc_table)= case e of 
   TS.INT i =>((I.i32const i) ::K,module,memoffset,function_ids,function_sigs,pc_table)
@@ -182,9 +207,7 @@ struct
 
   |TS.EXPPAIR (e1, e2) =>
     let 
-        val vt1 =CMLTyTovaltype (TS.getTy e1) 
-        val vt2 =CMLTyTovaltype (TS.getTy e2) 
-        val (pc_table,call)= generate_pair_construction_call (pc_table,vt1,vt2)
+        val (pc_table,call)= generate_pair_construction_call (pc_table,TS.getTy e1,TS.getTy e2)
         val (K2,module,memoffset,function_ids,function_sigs,pc_table)
          = compile_expr e2 (call::K) module memoffset (function_ids,function_sigs,pc_table) in 
         compile_expr e1 K2  module memoffset (function_ids,function_sigs,pc_table)
@@ -202,7 +225,10 @@ struct
       |PAIRty(STRINGty,_)=>I.i32load(I.memarg(0w0,0w4)) 
       |PAIRty(PAIRty(_,_),_)=>I.i32load(I.memarg(0w0,0w4)) 
       |PAIRty(FUNty(_,_),_)=>I.i32load(I.memarg(0w0,0w4))
-      |x=>raise  CantMapToWasmValType x
+      |PAIRty(POLYty(_,_),_)=>I.i32load(I.memarg(0w0,0w4))
+      |PAIRty(TYVARty(_),_)=>I.i32load(I.memarg(0w0,0w4))
+      |POLYty(_,_)=>I.i32load(I.memarg(0w0,0w4))
+      |x=> raise  CantMapToWasmValType x
      in
       compile_expr e (i:: K) module memoffset (function_ids,function_sigs,pc_table)
     end
@@ -218,6 +244,9 @@ struct
         |PAIRty(STRINGty,_)=>0w4
         |PAIRty(FUNty(_,_),_)=>0w4
         |PAIRty(PAIRty(_,_),_)=>0w4
+        |PAIRty(TYVARty _,_)=>0w4
+        |PAIRty(POLYty(_,_),_)=>0w4
+        |POLYty(tyvars,ty)=>0w4
         |x=>raise CantMapToWasmValType x) in 
         let val i = (case ty of 
           PAIRty(_,INTty)=>I.i32load(I.memarg(offset,0w4))
@@ -225,6 +254,9 @@ struct
           |PAIRty(_,STRINGty)=>I.i32load(I.memarg(offset,0w4))
           |PAIRty(_,PAIRty(_,_))=>I.i32load(I.memarg(offset,0w4))
           |PAIRty(_,FUNty(_,_))=>I.i32load(I.memarg(offset,0w4))
+          |PAIRty(_,TYVARty _ )=>I.i32load(I.memarg(offset,0w4))
+          |PAIRty(_,POLYty(_,_))=>I.i32load(I.memarg(offset,0w4))
+          |POLYty(tyvars,ty)=>I.i32load(I.memarg(offset,0w4))
           |x=>raise CantMapToWasmValType x)
         in 
           compile_expr e (i:: K) module memoffset (function_ids,function_sigs,pc_table)
@@ -252,7 +284,7 @@ struct
     |TS.EXPIF (e1, e2, e3) => 
     let val ty = TS.getTy e2 
         val bt = CMLTyToblocktype ty 
-        val (e2K,module,memoffset,function_ids,function_sigs,pc_table)= compile_expr e2 nil module memoffset  (function_ids,function_sigs,pc_table)
+        val (e2K,module,memoffset,function_ids,function_sigs,pc_table)= compile_expr e2 nil module memoffset (function_ids,function_sigs,pc_table)
         val (e3K,module,memoffset,function_ids,function_sigs,pc_table)= compile_expr e3 nil module memoffset (function_ids,function_sigs,pc_table) in  
           compile_expr e1 (I.if_(NONE,bt,e2K, e3K) :: K) module memoffset (function_ids,function_sigs,pc_table)
         end   
@@ -291,7 +323,7 @@ struct
     |_ =>raise Unreachable)
     val fvs  =fv e  
     (*クロージャ内で使う変数群の生成*)
-    val prelude =  SEnv.foldr (op ::) [] (SEnv.mapi (fn (v_name,v_ty)=> (v_name,CMLTyTovaltype v_ty)) fvs)  
+    val prelude = SEnv.foldri (fn (v_name,v_ty,K)=>(v_name,CMLTyTovaltype v_ty)::K) [] fvs
     (*クロージャは関数ポインタを含むため 自由変数+ 関数ポインタ4バイトが必要*)
     val closure_size =foldr (op + )  4 (map (fn (v_name,v_ty)=> size_of_valtype v_ty)  prelude) 
     val closure_name_offset_size= foldr (fn ((name,size),xs)=> 
@@ -309,18 +341,17 @@ struct
     val (internal_function_name,function_index,function_ids) =
         case SEnv.find (function_ids,f_sig)  of 
         NONE=> (
-        (f_sig ^ "0",0,SEnv.insert (function_ids,f_sig,1))) 
-        |SOME count =>(
-        (f_sig ^(Int.toString count),count,SEnv.insert(function_ids,f_sig,count+1))) 
-    val K = [
-          I.i32const function_index,
-          I.localset(IDX.localidx(IDX.text_id "__fptr"))
-          ] @ (foldr (fn ((v_name,offset,_),iseq)=>[
+        f_sig ^ "0",0,SEnv.insert (function_ids,f_sig,1)) 
+        |SOME count =>
+        (f_sig ^(Int.toString count),count,SEnv.insert(function_ids,f_sig,count+1)) 
+    val K =(foldr (fn ((v_name,offset,_),iseq)=>[
           I.localget(IDX.localidx (IDX.text_id v_name)),
           I.i32store(I.memarg(offset,0w4)),
           I.localget(IDX.localidx ( IDX.text_id "closure_ptr"))]@iseq
          ) [] closure_name_offset_size)  @K 
-        (*クロージャをlinear メモリに保管するための領域を確保*)
+        (*クロージャをlinear メモリに保管するための領域を確保
+          クロージャの大きさを積み, alloc を呼び出し,帰ってきたアドレスをローカル変数 closure_ptr に保存する.
+        *)
     val K =
         I.i32const closure_size::
         I.call(IDX.funcidx(IDX.text_id "alloc" ))::
@@ -338,6 +369,7 @@ struct
           I.i32load (I.memarg(offset,0w4)),
           I.localset(IDX.localidx(IDX.text_id name))
         ] ) [] closure_name_offset_size
+
         (*関数の定義に必要なものがそろった*)
     val (f_K,module,memoffset,function_ids,function_sigs,pc_table) = compile_expr e_inner [] module memoffset (function_ids,function_sigs,pc_table)
     val f_body=f_closure_load@f_K
@@ -345,13 +377,17 @@ struct
 
 
     val function =(    SOME(IDX.funcidx(IDX.text_id internal_function_name)),I.with_functype(IDX.typeidx(IDX.text_id (generate_type_id (TS.getTy e))),#1 f_sig_in_cml ,#2 f_sig_in_cml),locals,f_body)
-    val filter_fn =fn (SOME (IDX.tableidx (IDX.text_id a )),I.tabletype (b)) => a =f_sig
+    
+    fun filter_fn (SOME(IDX.tableidx (IDX.text_id a)),I.tabletype b ) = a = f_sig
+    | filter_fn (_,I.tabletype b) = false
+    
     fun table_and_funcs {ta=tables,fn_=funcs,...}=
           (
            (case List.filter filter_fn tables of 
             nil=> (SOME(IDX.tableidx (IDX.text_id f_sig )),I.tabletype (I.min 0w1 , I.funcref ))::tables
-            |(table_id,I.tabletype(I.min limit,reftype))::tables =>(table_id,I.tabletype (I.min (limit+0w1) ,reftype ))::tables
-            |(table_id,I.tabletype(I.minmax (min,max),reftype))::tables =>(table_id,I.tabletype (I.minmax (min+0w1,max+0w1) ,reftype ))::tables  )
+            |(_,I.tabletype(I.min limit,reftype))::tables =>(
+              SOME(IDX.tableidx(IDX.text_id f_sig)),I.tabletype (I.min (limit+0w1) ,reftype ))::tables
+            |(_,I.tabletype(I.minmax (min,max),reftype))::tables =>(SOME(IDX.tableidx (IDX.text_id f_sig)),I.tabletype (I.minmax (min+0w1,max+0w1) ,reftype ))::tables  )
           ,function::funcs
         ) 
     val (new_ta,new_fn) = table_and_funcs module           
@@ -372,21 +408,6 @@ struct
       val (iseq,module,offset,function_ids,function_sigs,pc_table)= compile_expr e [] module offset (function_ids,function_sigs,pc_table) in 
         ((I.local_(SOME(IDX.localidx(IDX.text_id name)),CMLTyTovaltype( TS.getTy e)))::locals,iseq::instructions,module,offset,function_ids,function_sigs,pc_table)   
     end  
-    (*alloc 
-      fn alloc(size:i32)->i32{
-        let old=alloc_ptr;
-        alloc_ptr+= size;
-        old
-      }
-      (local $old i32 )
-      global.get alloc_ptr
-      local.set $old 
-      local.get $old 
-      local.get $size 
-      i32.add 
-      global.set $alloc_ptr
-      local.get $old
-    *)
     val alloc =let 
 
       val alloc_iseq = [
@@ -425,24 +446,38 @@ struct
       val module = { ty = alloc_sig::pc_sigs @(#ty module), im = mem::(#im module), fn_ = alloc::pc_fns@(#fn_ module) , ta = #ta module , me = #me module, gl = alloc_ptr::(#gl module) , ex = #ex module, st = #st module, el = #el module, da = #da module  }
       val local_and_exprs=ListPair.zip (locals,wasm_expr_list) 
 
-      val (module,iseq,memoffset,pp_table)= foldr (fn ((I.local_(SOME idx,val_ty),expr),(module,iseq,memoffset,pp_table))=>
-        let 
-          val SOME (id,ty)=List.find (fn elem=> case idx of IDX.localidx(IDX.text_id id)=> id = #1 elem|_=>raise Unreachable ) ty_env
-          val (module,print,memoffset,pp_table)=Debug.insert_debug_instructions(id,ty,module,memoffset,pp_table) 
-        in 
-          (module,iseq@expr@(I.localset(idx))::print,memoffset,pp_table)
-        end
-      ) (module,[],memoffset,pp_table) local_and_exprs
+      fun folder ((I.local_(local_id,val_ty),expr),(module,iseq,memoffset,pp_table))= 
+      (case local_id of 
+      SOME idx =>
+        if is_debug then 
+          let 
+            val SOME (id,ty)=List.find (fn elem=> case idx of IDX.localidx(IDX.text_id id)=> id = #1 elem|_=>raise Unreachable ) ty_env
+            val (module,print,memoffset,pp_table)=Debug.insert_debug_instructions(id,ty,module,memoffset,pp_table) 
+          in 
+            (module,iseq@expr@(I.localset idx)::print,memoffset,pp_table)
+          end
+        else 
+          (module,iseq@expr@[(I.localset idx)],memoffset,pp_table)
+      |NONE =>
+        raise Unreachable
+      )
 
-      val pair_debugs =SEnv.listItemsi pp_table
-      val pp_sigs  =foldr (fn ((name,(_,s)),l)=>s::l) [] pair_debugs
-      val pp_fns = foldr (fn ((name,(f,_)),l)=>f::l) [] pair_debugs
-      (*WASM32 では4バイトアラインであるからこのようにする.*)
+      val (module,iseq,memoffset,pp_table)=
+       foldr folder (module,[],memoffset,pp_table) local_and_exprs
       (*初めにグローバル変数 alloc_ptr の初期化を行う.*)
       val aligned_initial_alloc_ptr = ((memoffset div 4)+1)*4
       val iseq  = [I.i32const aligned_initial_alloc_ptr ,I.globalset(IDX.globalidx(IDX.text_id "alloc_ptr"))]@iseq
       val f =(SOME(IDX.funcidx(IDX.text_id "__cml_main" )),I.with_functype(IDX.typeidx(IDX.text_id "entry_point" ),[],[]),locals,iseq) 
-      val module={ty = pp_sigs @ (#ty module),fn_ = pp_fns@(f::(#fn_ module)),ta = #ta module,me = #me module,gl = #gl module,el = #el module ,da = #da module,im = #im module,ex= #ex module,st = #st module}
+      val module=
+      if is_debug then let
+        val pair_debugs =SEnv.listItemsi pp_table
+        val pp_sigs  =foldr (fn ((name,(_,s)),l)=>s::l) [] pair_debugs
+        val pp_fns = foldr (fn ((name,(f,_)),l)=>f::l) [] pair_debugs
+      in 
+        {ty = pp_sigs @ (#ty module),fn_ = pp_fns@(f::(#fn_ module)),ta = #ta module,me = #me module,gl = #gl module,el = #el module ,da = #da module,im = #im module,ex= #ex module,st = #st module}
+      end 
+      else       
+       {ty =  #ty module,fn_ = f::(#fn_ module),ta = #ta module,me = #me module,gl = #gl module,el = #el module ,da = #da module,im = #im module,ex= #ex module,st = #st module}
       val types = foldr (fn ((SOME (IDX.tableidx (IDX.text_id tid)),t_type),other)=>
       let val SOME f_sig_in_cml =SEnv.find(function_sigs,tid)in 
        I.type_definition (SOME tid,I.functype(#1 f_sig_in_cml,#2 f_sig_in_cml))::other
@@ -454,7 +489,6 @@ struct
        let 
        val SOME count = SEnv.find(function_ids,tid) 
        val f_names =f_names tid count  
-       val _ = print "successfully generate f_names"
         in (
         I.element(
         NONE,I.elemlist(I.funcref,
@@ -467,9 +501,16 @@ struct
         I.active_elem_mode(IDX.tableidx (IDX.text_id tid),[I.i32const 0])
       )::xs) end ) [] (#ta module)
       val module
-      =Debug.install_system_functions {ty = types@(#ty module),fn_ = #fn_ module,ta = #ta module,me = #me module,gl = #gl module,el = elements ,da = #da module,im = #im module,ex= main_export::(#ex module),st = #st module}
-     in  
+      =if is_debug 
+      then 
+      Debug.install_system_functions {ty = types@(#ty module),fn_ = #fn_ module,ta = #ta module,me = #me module,gl = #gl module,el = elements ,da = #da module,im = #im module,ex= main_export::(#ex module),st = #st module}
+     
+      else
+      {ty = types@(#ty module),fn_ = #fn_ module,ta = #ta module,me = #me module,gl = #gl module,el = elements ,da = #da module,im = #im module,ex= main_export::(#ex module),st = #st module}
+     
+      in  
      print ((I.moduleToString module)^"\n") ;
      module
-    end 
+    end
+    fun print_CantMapToWasmValType ty = print ("Compile error:"^Type.tyToString ty^"\n") 
   end

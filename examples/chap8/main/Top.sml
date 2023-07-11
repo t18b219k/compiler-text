@@ -28,7 +28,8 @@ structure Top = struct
         Parser.EOF => ()
       | Parser.ParseError => print "Syntax error\n"
       | Typeinf.TypeError => print "Type error\n"
-      | Exec.RuntimeError => print "Runtime error\n";
+      | Exec.RuntimeError => print "Runtime error\n"
+      | WasmComp.CantMapToWasmValType ty => WasmComp.print_CantMapToWasmValType ty;
       case file of
         "" => ()
       | _ => TextIO.closeIn inStream

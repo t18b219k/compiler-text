@@ -7,5 +7,7 @@ _require "./WasmModule.smi"
 _require "./Debug.smi"
 structure WasmComp = 
 struct
-    val compile:TypedSyntax.typed_dec list-> WasmModule.module
+    exception CantMapToWasmValType of Type.ty
+    val print_CantMapToWasmValType:Type.ty -> unit 
+    val compile:bool->(TypedSyntax.typed_dec list-> WasmModule.module)
 end 

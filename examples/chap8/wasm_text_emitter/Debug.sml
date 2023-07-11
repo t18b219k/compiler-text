@@ -27,7 +27,7 @@ structure Debug = struct
     WasmModule.import ("env", "print_space",WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_space")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_token")))),
     WasmModule.import ("env", "print_double_quote",WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_double_quote")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_token")))),
     WasmModule.import ("env", "print_new_line",WasmModule.f (SOME (IDX.funcidx (IDX.text_id "print_new_line")), WasmModule.name_only (IDX.typeidx (IDX.text_id "print_token"))))
-    
+
     ]
 
     fun install_system_functions module : WasmModule.module = { ty = (#ty module) @ type_list, im = (#im module) @ import_list, fn_ = #fn_ module, ta = #ta module, me = #me module, gl = #gl module, ex = #ex module, st = #st module, el = #el module, da = #da module }
@@ -93,8 +93,10 @@ structure Debug = struct
     Type.INTty=>"i"
     |Type.BOOLty=>"b"
     |Type.STRINGty=>"s"
-    |Type.FUNty(a,b)=>(gen_pp_sig a)^"_->_"^ (gen_pp_sig b)
-    |Type.PAIRty(a,b)=>(gen_pp_sig a)^"_x_"^(gen_pp_sig b)
+    |Type.FUNty(a,b)=>(gen_pp_sig a)^"->"^ (gen_pp_sig b)
+    |Type.PAIRty(a,b)=>"<"^(gen_pp_sig a)^"*"^(gen_pp_sig b)^">"
+    |Type.POLYty(tyvars,ty)=>"#"^foldr (fn (tv,K)=>tv^"_"^K) "" tyvars^":"^gen_pp_sig ty^"#"
+    |Type.TYVARty tyvar=>"?"^tyvar
     ):string
 
     val call_print_int = WasmModule.call (IDX.funcidx (IDX.text_id "print_int"))
@@ -161,8 +163,18 @@ structure Debug = struct
                 in
                     (module, [WasmModule.call (IDX.funcidx (IDX.text_id pp_fn_name)) ], memoffset,pp_table)
                 end
-        | _ => raise Unreachable
-
+        | Type.POLYty(_,_) =>
+        let val (module,call_print_ty,memoffset) =generate_text_print (module,Type.tyToString ty,memoffset) in
+          (module,WasmModule.drop::call_print_ty,memoffset,pp_table)
+        end
+        | Type.FUNty(_,_)=>
+        let val (module,call_print_ty,memoffset) =generate_text_print (module,Type.tyToString ty,memoffset) in
+          (module,WasmModule.drop::call_print_ty,memoffset,pp_table)
+        end
+        | Type.TYVARty tyvar=>
+        let val (module,call_print_tyvar,memoffset) =generate_text_print (module,tyvar,memoffset) in
+          (module,WasmModule.drop::call_print_tyvar,memoffset,pp_table)
+        end
     fun generate_identifier_print (id, module, memoffset) = generate_text_print (module, id, memoffset)
 
     (*
@@ -205,12 +217,19 @@ structure Debug = struct
                 in
                     (module, [call_print_val, call_print_space] @ call_print_id @ [call_print_equal , WasmModule.localget (IDX.localidx (IDX.text_id id)) ]@ iseq@call_print_colon::print_type@[call_print_new_line], memoffset,pp_table)
                 end
-        | Type.FUNty (arg_ty, ret_ry) =>
+        | Type.FUNty (_, _) =>
                 let
                     val (module, call_print_id, memoffset) = generate_identifier_print (id, module, memoffset)
                     val (module, print_type, memoffset) = generate_text_print(module,Type.tyToString ty, memoffset)
                 in
                     (module, [call_print_val, call_print_space] @ call_print_id @ call_print_colon:: print_type@[call_print_new_line], memoffset,pp_table)
                 end
+        |Type.POLYty(_,_)=>
+         let
+            val (module, call_print_id, memoffset) = generate_identifier_print (id, module, memoffset)
+            val (module, print_type, memoffset) = generate_text_print(module,Type.tyToString ty, memoffset)
+         in
+                (module,[call_print_val,call_print_space]@call_print_id@call_print_colon::print_type@[call_print_new_line],memoffset,pp_table)
+            end
         |_ => raise Unreachable (*スタックにあるものはペア,関数,定数であるからここには到達しない*)
 end
