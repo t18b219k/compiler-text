@@ -504,41 +504,37 @@ structure WasmModule = struct
         case inst of
             block_i (l, bt, iseq) => (ctx, generate_tabs ctx ^ "block " ^ (case l of
             SOME (label l) => "$" ^ l ^ " "
-        | NONE => "") ^ blocktypeToString bt ^ "\n" ^ foldr (fn (x, K) =>
-                let
-                    val context { nest_level } = ctx
-                    val ctx = context { nest_level = nest_level + 1 }
-                    val (ctx, instructions) = pp_expr_bracketted ctx iseq
-                in
-                    instructions ^ K
-                end) ("\n" ^ generate_tabs ctx ^ "end") iseq)
+        | NONE => "") ^ blocktypeToString bt ^ "\n" ^ let
+            val context { nest_level } = ctx
+            val ctx = context { nest_level = nest_level + 1 }
+            val (_, asm) = pp_expr_bracketted ctx iseq
+        in
+            asm
+        end ^ "\n" ^ generate_tabs ctx ^ "end")
         | loop (l, bt, iseq) => (ctx, generate_tabs ctx ^ "loop " ^ (case l of
             SOME (label l) => "$" ^ l ^ " "
-        | NONE => "") ^ blocktypeToString bt ^ "\n" ^ foldr (fn (x, K) =>
-                let
-                    val context { nest_level } = ctx
-                    val ctx = context { nest_level = nest_level + 1 }
-                    val (ctx, instructions) = pp_expr_bracketted ctx iseq
-                in
-                    instructions ^ K
-                end) ("\n" ^ generate_tabs ctx ^ "end") iseq)
+        | NONE => "") ^ blocktypeToString bt ^ "\n" ^ let
+            val context { nest_level } = ctx
+            val ctx = context { nest_level = nest_level + 1 }
+            val (_, asm) = pp_expr_bracketted ctx iseq
+        in
+            asm
+        end ^ "\n" ^ generate_tabs ctx ^ "end")
         | if_ (l, bt, iseq_true, iseq_false) => (ctx, generate_tabs ctx ^ "if " ^ (case l of
             SOME (label l) => "$" ^ l ^ " "
-        | NONE => "") ^ blocktypeToString bt ^ "\n" ^ (foldr (fn (x, K) =>
-                let
-                    val context { nest_level } = ctx
-                    val ctx = context { nest_level = nest_level + 1 }
-                    val (ctx, instructions) = pp_expr_bracketted ctx iseq_true
-                in
-                    instructions ^ K
-                end) ("\n" ^ generate_tabs ctx ^ "else\n") iseq_true) ^ (foldr (fn (x, K) =>
-                let
-                    val context { nest_level } = ctx
-                    val ctx = context { nest_level = nest_level + 1 }
-                    val (ctx, instructions) = pp_expr_bracketted ctx iseq_false
-                in
-                    instructions ^ K
-                end) ("\n" ^ generate_tabs ctx ^ "end") iseq_false))
+        | NONE => "") ^ blocktypeToString bt ^ "\n" ^ let
+            val context { nest_level } = ctx
+            val ctx = context { nest_level = nest_level + 1 }
+            val (_, asm) = pp_expr_bracketted ctx iseq_true
+        in
+            asm
+        end ^ "\n" ^ generate_tabs ctx ^ "else\n" ^ let
+            val context { nest_level } = ctx
+            val ctx = context { nest_level = nest_level + 1 }
+            val (_, asm) = pp_expr_bracketted ctx iseq_false
+        in
+            asm
+        end ^ "\n" ^ generate_tabs ctx ^ "end")
         | inst => (ctx, generate_tabs ctx ^ instructionToString inst)
     and pp_expr_bracketted ctx [inst] = pp_instruction ctx inst
         | pp_expr_bracketted ctx il = (ctx, foldr (fn (x, K) =>
