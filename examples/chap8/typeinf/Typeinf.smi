@@ -9,7 +9,14 @@ _require "./UnifyTy.smi"
 
 structure Typeinf = 
 struct
-  exception TypeError
-  val typeinf : TypeUtils.tyEnv -> Syntax.dec -> TypeUtils.tyEnv
+  exception TypeError 
+  exception UndefinedVariable of string 
+  exception NotFunction of {expected:Type.ty,actual:Type.ty,expression:Syntax.exp }
+  exception ExpectedToBeBool of {actual:Type.ty,expression:Syntax.exp}
+  exception ArgNotMatch of {expected:Type.ty,actual:Type.ty,expression:Syntax.exp}
+  exception ResultNotMatch of {expected:Type.ty,actual:Type.ty,expression:Syntax.exp}
+  exception IfArmsNotMatch of {then_ty:Type.ty,else_ty:Type.ty,then_exp:Syntax.exp,else_exp:Syntax.exp}
+  exception ExpectedToBePair of {expected:Type.ty,actual:Type.ty,expression:Syntax.exp}
+  exception ExpectedToBeInt of {actual:Type.ty,expression:Syntax.exp}
   val typeinf_with_typed_expr : TypeUtils.tyEnv -> Syntax.dec -> TypeUtils.tyEnv * TypedSyntax.typed_exp
 end

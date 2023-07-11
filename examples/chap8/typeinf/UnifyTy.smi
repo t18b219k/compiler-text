@@ -4,7 +4,8 @@ _require "compiler/libs/env/main/SEnv.smi"
 _require "./Type.smi"
 _require "./TypeUtils.smi"
 structure UnifyTy = struct
-  exception UnifyTy
+  exception UnifyTy of Type.ty * Type.ty * int
+  exception CyclicType 
   val FTV : Type.ty -> SSet.set
   val unify : (Type.ty * Type.ty) list -> TypeUtils.subst
 end

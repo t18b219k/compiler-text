@@ -1,7 +1,0 @@
-_require "basis.smi"
-_require "../parser/Parser.smi"
-_require "../typeinf/Typeinf.smi"
-structure Top =
-struct
-  val top : string -> unit
-end
