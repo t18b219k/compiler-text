@@ -129,6 +129,7 @@ structure Debug = struct
         case ty of
             Type.INTty => (module, [call_print_int], memoffset,pp_table)
         | Type.BOOLty => (module, [call_print_bool], memoffset,pp_table)
+        (*スタックが正常ならば正しく表示できる.*)
         | Type.STRINGty => (module, [
             WasmModule.localtee(IDX.localidx(IDX.text_id "str_ptr")),
             WasmModule.i32load (WasmModule.memarg(0w0,0w4)),(*fetch ptr (str)->ptr*)

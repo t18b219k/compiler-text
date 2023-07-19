@@ -51,8 +51,7 @@ struct
   fun CMLTyToblocktype ty =I.blocktype(SOME(I.result(CMLTyTovaltype ty)))
   val internal_local_vars = [
     (I.local_(SOME(IDX.localidx(IDX.text_id "str_ptr")),I.numtype I.i32)),
-    (I.local_(SOME(IDX.localidx(IDX.text_id "closure_ptr")),I.numtype I.i32)),
-    (I.local_(SOME(IDX.localidx(IDX.text_id "__fptr")),I.numtype I.i32))]
+    (I.local_(SOME(IDX.localidx(IDX.text_id "closure_ptr")),I.numtype I.i32))]
   (*型付き抽象構文木の自由変数を求める*)
 
   fun fv e=case e of 
@@ -291,21 +290,18 @@ struct
     |TS.EXPFN(x,e_inner,ty)=>generate_closure("non_recursive_closure",x,e,K,module,memoffset,function_ids,function_sigs,pc_table)
     |TS.EXPFIX(f,x,e_inner,ty)=>generate_closure(f,x,e,K,module,memoffset,function_ids,function_sigs,pc_table)
     |TS.EXPAPP(e_1,e_2,ty)=>
-    (*スタックにはクロージャptr が積まれている.
-    クロージャptr からftbl ptr を参照.
-    クロージャポインタから関数ポインタを取り出すためにローカル変数 __fptr を使う 
-    スタックは次のようになっている
-    0 top closure_ptr,... bottom
-    1 top arg,closure_ptr,... bottom
-    2 top ftbl,arg,closure_ptr,... bottom 
-    3 top calicurated value ,... bottom  
+    (*
+      クロージャの呼び出しには専用の関数 closure_call を用いる.
+      closure_call はclosure_ptr とarg を引数にとりクロージャを呼び出す組み込み関数である.
+    0 top closure_ptr,... bottom e1の計算
+    1 top arg,closure_ptr,... bottom e2の計算
+    3 top calicurated value ,... bottom  closure_call を呼ぶ
     *)
       let val ft = FUNty(TS.getTy e_2,ty)  
-          val call =I.call_indirect(IDX.tableidx(IDX.text_id(generate_type_id ft)),I.name_only(IDX.typeidx(IDX.text_id(generate_type_id ft))))
           val (K,module,memoffset,function_ids,function_sigs,pc_table) =compile_expr e_2 
-          ([I.localget(IDX.localidx(IDX.text_id "__fptr")),I.i32load(I.memarg(0w0,0w4)),call]@K) module memoffset (function_ids,function_sigs,pc_table)
+          (I.call(IDX.funcidx (IDX.text_id "closure_call"))::K) module memoffset (function_ids,function_sigs,pc_table)
           in
-           compile_expr e_1 (I.localtee(IDX.localidx (IDX.text_id "__fptr"))::K) module memoffset (function_ids,function_sigs,pc_table)
+           compile_expr e_1 K module memoffset (function_ids,function_sigs,pc_table)
           end 
     and 
     (*クロージャの生成コードと,クロージャの実際の関数を生成してモジュールに入れる.
@@ -324,13 +320,11 @@ struct
     val fvs  =fv e  
     (*クロージャ内で使う変数群の生成*)
     val prelude = SEnv.foldri (fn (v_name,v_ty,K)=>(v_name,CMLTyTovaltype v_ty)::K) [] fvs
-    (*クロージャは関数ポインタを含むため 自由変数+ 関数ポインタ4バイトが必要*)
+    (*クロージャは関数ポインタ(関数テーブルのインデックス)を含むため 自由変数+ 関数ポインタ4バイトが必要*)
     val closure_size =foldr (op + )  4 (map (fn (v_name,v_ty)=> size_of_valtype v_ty)  prelude) 
-    val closure_name_offset_size= foldr (fn ((name,size),xs)=> 
-          let val (_,last_offset,last_size) = List.last xs in 
-            xs@[(name,last_offset+size,size)]
-          end 
-        ) [("__fptr",0w0,0w4)] (map (fn (v_name,v_ty)=>(v_name,Word.fromInt (size_of_valtype v_ty)) ) prelude)
+    val (closure_name_offset_size,_)= foldr (fn ((name,size),(xs,last_offset))=> 
+          (xs@[(name,last_offset,size)],last_offset+size)
+        ) ([],0w4) (map (fn (v_name,v_ty)=>(v_name,Word.fromInt (size_of_valtype v_ty)) ) prelude)
     val (var_ty,return_ty) = case TS.getTy e of 
         Type.FUNty(a,b)=>(a,b)
         |x =>raise CantMapToWasmValType x
@@ -344,18 +338,29 @@ struct
         f_sig ^ "0",0,SEnv.insert (function_ids,f_sig,1)) 
         |SOME count =>
         (f_sig ^(Int.toString count),count,SEnv.insert(function_ids,f_sig,count+1)) 
-    val K =(foldr (fn ((v_name,offset,_),iseq)=>[
+    (*ローカル変数からとってきてクロージャに詰め込む処理 問題なし*)
+    val K =
+    (foldr (fn ((v_name,offset,_),iseq)=>[
+          I.localget(IDX.localidx ( IDX.text_id "closure_ptr")),
           I.localget(IDX.localidx (IDX.text_id v_name)),
-          I.i32store(I.memarg(offset,0w4)),
-          I.localget(IDX.localidx ( IDX.text_id "closure_ptr"))]@iseq
-         ) [] closure_name_offset_size)  @K 
+          I.i32store(I.memarg(offset,0w4))]@iseq
+         ) [] closure_name_offset_size)
+  @I.localget(IDX.localidx ( IDX.text_id "closure_ptr"))::K 
         (*クロージャをlinear メモリに保管するための領域を確保
-          クロージャの大きさを積み, alloc を呼び出し,帰ってきたアドレスをローカル変数 closure_ptr に保存する.
+          クロージャの大きさを積み, alloc を呼び出し,
+          closure_ptr に保存,
+          関数ポインタを積む,
+          クロージャに関数ポインタを書き込む
+          7/19 15:15 修正 
         *)
     val K =
-        I.i32const closure_size::
-        I.call(IDX.funcidx(IDX.text_id "alloc" ))::
-        I.localtee(IDX.localidx(IDX.text_id "closure_ptr" ))::K
+        [
+        I.i32const closure_size,
+        I.call(IDX.funcidx(IDX.text_id "alloc" )),
+        I.localtee(IDX.localidx(IDX.text_id "closure_ptr")),
+        I.i32const (SEnv.numItems function_sigs),
+        I.i32store(I.memarg(0w0,0w4))
+        ]@K
         (*渡されてきたクロージャをローカル変数に展開する
           これによりネストしたクロージャが実現できる.
           we need to respect execution of localset, i32load ,localget .
@@ -408,6 +413,7 @@ struct
       val (iseq,module,offset,function_ids,function_sigs,pc_table)= compile_expr e [] module offset (function_ids,function_sigs,pc_table) in 
         ((I.local_(SOME(IDX.localidx(IDX.text_id name)),CMLTyTovaltype( TS.getTy e)))::locals,iseq::instructions,module,offset,function_ids,function_sigs,pc_table)   
     end  
+
     val alloc =let 
 
       val alloc_iseq = [
@@ -421,6 +427,17 @@ struct
       ]
       in
         (SOME(IDX.funcidx(IDX.text_id "alloc")),I.with_functype(IDX.typeidx(IDX.text_id "alloc_sig"),[(I.param ("size",I.numtype I.i32))],[(I.result (I.numtype I.i32))]),[(I.local_(SOME (IDX.localidx(IDX.text_id "old")),(I.numtype I.i32)))],alloc_iseq) 
+      end 
+    val closure_call = let 
+      val closure_call_iseq = [
+        I.localget(IDX.localidx(IDX.text_id "closure")),
+        I.localget(IDX.localidx(IDX.text_id "arg")),
+        I.localget(IDX.localidx(IDX.text_id "closure")),
+        I.i32load(I.memarg(0w0,0w4)),
+        I.call_indirect(IDX.tableidx (IDX.text_id "function"),I.name_only(IDX.typeidx(IDX.text_id "function")))
+      ]
+      in
+      (SOME(IDX.funcidx(IDX.text_id "closure_call")),I.with_functype(IDX.typeidx(IDX.text_id "closure_call_sig"),[I.param("closure",I.numtype I.i32),I.param("arg",I.numtype I.i32)],[I.result(I.numtype I.i32)]),[],closure_call_iseq) 
       end 
     (*__cml_main 関数を作る. *)     
     fun compile is_debug declarations =
@@ -438,12 +455,13 @@ struct
       val (locals,wasm_expr_list,module,memoffset,function_ids,function_sigs,pc_table)=compile_declarations (declarations,function_ids,function_sigs,pc_table)
       val alloc_sig = I.type_definition (SOME "alloc_sig", I.functype ([I.param("size",I.numtype I.i32)], [(I.result(I.numtype I.i32))]))
       val alloc_ptr = (SOME (IDX.globalidx(IDX.text_id "alloc_ptr")),I.mutable(I.numtype I.i32),[I.i32const 0])
+      val closure_call_sig= I.type_definition(SOME "closure_call_sig",I.functype([I.param("closure",I.numtype I.i32),I.param("arg",I.numtype I.i32)],[I.result(I.numtype I.i32)]))
       val mem =I.import("env","linear_memory",I.m(SOME (IDX.memidx(IDX.text_id "linear_memory")),I.memtype(I.min 0w2)))
       val pair_constructions=SEnv.listItemsi pc_table
 
       val pc_sigs = foldr (fn ((name,(_,s)),l)=>s::l) [] pair_constructions 
       val pc_fns = foldr (fn ((name,(f,_)),l)=>f::l) [] pair_constructions
-      val module = { ty = alloc_sig::pc_sigs @(#ty module), im = mem::(#im module), fn_ = alloc::pc_fns@(#fn_ module) , ta = #ta module , me = #me module, gl = alloc_ptr::(#gl module) , ex = #ex module, st = #st module, el = #el module, da = #da module  }
+      val module = { ty = closure_call_sig::alloc_sig::pc_sigs @(#ty module), im = mem::(#im module), fn_ = closure_call::alloc::pc_fns@(#fn_ module) , ta = #ta module , me = #me module, gl = alloc_ptr::(#gl module) , ex = #ex module, st = #st module, el = #el module, da = #da module  }
       val local_and_exprs=ListPair.zip (locals,wasm_expr_list) 
 
       fun folder ((I.local_(local_id,val_ty),expr),(module,iseq,memoffset,pp_table))= 
@@ -494,7 +512,7 @@ struct
         NONE,I.elemlist(I.funcref,
         foldl 
         (
-          fn (a,k)=>  k@[(I.elemexpr[I.reffunc (IDX.funcidx (IDX.text_id a))])])
+          fn (a,k)=>  (I.elemexpr[I.reffunc (IDX.funcidx (IDX.text_id a))])::k)
         []
         f_names
         ),

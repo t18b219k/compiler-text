@@ -44,11 +44,14 @@ structure TypedSyntax = struct
     | EXPPROJ1 typed_exp =>
         (case (getTy typed_exp) of
           Type.PAIRty (a, _) => a
-        | x => raise UnexpectedType x)
+        | Type.POLYty(tyvars,Type.PAIRty(a,_)) =>Type.POLYty(tyvars,a)
+        |x=>raise UnexpectedType x)
     | EXPPROJ2 typed_exp =>
         (case (getTy typed_exp) of
           Type.PAIRty (_, b) => b
-        | x => raise UnexpectedType x)
+        | Type.POLYty(tyvars,Type.PAIRty(_,b)) =>Type.POLYty(tyvars,b)
+        |x=>raise UnexpectedType x
+        )
     | EXPFIX (_, _, _, ty) => ty
     | EXPPRIM (p, _, _) =>
         (case p of

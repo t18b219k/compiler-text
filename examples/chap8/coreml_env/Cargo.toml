@@ -8,6 +8,6 @@ crate-type = ["staticlib", "lib"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-wasmer = "4"
+wasmer = { version = "4.0.0-alpha.1", features = ["tracing", "jit"] }
 log = "0.4"
 fern = "0.6.2"
