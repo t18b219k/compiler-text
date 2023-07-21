@@ -3,7 +3,8 @@
  * @copyright (c) 2006, Tohoku University.
  * @author Atsushi Ohori
  *)
-structure TypedSyntax = struct
+structure TypedSyntax =
+struct
   open Syntax
 
   open Type
@@ -26,7 +27,8 @@ structure TypedSyntax = struct
   | EXPPRIM of prim * typed_exp * typed_exp
   | EXPIF of typed_exp * typed_exp * typed_exp
   | EXPFIX of string * string * typed_exp * ty
-  and typed_dec = VAL of string * typed_exp
+  and typed_dec =
+    VAL of string * typed_exp
 
   exception UnexpectedType of ty
 
@@ -43,20 +45,19 @@ structure TypedSyntax = struct
     | EXPFN (_, _, ty) => ty
     | EXPPROJ1 typed_exp =>
         (case (getTy typed_exp) of
-          Type.PAIRty (a, _) => a
-        | Type.POLYty(tyvars,Type.PAIRty(a,_)) =>Type.POLYty(tyvars,a)
-        |x=>raise UnexpectedType x)
+           Type.PAIRty (a, _) => a
+         | Type.POLYty (tyvars, Type.PAIRty (a, _)) => Type.POLYty (tyvars, a)
+         | x => raise UnexpectedType x)
     | EXPPROJ2 typed_exp =>
         (case (getTy typed_exp) of
-          Type.PAIRty (_, b) => b
-        | Type.POLYty(tyvars,Type.PAIRty(_,b)) =>Type.POLYty(tyvars,b)
-        |x=>raise UnexpectedType x
-        )
+           Type.PAIRty (_, b) => b
+         | Type.POLYty (tyvars, Type.PAIRty (_, b)) => Type.POLYty (tyvars, b)
+         | x => raise UnexpectedType x)
     | EXPFIX (_, _, _, ty) => ty
     | EXPPRIM (p, _, _) =>
         (case p of
-          EQ => Type.BOOLty
-        | _ => Type.INTty)
+           EQ => Type.BOOLty
+         | _ => Type.INTty)
 
   fun expToString typed_exp =
     case typed_exp of
@@ -65,17 +66,33 @@ structure TypedSyntax = struct
     | TRUE => "true"
     | FALSE => "false"
     | EXPID (string, ty) => string ^ " : " ^ tyToString ty
-    | EXPPAIR (exp1, exp2) => "(" ^ expToString exp1 ^ "," ^ expToString exp2 ^ ")"
-    | EXPAPP (exp1, exp2, ty) => "(" ^ expToString exp1 ^ " " ^ expToString exp2 ^ ") : " ^ tyToString ty
-    | EXPIF (exp1, exp2, exp3) => "if " ^ expToString exp1 ^ " then " ^ expToString exp2 ^ " else " ^ expToString exp3
-    | EXPFN (var_id, typed_exp, ty) => "(fn " ^ var_id ^ " => " ^ expToString typed_exp ^ ") : " ^ tyToString ty
-    | EXPPROJ1 typed_exp => "#1 " ^ expToString typed_exp ^ " : " ^ tyToString (case (getTy typed_exp) of
-      PAIRty (a, _) => a
-    | x => raise UnexpectedType x)
-    | EXPPROJ2 typed_exp => "#2 " ^ expToString typed_exp ^ " : " ^ tyToString (case (getTy typed_exp) of
-      PAIRty (_, b) => b
-    | x => raise UnexpectedType x)
-    | EXPFIX (f, x, typed_exp, ty) => "(fix " ^ f ^ "(" ^ x ^ ") => " ^ expToString typed_exp ^ ") : " ^ (tyToString ty)
+    | EXPPAIR (exp1, exp2) =>
+        "(" ^ expToString exp1 ^ "," ^ expToString exp2 ^ ")"
+    | EXPAPP (exp1, exp2, ty) =>
+        "(" ^ expToString exp1 ^ " " ^ expToString exp2 ^ ") : " ^ tyToString ty
+    | EXPIF (exp1, exp2, exp3) =>
+        "if " ^ expToString exp1 ^ " then " ^ expToString exp2 ^ " else "
+        ^ expToString exp3
+    | EXPFN (var_id, typed_exp, ty) =>
+        "(fn " ^ var_id ^ " => " ^ expToString typed_exp ^ ") : "
+        ^ tyToString ty
+    | EXPPROJ1 typed_exp =>
+        "#1 " ^ expToString typed_exp ^ " : "
+        ^
+        tyToString
+          (case (getTy typed_exp) of
+             PAIRty (a, _) => a
+           | x => raise UnexpectedType x)
+    | EXPPROJ2 typed_exp =>
+        "#2 " ^ expToString typed_exp ^ " : "
+        ^
+        tyToString
+          (case (getTy typed_exp) of
+             PAIRty (_, b) => b
+           | x => raise UnexpectedType x)
+    | EXPFIX (f, x, typed_exp, ty) =>
+        "(fix " ^ f ^ "(" ^ x ^ ") => " ^ expToString typed_exp ^ ") : "
+        ^ (tyToString ty)
     | EXPPRIM (p, exp1, exp2) =>
         let
           val prim =
@@ -86,9 +103,14 @@ structure TypedSyntax = struct
             | DIV => "div"
             | EQ => "eq"
         in
-          "prim(" ^ prim ^ "," ^ expToString exp1 ^ "," ^ expToString exp2 ^ ") : " ^ (tyToString (case p of
-            EQ => BOOLty
-          | _ => INTty))
+          "prim(" ^ prim ^ "," ^ expToString exp1 ^ "," ^ expToString exp2
+          ^ ") : "
+          ^
+          (tyToString
+             (case p of
+                EQ => BOOLty
+              | _ => INTty))
         end
-  and typed_decToString (VAL (x, typed_exp)) = "val " ^ x ^ " = " ^ expToString typed_exp
+  and typed_decToString (VAL (x, typed_exp)) =
+    "val " ^ x ^ " = " ^ expToString typed_exp
 end

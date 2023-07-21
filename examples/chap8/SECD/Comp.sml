@@ -1,4 +1,5 @@
-structure Comp = struct
+structure Comp =
+struct
   structure S = Syntax
 
   structure I = Instruction
@@ -31,10 +32,7 @@ structure Comp = struct
     | S.EXPIF (e1, e2, e3) => comp e1 (I.If (comp e2 nil, comp e3 nil) :: K)
 
   fun compile (S.VAL (id, e)) =
-    let
-      val C = comp e nil
-    in
-      print ("Compiled to:\n" ^ I.codeToString C ^ "\n");
-      (id, C)
+    let val C = comp e nil
+    in print ("Compiled to:\n" ^ I.codeToString C ^ "\n"); (id, C)
     end
 end

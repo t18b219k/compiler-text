@@ -53058,3 +53058,5672 @@ A webassembly text passed
 )
 generated imports
 Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module
+	(type $function(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $closure_call_sig(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $alloc_sig(func (param $size i32) (result i32) ))
+	(type $entry_point(func))
+	(type $print_int(func (param $value i32)))
+	(type $print_bool(func (param $value i32)))
+	(type $print_string(func (param $ptr i32)(param $size i32)))
+	(type $print_token(func))
+	(import "env" "linear_memory" (memory $linear_memory 2))
+	(import "env" "print_int" (func $print_int (type $print_int)))
+	(import "env" "print_bool" (func $print_bool (type $print_bool)))
+	(import "env" "print_string" (func $print_string (type $print_string)))
+	(import "env" "print_lparen" (func $print_lparen (type $print_token)))
+	(import "env" "print_rparen" (func $print_rparen (type $print_token)))
+	(import "env" "print_val" (func $print_val (type $print_token)))
+	(import "env" "print_comma" (func $print_comma (type $print_token)))
+	(import "env" "print_equal" (func $print_equal (type $print_token)))
+	(import "env" "print_colon" (func $print_colon (type $print_token)))
+	(import "env" "print_arrow" (func $print_arrow (type $print_token)))
+	(import "env" "print_space" (func $print_space (type $print_token)))
+	(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))
+	(import "env" "print_new_line" (func $print_new_line (type $print_token)))
+	(func $__cml_main (type $entry_point) 
+		(local $a i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 8
+		global.set $alloc_ptr
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.mul
+		local.set $a
+		call $print_val
+		call $print_space
+		i32.const 0
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $a
+		call $print_int
+		call $print_colon
+		i32.const 1
+		i32.const 3
+		call $print_string
+		call $print_new_line
+)
+	(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+		(local $old i32)
+		global.get $alloc_ptr
+		local.set $old
+		local.get $old
+		local.get $size
+		i32.add
+		global.set $alloc_ptr
+		local.get $old
+)
+	(global $alloc_ptr (mut i32) i32.const 0)
+	(export "__cml_main" (func $__cml_main))
+	(start $__cml_main)	(data $linear_memory(offset i32.const 1) "int")
+	(data $linear_memory(offset i32.const 0) "a")
+)
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module
+	(type $function(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $closure_call_sig(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $alloc_sig(func (param $size i32) (result i32) ))
+	(type $entry_point(func))
+	(type $print_int(func (param $value i32)))
+	(type $print_bool(func (param $value i32)))
+	(type $print_string(func (param $ptr i32)(param $size i32)))
+	(type $print_token(func))
+	(import "env" "linear_memory" (memory $linear_memory 2))
+	(import "env" "print_int" (func $print_int (type $print_int)))
+	(import "env" "print_bool" (func $print_bool (type $print_bool)))
+	(import "env" "print_string" (func $print_string (type $print_string)))
+	(import "env" "print_lparen" (func $print_lparen (type $print_token)))
+	(import "env" "print_rparen" (func $print_rparen (type $print_token)))
+	(import "env" "print_val" (func $print_val (type $print_token)))
+	(import "env" "print_comma" (func $print_comma (type $print_token)))
+	(import "env" "print_equal" (func $print_equal (type $print_token)))
+	(import "env" "print_colon" (func $print_colon (type $print_token)))
+	(import "env" "print_arrow" (func $print_arrow (type $print_token)))
+	(import "env" "print_space" (func $print_space (type $print_token)))
+	(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))
+	(import "env" "print_new_line" (func $print_new_line (type $print_token)))
+	(func $__cml_main (type $entry_point) 
+		(local $b i32)
+		(local $a i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 16
+		global.set $alloc_ptr
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.mul
+		local.set $a
+		call $print_val
+		call $print_space
+		i32.const 4
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $a
+		call $print_int
+		call $print_colon
+		i32.const 5
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 0
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 2
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+		local.set $b
+		call $print_val
+		call $print_space
+		i32.const 8
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $b
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_colon
+		i32.const 9
+		i32.const 6
+		call $print_string
+		call $print_new_line
+)
+	(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+		(local $old i32)
+		global.get $alloc_ptr
+		local.set $old
+		local.get $old
+		local.get $size
+		i32.add
+		global.set $alloc_ptr
+		local.get $old
+)
+	(global $alloc_ptr (mut i32) i32.const 0)
+	(export "__cml_main" (func $__cml_main))
+	(start $__cml_main)	(data $linear_memory(offset i32.const 9) "string")
+	(data $linear_memory(offset i32.const 8) "b")
+	(data $linear_memory(offset i32.const 5) "int")
+	(data $linear_memory(offset i32.const 4) "a")
+	(data $linear_memory(offset i32.const 2) "NG")
+	(data $linear_memory(offset i32.const 0) "OK")
+)
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module
+	(type $function(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $pair_print_<i*b>(func (param $__pair_addr i32)))
+	(type $closure_call_sig(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $alloc_sig(func (param $size i32) (result i32) ))
+	(type $pair_con_nogc_i32_nogc_i32(func (param $e1 i32)(param $e2 i32) (result i32) ))
+	(type $entry_point(func))
+	(type $print_int(func (param $value i32)))
+	(type $print_bool(func (param $value i32)))
+	(type $print_string(func (param $ptr i32)(param $size i32)))
+	(type $print_token(func))
+	(import "env" "linear_memory" (memory $linear_memory 2))
+	(import "env" "print_int" (func $print_int (type $print_int)))
+	(import "env" "print_bool" (func $print_bool (type $print_bool)))
+	(import "env" "print_string" (func $print_string (type $print_string)))
+	(import "env" "print_lparen" (func $print_lparen (type $print_token)))
+	(import "env" "print_rparen" (func $print_rparen (type $print_token)))
+	(import "env" "print_val" (func $print_val (type $print_token)))
+	(import "env" "print_comma" (func $print_comma (type $print_token)))
+	(import "env" "print_equal" (func $print_equal (type $print_token)))
+	(import "env" "print_colon" (func $print_colon (type $print_token)))
+	(import "env" "print_arrow" (func $print_arrow (type $print_token)))
+	(import "env" "print_space" (func $print_space (type $print_token)))
+	(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))
+	(import "env" "print_new_line" (func $print_new_line (type $print_token)))
+	(func $pair_print_<i*b> (type $pair_print_<i*b>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		call $print_int
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		call $print_bool
+		call $print_rparen
+)
+	(func $__cml_main (type $entry_point) 
+		(local $c i32)
+		(local $b i32)
+		(local $a i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 32
+		global.set $alloc_ptr
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.mul
+		local.set $a
+		call $print_val
+		call $print_space
+		i32.const 4
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $a
+		call $print_int
+		call $print_colon
+		i32.const 5
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 0
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 2
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+		local.set $b
+		call $print_val
+		call $print_space
+		i32.const 8
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $b
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_colon
+		i32.const 9
+		i32.const 6
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 0
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c
+		call $print_val
+		call $print_space
+		i32.const 15
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $c
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 16
+		i32.const 12
+		call $print_string
+		call $print_new_line
+)
+	(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+		(local $old i32)
+		global.get $alloc_ptr
+		local.set $old
+		local.get $old
+		local.get $size
+		i32.add
+		global.set $alloc_ptr
+		local.get $old
+)
+	(func $pair_con_nogc_i32_nogc_i32 (type $pair_con_nogc_i32_nogc_i32)
+		(local $pair_addr i32)
+		i32.const 8
+		call $alloc
+		local.tee $pair_addr
+		local.get 0
+		i32.store offset=0 align=4
+		local.get $pair_addr
+		local.get 1
+		i32.store offset=4 align=4
+		local.get $pair_addr
+)
+	(global $alloc_ptr (mut i32) i32.const 0)
+	(export "__cml_main" (func $__cml_main))
+	(start $__cml_main)	(data $linear_memory(offset i32.const 16) "(int * bool)")
+	(data $linear_memory(offset i32.const 15) "c")
+	(data $linear_memory(offset i32.const 9) "string")
+	(data $linear_memory(offset i32.const 8) "b")
+	(data $linear_memory(offset i32.const 5) "int")
+	(data $linear_memory(offset i32.const 4) "a")
+	(data $linear_memory(offset i32.const 2) "NG")
+	(data $linear_memory(offset i32.const 0) "OK")
+)
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module
+	(type $function(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $pair_print_<i*b>(func (param $__pair_addr i32)))
+	(type $closure_call_sig(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $alloc_sig(func (param $size i32) (result i32) ))
+	(type $pair_con_nogc_i32_nogc_i32(func (param $e1 i32)(param $e2 i32) (result i32) ))
+	(type $entry_point(func))
+	(type $print_int(func (param $value i32)))
+	(type $print_bool(func (param $value i32)))
+	(type $print_string(func (param $ptr i32)(param $size i32)))
+	(type $print_token(func))
+	(import "env" "linear_memory" (memory $linear_memory 2))
+	(import "env" "print_int" (func $print_int (type $print_int)))
+	(import "env" "print_bool" (func $print_bool (type $print_bool)))
+	(import "env" "print_string" (func $print_string (type $print_string)))
+	(import "env" "print_lparen" (func $print_lparen (type $print_token)))
+	(import "env" "print_rparen" (func $print_rparen (type $print_token)))
+	(import "env" "print_val" (func $print_val (type $print_token)))
+	(import "env" "print_comma" (func $print_comma (type $print_token)))
+	(import "env" "print_equal" (func $print_equal (type $print_token)))
+	(import "env" "print_colon" (func $print_colon (type $print_token)))
+	(import "env" "print_arrow" (func $print_arrow (type $print_token)))
+	(import "env" "print_space" (func $print_space (type $print_token)))
+	(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))
+	(import "env" "print_new_line" (func $print_new_line (type $print_token)))
+	(func $pair_print_<i*b> (type $pair_print_<i*b>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		call $print_int
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		call $print_bool
+		call $print_rparen
+)
+	(func $__cml_main (type $entry_point) 
+		(local $c2 i32)
+		(local $c i32)
+		(local $b i32)
+		(local $a i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 44
+		global.set $alloc_ptr
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.mul
+		local.set $a
+		call $print_val
+		call $print_space
+		i32.const 4
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $a
+		call $print_int
+		call $print_colon
+		i32.const 5
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 0
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 2
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+		local.set $b
+		call $print_val
+		call $print_space
+		i32.const 8
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $b
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_colon
+		i32.const 9
+		i32.const 6
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 0
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c
+		call $print_val
+		call $print_space
+		i32.const 15
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $c
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 16
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 1
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c2
+		call $print_val
+		call $print_space
+		i32.const 28
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $c2
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 30
+		i32.const 12
+		call $print_string
+		call $print_new_line
+)
+	(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+		(local $old i32)
+		global.get $alloc_ptr
+		local.set $old
+		local.get $old
+		local.get $size
+		i32.add
+		global.set $alloc_ptr
+		local.get $old
+)
+	(func $pair_con_nogc_i32_nogc_i32 (type $pair_con_nogc_i32_nogc_i32)
+		(local $pair_addr i32)
+		i32.const 8
+		call $alloc
+		local.tee $pair_addr
+		local.get 0
+		i32.store offset=0 align=4
+		local.get $pair_addr
+		local.get 1
+		i32.store offset=4 align=4
+		local.get $pair_addr
+)
+	(global $alloc_ptr (mut i32) i32.const 0)
+	(export "__cml_main" (func $__cml_main))
+	(start $__cml_main)	(data $linear_memory(offset i32.const 30) "(int * bool)")
+	(data $linear_memory(offset i32.const 28) "c2")
+	(data $linear_memory(offset i32.const 16) "(int * bool)")
+	(data $linear_memory(offset i32.const 15) "c")
+	(data $linear_memory(offset i32.const 9) "string")
+	(data $linear_memory(offset i32.const 8) "b")
+	(data $linear_memory(offset i32.const 5) "int")
+	(data $linear_memory(offset i32.const 4) "a")
+	(data $linear_memory(offset i32.const 2) "NG")
+	(data $linear_memory(offset i32.const 0) "OK")
+)
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module
+	(type $function(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $pair_print_<i*b>(func (param $__pair_addr i32)))
+	(type $closure_call_sig(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $alloc_sig(func (param $size i32) (result i32) ))
+	(type $pair_con_nogc_i32_nogc_i32(func (param $e1 i32)(param $e2 i32) (result i32) ))
+	(type $entry_point(func))
+	(type $print_int(func (param $value i32)))
+	(type $print_bool(func (param $value i32)))
+	(type $print_string(func (param $ptr i32)(param $size i32)))
+	(type $print_token(func))
+	(import "env" "linear_memory" (memory $linear_memory 2))
+	(import "env" "print_int" (func $print_int (type $print_int)))
+	(import "env" "print_bool" (func $print_bool (type $print_bool)))
+	(import "env" "print_string" (func $print_string (type $print_string)))
+	(import "env" "print_lparen" (func $print_lparen (type $print_token)))
+	(import "env" "print_rparen" (func $print_rparen (type $print_token)))
+	(import "env" "print_val" (func $print_val (type $print_token)))
+	(import "env" "print_comma" (func $print_comma (type $print_token)))
+	(import "env" "print_equal" (func $print_equal (type $print_token)))
+	(import "env" "print_colon" (func $print_colon (type $print_token)))
+	(import "env" "print_arrow" (func $print_arrow (type $print_token)))
+	(import "env" "print_space" (func $print_space (type $print_token)))
+	(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))
+	(import "env" "print_new_line" (func $print_new_line (type $print_token)))
+	(func $pair_print_<i*b> (type $pair_print_<i*b>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		call $print_int
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		call $print_bool
+		call $print_rparen
+)
+	(func $__cml_main (type $entry_point) 
+		(local $d i32)
+		(local $c2 i32)
+		(local $c i32)
+		(local $b i32)
+		(local $a i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 48
+		global.set $alloc_ptr
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.mul
+		local.set $a
+		call $print_val
+		call $print_space
+		i32.const 4
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $a
+		call $print_int
+		call $print_colon
+		i32.const 5
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 0
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 2
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+		local.set $b
+		call $print_val
+		call $print_space
+		i32.const 8
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $b
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_colon
+		i32.const 9
+		i32.const 6
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 0
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c
+		call $print_val
+		call $print_space
+		i32.const 15
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $c
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 16
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 1
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c2
+		call $print_val
+		call $print_space
+		i32.const 28
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $c2
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 30
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		local.get $c
+		i32.load offset=4 align=4
+		if (result i32)
+			local.get $c
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.mul
+
+		else
+			local.get $c
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.div_s
+
+		end
+		local.set $d
+		call $print_val
+		call $print_space
+		i32.const 42
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $d
+		call $print_int
+		call $print_colon
+		i32.const 43
+		i32.const 3
+		call $print_string
+		call $print_new_line
+)
+	(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+		(local $old i32)
+		global.get $alloc_ptr
+		local.set $old
+		local.get $old
+		local.get $size
+		i32.add
+		global.set $alloc_ptr
+		local.get $old
+)
+	(func $pair_con_nogc_i32_nogc_i32 (type $pair_con_nogc_i32_nogc_i32)
+		(local $pair_addr i32)
+		i32.const 8
+		call $alloc
+		local.tee $pair_addr
+		local.get 0
+		i32.store offset=0 align=4
+		local.get $pair_addr
+		local.get 1
+		i32.store offset=4 align=4
+		local.get $pair_addr
+)
+	(global $alloc_ptr (mut i32) i32.const 0)
+	(export "__cml_main" (func $__cml_main))
+	(start $__cml_main)	(data $linear_memory(offset i32.const 43) "int")
+	(data $linear_memory(offset i32.const 42) "d")
+	(data $linear_memory(offset i32.const 30) "(int * bool)")
+	(data $linear_memory(offset i32.const 28) "c2")
+	(data $linear_memory(offset i32.const 16) "(int * bool)")
+	(data $linear_memory(offset i32.const 15) "c")
+	(data $linear_memory(offset i32.const 9) "string")
+	(data $linear_memory(offset i32.const 8) "b")
+	(data $linear_memory(offset i32.const 5) "int")
+	(data $linear_memory(offset i32.const 4) "a")
+	(data $linear_memory(offset i32.const 2) "NG")
+	(data $linear_memory(offset i32.const 0) "OK")
+)
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module
+	(type $function(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $pair_print_<i*b>(func (param $__pair_addr i32)))
+	(type $closure_call_sig(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $alloc_sig(func (param $size i32) (result i32) ))
+	(type $pair_con_nogc_i32_nogc_i32(func (param $e1 i32)(param $e2 i32) (result i32) ))
+	(type $entry_point(func))
+	(type $print_int(func (param $value i32)))
+	(type $print_bool(func (param $value i32)))
+	(type $print_string(func (param $ptr i32)(param $size i32)))
+	(type $print_token(func))
+	(import "env" "linear_memory" (memory $linear_memory 2))
+	(import "env" "print_int" (func $print_int (type $print_int)))
+	(import "env" "print_bool" (func $print_bool (type $print_bool)))
+	(import "env" "print_string" (func $print_string (type $print_string)))
+	(import "env" "print_lparen" (func $print_lparen (type $print_token)))
+	(import "env" "print_rparen" (func $print_rparen (type $print_token)))
+	(import "env" "print_val" (func $print_val (type $print_token)))
+	(import "env" "print_comma" (func $print_comma (type $print_token)))
+	(import "env" "print_equal" (func $print_equal (type $print_token)))
+	(import "env" "print_colon" (func $print_colon (type $print_token)))
+	(import "env" "print_arrow" (func $print_arrow (type $print_token)))
+	(import "env" "print_space" (func $print_space (type $print_token)))
+	(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))
+	(import "env" "print_new_line" (func $print_new_line (type $print_token)))
+	(func $pair_print_<i*b> (type $pair_print_<i*b>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		call $print_int
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		call $print_bool
+		call $print_rparen
+)
+	(func $__cml_main (type $entry_point) 
+		(local $d2 i32)
+		(local $d i32)
+		(local $c2 i32)
+		(local $c i32)
+		(local $b i32)
+		(local $a i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 52
+		global.set $alloc_ptr
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.mul
+		local.set $a
+		call $print_val
+		call $print_space
+		i32.const 4
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $a
+		call $print_int
+		call $print_colon
+		i32.const 5
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 0
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 2
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+		local.set $b
+		call $print_val
+		call $print_space
+		i32.const 8
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $b
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_colon
+		i32.const 9
+		i32.const 6
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 0
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c
+		call $print_val
+		call $print_space
+		i32.const 15
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $c
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 16
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 1
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c2
+		call $print_val
+		call $print_space
+		i32.const 28
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $c2
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 30
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		local.get $c
+		i32.load offset=4 align=4
+		if (result i32)
+			local.get $c
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.mul
+
+		else
+			local.get $c
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.div_s
+
+		end
+		local.set $d
+		call $print_val
+		call $print_space
+		i32.const 42
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $d
+		call $print_int
+		call $print_colon
+		i32.const 43
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		local.get $c2
+		i32.load offset=4 align=4
+		if (result i32)
+			local.get $c2
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.mul
+
+		else
+			local.get $c2
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.div_s
+
+		end
+		local.set $d2
+		call $print_val
+		call $print_space
+		i32.const 46
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $d2
+		call $print_int
+		call $print_colon
+		i32.const 48
+		i32.const 3
+		call $print_string
+		call $print_new_line
+)
+	(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+		(local $old i32)
+		global.get $alloc_ptr
+		local.set $old
+		local.get $old
+		local.get $size
+		i32.add
+		global.set $alloc_ptr
+		local.get $old
+)
+	(func $pair_con_nogc_i32_nogc_i32 (type $pair_con_nogc_i32_nogc_i32)
+		(local $pair_addr i32)
+		i32.const 8
+		call $alloc
+		local.tee $pair_addr
+		local.get 0
+		i32.store offset=0 align=4
+		local.get $pair_addr
+		local.get 1
+		i32.store offset=4 align=4
+		local.get $pair_addr
+)
+	(global $alloc_ptr (mut i32) i32.const 0)
+	(export "__cml_main" (func $__cml_main))
+	(start $__cml_main)	(data $linear_memory(offset i32.const 48) "int")
+	(data $linear_memory(offset i32.const 46) "d2")
+	(data $linear_memory(offset i32.const 43) "int")
+	(data $linear_memory(offset i32.const 42) "d")
+	(data $linear_memory(offset i32.const 30) "(int * bool)")
+	(data $linear_memory(offset i32.const 28) "c2")
+	(data $linear_memory(offset i32.const 16) "(int * bool)")
+	(data $linear_memory(offset i32.const 15) "c")
+	(data $linear_memory(offset i32.const 9) "string")
+	(data $linear_memory(offset i32.const 8) "b")
+	(data $linear_memory(offset i32.const 5) "int")
+	(data $linear_memory(offset i32.const 4) "a")
+	(data $linear_memory(offset i32.const 2) "NG")
+	(data $linear_memory(offset i32.const 0) "OK")
+)
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module
+	(type $function(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $pair_print_<i*b>(func (param $__pair_addr i32)))
+	(type $closure_call_sig(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $alloc_sig(func (param $size i32) (result i32) ))
+	(type $pair_con_nogc_i32_nogc_i32(func (param $e1 i32)(param $e2 i32) (result i32) ))
+	(type $entry_point(func))
+	(type $print_int(func (param $value i32)))
+	(type $print_bool(func (param $value i32)))
+	(type $print_string(func (param $ptr i32)(param $size i32)))
+	(type $print_token(func))
+	(import "env" "linear_memory" (memory $linear_memory 2))
+	(import "env" "print_int" (func $print_int (type $print_int)))
+	(import "env" "print_bool" (func $print_bool (type $print_bool)))
+	(import "env" "print_string" (func $print_string (type $print_string)))
+	(import "env" "print_lparen" (func $print_lparen (type $print_token)))
+	(import "env" "print_rparen" (func $print_rparen (type $print_token)))
+	(import "env" "print_val" (func $print_val (type $print_token)))
+	(import "env" "print_comma" (func $print_comma (type $print_token)))
+	(import "env" "print_equal" (func $print_equal (type $print_token)))
+	(import "env" "print_colon" (func $print_colon (type $print_token)))
+	(import "env" "print_arrow" (func $print_arrow (type $print_token)))
+	(import "env" "print_space" (func $print_space (type $print_token)))
+	(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))
+	(import "env" "print_new_line" (func $print_new_line (type $print_token)))
+	(func $pair_print_<i*b> (type $pair_print_<i*b>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		call $print_int
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		call $print_bool
+		call $print_rparen
+)
+	(func $__cml_main (type $entry_point) 
+		(local $e i32)
+		(local $d2 i32)
+		(local $d i32)
+		(local $c2 i32)
+		(local $c i32)
+		(local $b i32)
+		(local $a i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 80
+		global.set $alloc_ptr
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.mul
+		local.set $a
+		call $print_val
+		call $print_space
+		i32.const 15
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $a
+		call $print_int
+		call $print_colon
+		i32.const 16
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 0
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 2
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+		local.set $b
+		call $print_val
+		call $print_space
+		i32.const 19
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $b
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_colon
+		i32.const 20
+		i32.const 6
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 0
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c
+		call $print_val
+		call $print_space
+		i32.const 26
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $c
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 27
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 1
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c2
+		call $print_val
+		call $print_space
+		i32.const 39
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $c2
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 41
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		local.get $c
+		i32.load offset=4 align=4
+		if (result i32)
+			local.get $c
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.mul
+
+		else
+			local.get $c
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.div_s
+
+		end
+		local.set $d
+		call $print_val
+		call $print_space
+		i32.const 53
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $d
+		call $print_int
+		call $print_colon
+		i32.const 54
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		local.get $c2
+		i32.load offset=4 align=4
+		if (result i32)
+			local.get $c2
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.mul
+
+		else
+			local.get $c2
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.div_s
+
+		end
+		local.set $d2
+		call $print_val
+		call $print_space
+		i32.const 57
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $d2
+		call $print_int
+		call $print_colon
+		i32.const 59
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 0
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $e
+		call $print_val
+		call $print_space
+		i32.const 62
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 63
+		i32.const 15
+		call $print_string
+		call $print_new_line
+)
+	(func $closure_call (type $closure_call_sig)(param $closure i32)(param $arg i32) (result i32)
+		local.get $closure
+		local.get $arg
+		local.get $closure
+		i32.load offset=0 align=4
+		call_indirect $function (type $function)
+)
+	(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+		(local $old i32)
+		global.get $alloc_ptr
+		local.set $old
+		local.get $old
+		local.get $size
+		i32.add
+		global.set $alloc_ptr
+		local.get $old
+)
+	(func $pair_con_nogc_i32_nogc_i32 (type $pair_con_nogc_i32_nogc_i32)
+		(local $pair_addr i32)
+		i32.const 8
+		call $alloc
+		local.tee $pair_addr
+		local.get 0
+		i32.store offset=0 align=4
+		local.get $pair_addr
+		local.get 1
+		i32.store offset=4 align=4
+		local.get $pair_addr
+)
+	(func $function0 (type $function)(param $e i32)(param $x i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $x
+		i32.const 0
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 4
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 4
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 8
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 7
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+)
+	(table $function 1 funcref)
+	(global $alloc_ptr (mut i32) i32.const 0)
+	(export "__cml_main" (func $__cml_main))
+	(start $__cml_main)	(elem (table $function)(offset i32.const 0)funcref (item ref.func $function0)
+)
+	(data $linear_memory(offset i32.const 63) "(int -> string)")
+	(data $linear_memory(offset i32.const 62) "e")
+	(data $linear_memory(offset i32.const 59) "int")
+	(data $linear_memory(offset i32.const 57) "d2")
+	(data $linear_memory(offset i32.const 54) "int")
+	(data $linear_memory(offset i32.const 53) "d")
+	(data $linear_memory(offset i32.const 41) "(int * bool)")
+	(data $linear_memory(offset i32.const 39) "c2")
+	(data $linear_memory(offset i32.const 27) "(int * bool)")
+	(data $linear_memory(offset i32.const 26) "c")
+	(data $linear_memory(offset i32.const 20) "string")
+	(data $linear_memory(offset i32.const 19) "b")
+	(data $linear_memory(offset i32.const 16) "int")
+	(data $linear_memory(offset i32.const 15) "a")
+	(data $linear_memory(offset i32.const 8) "nonzero")
+	(data $linear_memory(offset i32.const 4) "zero")
+	(data $linear_memory(offset i32.const 2) "NG")
+	(data $linear_memory(offset i32.const 0) "OK")
+)
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module
+	(type $function(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $pair_print_<i*b>(func (param $__pair_addr i32)))
+	(type $pair_print_<s*s>(func (param $__pair_addr i32)))
+	(type $closure_call_sig(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $alloc_sig(func (param $size i32) (result i32) ))
+	(type $pair_con_nogc_i32_nogc_i32(func (param $e1 i32)(param $e2 i32) (result i32) ))
+	(type $entry_point(func))
+	(type $print_int(func (param $value i32)))
+	(type $print_bool(func (param $value i32)))
+	(type $print_string(func (param $ptr i32)(param $size i32)))
+	(type $print_token(func))
+	(import "env" "linear_memory" (memory $linear_memory 2))
+	(import "env" "print_int" (func $print_int (type $print_int)))
+	(import "env" "print_bool" (func $print_bool (type $print_bool)))
+	(import "env" "print_string" (func $print_string (type $print_string)))
+	(import "env" "print_lparen" (func $print_lparen (type $print_token)))
+	(import "env" "print_rparen" (func $print_rparen (type $print_token)))
+	(import "env" "print_val" (func $print_val (type $print_token)))
+	(import "env" "print_comma" (func $print_comma (type $print_token)))
+	(import "env" "print_equal" (func $print_equal (type $print_token)))
+	(import "env" "print_colon" (func $print_colon (type $print_token)))
+	(import "env" "print_arrow" (func $print_arrow (type $print_token)))
+	(import "env" "print_space" (func $print_space (type $print_token)))
+	(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))
+	(import "env" "print_new_line" (func $print_new_line (type $print_token)))
+	(func $pair_print_<i*b> (type $pair_print_<i*b>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		call $print_int
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		call $print_bool
+		call $print_rparen
+)
+	(func $pair_print_<s*s> (type $pair_print_<s*s>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_rparen
+)
+	(func $__cml_main (type $entry_point) 
+		(local $f i32)
+		(local $e i32)
+		(local $d2 i32)
+		(local $d i32)
+		(local $c2 i32)
+		(local $c i32)
+		(local $b i32)
+		(local $a i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 100
+		global.set $alloc_ptr
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.mul
+		local.set $a
+		call $print_val
+		call $print_space
+		i32.const 15
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $a
+		call $print_int
+		call $print_colon
+		i32.const 16
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 0
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 2
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+		local.set $b
+		call $print_val
+		call $print_space
+		i32.const 19
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $b
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_colon
+		i32.const 20
+		i32.const 6
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 0
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c
+		call $print_val
+		call $print_space
+		i32.const 26
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $c
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 27
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 1
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c2
+		call $print_val
+		call $print_space
+		i32.const 39
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $c2
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 41
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		local.get $c
+		i32.load offset=4 align=4
+		if (result i32)
+			local.get $c
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.mul
+
+		else
+			local.get $c
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.div_s
+
+		end
+		local.set $d
+		call $print_val
+		call $print_space
+		i32.const 53
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $d
+		call $print_int
+		call $print_colon
+		i32.const 54
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		local.get $c2
+		i32.load offset=4 align=4
+		if (result i32)
+			local.get $c2
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.mul
+
+		else
+			local.get $c2
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.div_s
+
+		end
+		local.set $d2
+		call $print_val
+		call $print_space
+		i32.const 57
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $d2
+		call $print_int
+		call $print_colon
+		i32.const 59
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 0
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $e
+		call $print_val
+		call $print_space
+		i32.const 62
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 63
+		i32.const 15
+		call $print_string
+		call $print_new_line
+		local.get $e
+		i32.const 0
+		call $closure_call
+		local.get $e
+		i32.const 123
+		call $closure_call
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $f
+		call $print_val
+		call $print_space
+		i32.const 78
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $f
+		call $pair_print_<s*s>
+		call $print_colon
+		i32.const 79
+		i32.const 17
+		call $print_string
+		call $print_new_line
+)
+	(func $closure_call (type $closure_call_sig)(param $closure i32)(param $arg i32) (result i32)
+		local.get $closure
+		local.get $arg
+		local.get $closure
+		i32.load offset=0 align=4
+		call_indirect $function (type $function)
+)
+	(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+		(local $old i32)
+		global.get $alloc_ptr
+		local.set $old
+		local.get $old
+		local.get $size
+		i32.add
+		global.set $alloc_ptr
+		local.get $old
+)
+	(func $pair_con_nogc_i32_nogc_i32 (type $pair_con_nogc_i32_nogc_i32)
+		(local $pair_addr i32)
+		i32.const 8
+		call $alloc
+		local.tee $pair_addr
+		local.get 0
+		i32.store offset=0 align=4
+		local.get $pair_addr
+		local.get 1
+		i32.store offset=4 align=4
+		local.get $pair_addr
+)
+	(func $function0 (type $function)(param $e i32)(param $x i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $x
+		i32.const 0
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 4
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 4
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 8
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 7
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+)
+	(table $function 1 funcref)
+	(global $alloc_ptr (mut i32) i32.const 0)
+	(export "__cml_main" (func $__cml_main))
+	(start $__cml_main)	(elem (table $function)(offset i32.const 0)funcref (item ref.func $function0)
+)
+	(data $linear_memory(offset i32.const 79) "(string * string)")
+	(data $linear_memory(offset i32.const 78) "f")
+	(data $linear_memory(offset i32.const 63) "(int -> string)")
+	(data $linear_memory(offset i32.const 62) "e")
+	(data $linear_memory(offset i32.const 59) "int")
+	(data $linear_memory(offset i32.const 57) "d2")
+	(data $linear_memory(offset i32.const 54) "int")
+	(data $linear_memory(offset i32.const 53) "d")
+	(data $linear_memory(offset i32.const 41) "(int * bool)")
+	(data $linear_memory(offset i32.const 39) "c2")
+	(data $linear_memory(offset i32.const 27) "(int * bool)")
+	(data $linear_memory(offset i32.const 26) "c")
+	(data $linear_memory(offset i32.const 20) "string")
+	(data $linear_memory(offset i32.const 19) "b")
+	(data $linear_memory(offset i32.const 16) "int")
+	(data $linear_memory(offset i32.const 15) "a")
+	(data $linear_memory(offset i32.const 8) "nonzero")
+	(data $linear_memory(offset i32.const 4) "zero")
+	(data $linear_memory(offset i32.const 2) "NG")
+	(data $linear_memory(offset i32.const 0) "OK")
+)
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module
+	(type $function(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $pair_print_<i*b>(func (param $__pair_addr i32)))
+	(type $pair_print_<s*s>(func (param $__pair_addr i32)))
+	(type $closure_call_sig(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $alloc_sig(func (param $size i32) (result i32) ))
+	(type $pair_con_nogc_i32_nogc_i32(func (param $e1 i32)(param $e2 i32) (result i32) ))
+	(type $entry_point(func))
+	(type $print_int(func (param $value i32)))
+	(type $print_bool(func (param $value i32)))
+	(type $print_string(func (param $ptr i32)(param $size i32)))
+	(type $print_token(func))
+	(import "env" "linear_memory" (memory $linear_memory 2))
+	(import "env" "print_int" (func $print_int (type $print_int)))
+	(import "env" "print_bool" (func $print_bool (type $print_bool)))
+	(import "env" "print_string" (func $print_string (type $print_string)))
+	(import "env" "print_lparen" (func $print_lparen (type $print_token)))
+	(import "env" "print_rparen" (func $print_rparen (type $print_token)))
+	(import "env" "print_val" (func $print_val (type $print_token)))
+	(import "env" "print_comma" (func $print_comma (type $print_token)))
+	(import "env" "print_equal" (func $print_equal (type $print_token)))
+	(import "env" "print_colon" (func $print_colon (type $print_token)))
+	(import "env" "print_arrow" (func $print_arrow (type $print_token)))
+	(import "env" "print_space" (func $print_space (type $print_token)))
+	(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))
+	(import "env" "print_new_line" (func $print_new_line (type $print_token)))
+	(func $pair_print_<i*b> (type $pair_print_<i*b>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		call $print_int
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		call $print_bool
+		call $print_rparen
+)
+	(func $pair_print_<s*s> (type $pair_print_<s*s>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_rparen
+)
+	(func $__cml_main (type $entry_point) 
+		(local $g i32)
+		(local $f i32)
+		(local $e i32)
+		(local $d2 i32)
+		(local $d i32)
+		(local $c2 i32)
+		(local $c i32)
+		(local $b i32)
+		(local $a i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 128
+		global.set $alloc_ptr
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.mul
+		local.set $a
+		call $print_val
+		call $print_space
+		i32.const 15
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $a
+		call $print_int
+		call $print_colon
+		i32.const 16
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 0
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 2
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+		local.set $b
+		call $print_val
+		call $print_space
+		i32.const 19
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $b
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_colon
+		i32.const 20
+		i32.const 6
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 0
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c
+		call $print_val
+		call $print_space
+		i32.const 26
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $c
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 27
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 1
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c2
+		call $print_val
+		call $print_space
+		i32.const 39
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $c2
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 41
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		local.get $c
+		i32.load offset=4 align=4
+		if (result i32)
+			local.get $c
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.mul
+
+		else
+			local.get $c
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.div_s
+
+		end
+		local.set $d
+		call $print_val
+		call $print_space
+		i32.const 53
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $d
+		call $print_int
+		call $print_colon
+		i32.const 54
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		local.get $c2
+		i32.load offset=4 align=4
+		if (result i32)
+			local.get $c2
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.mul
+
+		else
+			local.get $c2
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.div_s
+
+		end
+		local.set $d2
+		call $print_val
+		call $print_space
+		i32.const 57
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $d2
+		call $print_int
+		call $print_colon
+		i32.const 59
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 0
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $e
+		call $print_val
+		call $print_space
+		i32.const 62
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 63
+		i32.const 15
+		call $print_string
+		call $print_new_line
+		local.get $e
+		i32.const 0
+		call $closure_call
+		local.get $e
+		i32.const 123
+		call $closure_call
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $f
+		call $print_val
+		call $print_space
+		i32.const 78
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $f
+		call $pair_print_<s*s>
+		call $print_colon
+		i32.const 79
+		i32.const 17
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 1
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $g
+		call $print_val
+		call $print_space
+		i32.const 96
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 97
+		i32.const 30
+		call $print_string
+		call $print_new_line
+)
+	(func $closure_call (type $closure_call_sig)(param $closure i32)(param $arg i32) (result i32)
+		local.get $closure
+		local.get $arg
+		local.get $closure
+		i32.load offset=0 align=4
+		call_indirect $function (type $function)
+)
+	(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+		(local $old i32)
+		global.get $alloc_ptr
+		local.set $old
+		local.get $old
+		local.get $size
+		i32.add
+		global.set $alloc_ptr
+		local.get $old
+)
+	(func $pair_con_nogc_i32_nogc_i32 (type $pair_con_nogc_i32_nogc_i32)
+		(local $pair_addr i32)
+		i32.const 8
+		call $alloc
+		local.tee $pair_addr
+		local.get 0
+		i32.store offset=0 align=4
+		local.get $pair_addr
+		local.get 1
+		i32.store offset=4 align=4
+		local.get $pair_addr
+)
+	(func $function1 (type $function)(param $g i32)(param $h i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 8
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 2
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.get $h
+		i32.store offset=4 align=4
+		local.get $closure_ptr
+)
+	(func $function2 (type $function)(param $non_recursive_closure i32)(param $x i32) (result i32)
+		(local $h i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $non_recursive_closure
+		i32.load offset=4 align=4
+		local.set $h
+		local.get $h
+		local.get $x
+		call $closure_call
+		local.get $h
+		i32.const 123
+		call $closure_call
+		i32.add
+)
+	(func $function0 (type $function)(param $e i32)(param $x i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $x
+		i32.const 0
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 4
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 4
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 8
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 7
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+)
+	(table $function 3 funcref)
+	(global $alloc_ptr (mut i32) i32.const 0)
+	(export "__cml_main" (func $__cml_main))
+	(start $__cml_main)	(elem (table $function)(offset i32.const 0)funcref (item ref.func $function0)
+(item ref.func $function1)
+(item ref.func $function2)
+)
+	(data $linear_memory(offset i32.const 97) "((int -> int) -> (int -> int))")
+	(data $linear_memory(offset i32.const 96) "g")
+	(data $linear_memory(offset i32.const 79) "(string * string)")
+	(data $linear_memory(offset i32.const 78) "f")
+	(data $linear_memory(offset i32.const 63) "(int -> string)")
+	(data $linear_memory(offset i32.const 62) "e")
+	(data $linear_memory(offset i32.const 59) "int")
+	(data $linear_memory(offset i32.const 57) "d2")
+	(data $linear_memory(offset i32.const 54) "int")
+	(data $linear_memory(offset i32.const 53) "d")
+	(data $linear_memory(offset i32.const 41) "(int * bool)")
+	(data $linear_memory(offset i32.const 39) "c2")
+	(data $linear_memory(offset i32.const 27) "(int * bool)")
+	(data $linear_memory(offset i32.const 26) "c")
+	(data $linear_memory(offset i32.const 20) "string")
+	(data $linear_memory(offset i32.const 19) "b")
+	(data $linear_memory(offset i32.const 16) "int")
+	(data $linear_memory(offset i32.const 15) "a")
+	(data $linear_memory(offset i32.const 8) "nonzero")
+	(data $linear_memory(offset i32.const 4) "zero")
+	(data $linear_memory(offset i32.const 2) "NG")
+	(data $linear_memory(offset i32.const 0) "OK")
+)
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module
+	(type $function(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $pair_print_<i*b>(func (param $__pair_addr i32)))
+	(type $pair_print_<s*s>(func (param $__pair_addr i32)))
+	(type $closure_call_sig(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $alloc_sig(func (param $size i32) (result i32) ))
+	(type $pair_con_nogc_i32_nogc_i32(func (param $e1 i32)(param $e2 i32) (result i32) ))
+	(type $entry_point(func))
+	(type $print_int(func (param $value i32)))
+	(type $print_bool(func (param $value i32)))
+	(type $print_string(func (param $ptr i32)(param $size i32)))
+	(type $print_token(func))
+	(import "env" "linear_memory" (memory $linear_memory 2))
+	(import "env" "print_int" (func $print_int (type $print_int)))
+	(import "env" "print_bool" (func $print_bool (type $print_bool)))
+	(import "env" "print_string" (func $print_string (type $print_string)))
+	(import "env" "print_lparen" (func $print_lparen (type $print_token)))
+	(import "env" "print_rparen" (func $print_rparen (type $print_token)))
+	(import "env" "print_val" (func $print_val (type $print_token)))
+	(import "env" "print_comma" (func $print_comma (type $print_token)))
+	(import "env" "print_equal" (func $print_equal (type $print_token)))
+	(import "env" "print_colon" (func $print_colon (type $print_token)))
+	(import "env" "print_arrow" (func $print_arrow (type $print_token)))
+	(import "env" "print_space" (func $print_space (type $print_token)))
+	(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))
+	(import "env" "print_new_line" (func $print_new_line (type $print_token)))
+	(func $pair_print_<i*b> (type $pair_print_<i*b>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		call $print_int
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		call $print_bool
+		call $print_rparen
+)
+	(func $pair_print_<s*s> (type $pair_print_<s*s>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_rparen
+)
+	(func $__cml_main (type $entry_point) 
+		(local $i i32)
+		(local $g i32)
+		(local $f i32)
+		(local $e i32)
+		(local $d2 i32)
+		(local $d i32)
+		(local $c2 i32)
+		(local $c i32)
+		(local $b i32)
+		(local $a i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 132
+		global.set $alloc_ptr
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.mul
+		local.set $a
+		call $print_val
+		call $print_space
+		i32.const 15
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $a
+		call $print_int
+		call $print_colon
+		i32.const 16
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 0
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 2
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+		local.set $b
+		call $print_val
+		call $print_space
+		i32.const 19
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $b
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_colon
+		i32.const 20
+		i32.const 6
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 0
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c
+		call $print_val
+		call $print_space
+		i32.const 26
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $c
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 27
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 1
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c2
+		call $print_val
+		call $print_space
+		i32.const 39
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $c2
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 41
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		local.get $c
+		i32.load offset=4 align=4
+		if (result i32)
+			local.get $c
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.mul
+
+		else
+			local.get $c
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.div_s
+
+		end
+		local.set $d
+		call $print_val
+		call $print_space
+		i32.const 53
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $d
+		call $print_int
+		call $print_colon
+		i32.const 54
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		local.get $c2
+		i32.load offset=4 align=4
+		if (result i32)
+			local.get $c2
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.mul
+
+		else
+			local.get $c2
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.div_s
+
+		end
+		local.set $d2
+		call $print_val
+		call $print_space
+		i32.const 57
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $d2
+		call $print_int
+		call $print_colon
+		i32.const 59
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 0
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $e
+		call $print_val
+		call $print_space
+		i32.const 62
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 63
+		i32.const 15
+		call $print_string
+		call $print_new_line
+		local.get $e
+		i32.const 0
+		call $closure_call
+		local.get $e
+		i32.const 123
+		call $closure_call
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $f
+		call $print_val
+		call $print_space
+		i32.const 78
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $f
+		call $pair_print_<s*s>
+		call $print_colon
+		i32.const 79
+		i32.const 17
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 1
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $g
+		call $print_val
+		call $print_space
+		i32.const 96
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 97
+		i32.const 30
+		call $print_string
+		call $print_new_line
+		local.get $g
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 3
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		call $closure_call
+		i32.const 456
+		call $closure_call
+		local.set $i
+		call $print_val
+		call $print_space
+		i32.const 127
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $i
+		call $print_int
+		call $print_colon
+		i32.const 128
+		i32.const 3
+		call $print_string
+		call $print_new_line
+)
+	(func $closure_call (type $closure_call_sig)(param $closure i32)(param $arg i32) (result i32)
+		local.get $closure
+		local.get $arg
+		local.get $closure
+		i32.load offset=0 align=4
+		call_indirect $function (type $function)
+)
+	(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+		(local $old i32)
+		global.get $alloc_ptr
+		local.set $old
+		local.get $old
+		local.get $size
+		i32.add
+		global.set $alloc_ptr
+		local.get $old
+)
+	(func $pair_con_nogc_i32_nogc_i32 (type $pair_con_nogc_i32_nogc_i32)
+		(local $pair_addr i32)
+		i32.const 8
+		call $alloc
+		local.tee $pair_addr
+		local.get 0
+		i32.store offset=0 align=4
+		local.get $pair_addr
+		local.get 1
+		i32.store offset=4 align=4
+		local.get $pair_addr
+)
+	(func $function3 (type $function)(param $non_recursive_closure i32)(param $z i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $z
+		i32.const 2
+		i32.mul
+)
+	(func $function1 (type $function)(param $g i32)(param $h i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 8
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 2
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.get $h
+		i32.store offset=4 align=4
+		local.get $closure_ptr
+)
+	(func $function2 (type $function)(param $non_recursive_closure i32)(param $x i32) (result i32)
+		(local $h i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $non_recursive_closure
+		i32.load offset=4 align=4
+		local.set $h
+		local.get $h
+		local.get $x
+		call $closure_call
+		local.get $h
+		i32.const 123
+		call $closure_call
+		i32.add
+)
+	(func $function0 (type $function)(param $e i32)(param $x i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $x
+		i32.const 0
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 4
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 4
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 8
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 7
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+)
+	(table $function 4 funcref)
+	(global $alloc_ptr (mut i32) i32.const 0)
+	(export "__cml_main" (func $__cml_main))
+	(start $__cml_main)	(elem (table $function)(offset i32.const 0)funcref (item ref.func $function0)
+(item ref.func $function1)
+(item ref.func $function2)
+(item ref.func $function3)
+)
+	(data $linear_memory(offset i32.const 128) "int")
+	(data $linear_memory(offset i32.const 127) "i")
+	(data $linear_memory(offset i32.const 97) "((int -> int) -> (int -> int))")
+	(data $linear_memory(offset i32.const 96) "g")
+	(data $linear_memory(offset i32.const 79) "(string * string)")
+	(data $linear_memory(offset i32.const 78) "f")
+	(data $linear_memory(offset i32.const 63) "(int -> string)")
+	(data $linear_memory(offset i32.const 62) "e")
+	(data $linear_memory(offset i32.const 59) "int")
+	(data $linear_memory(offset i32.const 57) "d2")
+	(data $linear_memory(offset i32.const 54) "int")
+	(data $linear_memory(offset i32.const 53) "d")
+	(data $linear_memory(offset i32.const 41) "(int * bool)")
+	(data $linear_memory(offset i32.const 39) "c2")
+	(data $linear_memory(offset i32.const 27) "(int * bool)")
+	(data $linear_memory(offset i32.const 26) "c")
+	(data $linear_memory(offset i32.const 20) "string")
+	(data $linear_memory(offset i32.const 19) "b")
+	(data $linear_memory(offset i32.const 16) "int")
+	(data $linear_memory(offset i32.const 15) "a")
+	(data $linear_memory(offset i32.const 8) "nonzero")
+	(data $linear_memory(offset i32.const 4) "zero")
+	(data $linear_memory(offset i32.const 2) "NG")
+	(data $linear_memory(offset i32.const 0) "OK")
+)
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module
+	(type $function(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $pair_print_<i*b>(func (param $__pair_addr i32)))
+	(type $pair_print_<s*s>(func (param $__pair_addr i32)))
+	(type $closure_call_sig(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $alloc_sig(func (param $size i32) (result i32) ))
+	(type $pair_con_nogc_i32_nogc_i32(func (param $e1 i32)(param $e2 i32) (result i32) ))
+	(type $entry_point(func))
+	(type $print_int(func (param $value i32)))
+	(type $print_bool(func (param $value i32)))
+	(type $print_string(func (param $ptr i32)(param $size i32)))
+	(type $print_token(func))
+	(import "env" "linear_memory" (memory $linear_memory 2))
+	(import "env" "print_int" (func $print_int (type $print_int)))
+	(import "env" "print_bool" (func $print_bool (type $print_bool)))
+	(import "env" "print_string" (func $print_string (type $print_string)))
+	(import "env" "print_lparen" (func $print_lparen (type $print_token)))
+	(import "env" "print_rparen" (func $print_rparen (type $print_token)))
+	(import "env" "print_val" (func $print_val (type $print_token)))
+	(import "env" "print_comma" (func $print_comma (type $print_token)))
+	(import "env" "print_equal" (func $print_equal (type $print_token)))
+	(import "env" "print_colon" (func $print_colon (type $print_token)))
+	(import "env" "print_arrow" (func $print_arrow (type $print_token)))
+	(import "env" "print_space" (func $print_space (type $print_token)))
+	(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))
+	(import "env" "print_new_line" (func $print_new_line (type $print_token)))
+	(func $pair_print_<i*b> (type $pair_print_<i*b>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		call $print_int
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		call $print_bool
+		call $print_rparen
+)
+	(func $pair_print_<s*s> (type $pair_print_<s*s>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_rparen
+)
+	(func $__cml_main (type $entry_point) 
+		(local $j i32)
+		(local $i i32)
+		(local $g i32)
+		(local $f i32)
+		(local $e i32)
+		(local $d2 i32)
+		(local $d i32)
+		(local $c2 i32)
+		(local $c i32)
+		(local $b i32)
+		(local $a i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 148
+		global.set $alloc_ptr
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.mul
+		local.set $a
+		call $print_val
+		call $print_space
+		i32.const 15
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $a
+		call $print_int
+		call $print_colon
+		i32.const 16
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 0
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 2
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+		local.set $b
+		call $print_val
+		call $print_space
+		i32.const 19
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $b
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_colon
+		i32.const 20
+		i32.const 6
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 0
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c
+		call $print_val
+		call $print_space
+		i32.const 26
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $c
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 27
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 1
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c2
+		call $print_val
+		call $print_space
+		i32.const 39
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $c2
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 41
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		local.get $c
+		i32.load offset=4 align=4
+		if (result i32)
+			local.get $c
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.mul
+
+		else
+			local.get $c
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.div_s
+
+		end
+		local.set $d
+		call $print_val
+		call $print_space
+		i32.const 53
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $d
+		call $print_int
+		call $print_colon
+		i32.const 54
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		local.get $c2
+		i32.load offset=4 align=4
+		if (result i32)
+			local.get $c2
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.mul
+
+		else
+			local.get $c2
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.div_s
+
+		end
+		local.set $d2
+		call $print_val
+		call $print_space
+		i32.const 57
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $d2
+		call $print_int
+		call $print_colon
+		i32.const 59
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 0
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $e
+		call $print_val
+		call $print_space
+		i32.const 62
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 63
+		i32.const 15
+		call $print_string
+		call $print_new_line
+		local.get $e
+		i32.const 0
+		call $closure_call
+		local.get $e
+		i32.const 123
+		call $closure_call
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $f
+		call $print_val
+		call $print_space
+		i32.const 78
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $f
+		call $pair_print_<s*s>
+		call $print_colon
+		i32.const 79
+		i32.const 17
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 1
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $g
+		call $print_val
+		call $print_space
+		i32.const 96
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 97
+		i32.const 30
+		call $print_string
+		call $print_new_line
+		local.get $g
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 3
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		call $closure_call
+		i32.const 456
+		call $closure_call
+		local.set $i
+		call $print_val
+		call $print_space
+		i32.const 127
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $i
+		call $print_int
+		call $print_colon
+		i32.const 128
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 4
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $j
+		call $print_val
+		call $print_space
+		i32.const 131
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 132
+		i32.const 12
+		call $print_string
+		call $print_new_line
+)
+	(func $closure_call (type $closure_call_sig)(param $closure i32)(param $arg i32) (result i32)
+		local.get $closure
+		local.get $arg
+		local.get $closure
+		i32.load offset=0 align=4
+		call_indirect $function (type $function)
+)
+	(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+		(local $old i32)
+		global.get $alloc_ptr
+		local.set $old
+		local.get $old
+		local.get $size
+		i32.add
+		global.set $alloc_ptr
+		local.get $old
+)
+	(func $pair_con_nogc_i32_nogc_i32 (type $pair_con_nogc_i32_nogc_i32)
+		(local $pair_addr i32)
+		i32.const 8
+		call $alloc
+		local.tee $pair_addr
+		local.get 0
+		i32.store offset=0 align=4
+		local.get $pair_addr
+		local.get 1
+		i32.store offset=4 align=4
+		local.get $pair_addr
+)
+	(func $function4 (type $function)(param $j i32)(param $x i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $x
+		i32.const 0
+		i32.eq
+		if (result i32)
+			i32.const 1
+		else
+			local.get $j
+			local.get $x
+			i32.const 1
+			i32.sub
+			call $closure_call
+			local.get $x
+			i32.mul
+
+		end
+)
+	(func $function3 (type $function)(param $non_recursive_closure i32)(param $z i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $z
+		i32.const 2
+		i32.mul
+)
+	(func $function1 (type $function)(param $g i32)(param $h i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 8
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 2
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.get $h
+		i32.store offset=4 align=4
+		local.get $closure_ptr
+)
+	(func $function2 (type $function)(param $non_recursive_closure i32)(param $x i32) (result i32)
+		(local $h i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $non_recursive_closure
+		i32.load offset=4 align=4
+		local.set $h
+		local.get $h
+		local.get $x
+		call $closure_call
+		local.get $h
+		i32.const 123
+		call $closure_call
+		i32.add
+)
+	(func $function0 (type $function)(param $e i32)(param $x i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $x
+		i32.const 0
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 4
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 4
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 8
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 7
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+)
+	(table $function 5 funcref)
+	(global $alloc_ptr (mut i32) i32.const 0)
+	(export "__cml_main" (func $__cml_main))
+	(start $__cml_main)	(elem (table $function)(offset i32.const 0)funcref (item ref.func $function0)
+(item ref.func $function1)
+(item ref.func $function2)
+(item ref.func $function3)
+(item ref.func $function4)
+)
+	(data $linear_memory(offset i32.const 132) "(int -> int)")
+	(data $linear_memory(offset i32.const 131) "j")
+	(data $linear_memory(offset i32.const 128) "int")
+	(data $linear_memory(offset i32.const 127) "i")
+	(data $linear_memory(offset i32.const 97) "((int -> int) -> (int -> int))")
+	(data $linear_memory(offset i32.const 96) "g")
+	(data $linear_memory(offset i32.const 79) "(string * string)")
+	(data $linear_memory(offset i32.const 78) "f")
+	(data $linear_memory(offset i32.const 63) "(int -> string)")
+	(data $linear_memory(offset i32.const 62) "e")
+	(data $linear_memory(offset i32.const 59) "int")
+	(data $linear_memory(offset i32.const 57) "d2")
+	(data $linear_memory(offset i32.const 54) "int")
+	(data $linear_memory(offset i32.const 53) "d")
+	(data $linear_memory(offset i32.const 41) "(int * bool)")
+	(data $linear_memory(offset i32.const 39) "c2")
+	(data $linear_memory(offset i32.const 27) "(int * bool)")
+	(data $linear_memory(offset i32.const 26) "c")
+	(data $linear_memory(offset i32.const 20) "string")
+	(data $linear_memory(offset i32.const 19) "b")
+	(data $linear_memory(offset i32.const 16) "int")
+	(data $linear_memory(offset i32.const 15) "a")
+	(data $linear_memory(offset i32.const 8) "nonzero")
+	(data $linear_memory(offset i32.const 4) "zero")
+	(data $linear_memory(offset i32.const 2) "NG")
+	(data $linear_memory(offset i32.const 0) "OK")
+)
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module
+	(type $function(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $pair_print_<i*b>(func (param $__pair_addr i32)))
+	(type $pair_print_<s*s>(func (param $__pair_addr i32)))
+	(type $closure_call_sig(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $alloc_sig(func (param $size i32) (result i32) ))
+	(type $pair_con_nogc_i32_nogc_i32(func (param $e1 i32)(param $e2 i32) (result i32) ))
+	(type $entry_point(func))
+	(type $print_int(func (param $value i32)))
+	(type $print_bool(func (param $value i32)))
+	(type $print_string(func (param $ptr i32)(param $size i32)))
+	(type $print_token(func))
+	(import "env" "linear_memory" (memory $linear_memory 2))
+	(import "env" "print_int" (func $print_int (type $print_int)))
+	(import "env" "print_bool" (func $print_bool (type $print_bool)))
+	(import "env" "print_string" (func $print_string (type $print_string)))
+	(import "env" "print_lparen" (func $print_lparen (type $print_token)))
+	(import "env" "print_rparen" (func $print_rparen (type $print_token)))
+	(import "env" "print_val" (func $print_val (type $print_token)))
+	(import "env" "print_comma" (func $print_comma (type $print_token)))
+	(import "env" "print_equal" (func $print_equal (type $print_token)))
+	(import "env" "print_colon" (func $print_colon (type $print_token)))
+	(import "env" "print_arrow" (func $print_arrow (type $print_token)))
+	(import "env" "print_space" (func $print_space (type $print_token)))
+	(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))
+	(import "env" "print_new_line" (func $print_new_line (type $print_token)))
+	(func $pair_print_<i*b> (type $pair_print_<i*b>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		call $print_int
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		call $print_bool
+		call $print_rparen
+)
+	(func $pair_print_<s*s> (type $pair_print_<s*s>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_rparen
+)
+	(func $__cml_main (type $entry_point) 
+		(local $k i32)
+		(local $j i32)
+		(local $i i32)
+		(local $g i32)
+		(local $f i32)
+		(local $e i32)
+		(local $d2 i32)
+		(local $d i32)
+		(local $c2 i32)
+		(local $c i32)
+		(local $b i32)
+		(local $a i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 152
+		global.set $alloc_ptr
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.mul
+		local.set $a
+		call $print_val
+		call $print_space
+		i32.const 15
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $a
+		call $print_int
+		call $print_colon
+		i32.const 16
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 0
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 2
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+		local.set $b
+		call $print_val
+		call $print_space
+		i32.const 19
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $b
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_colon
+		i32.const 20
+		i32.const 6
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 0
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c
+		call $print_val
+		call $print_space
+		i32.const 26
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $c
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 27
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 1
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c2
+		call $print_val
+		call $print_space
+		i32.const 39
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $c2
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 41
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		local.get $c
+		i32.load offset=4 align=4
+		if (result i32)
+			local.get $c
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.mul
+
+		else
+			local.get $c
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.div_s
+
+		end
+		local.set $d
+		call $print_val
+		call $print_space
+		i32.const 53
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $d
+		call $print_int
+		call $print_colon
+		i32.const 54
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		local.get $c2
+		i32.load offset=4 align=4
+		if (result i32)
+			local.get $c2
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.mul
+
+		else
+			local.get $c2
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.div_s
+
+		end
+		local.set $d2
+		call $print_val
+		call $print_space
+		i32.const 57
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $d2
+		call $print_int
+		call $print_colon
+		i32.const 59
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 0
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $e
+		call $print_val
+		call $print_space
+		i32.const 62
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 63
+		i32.const 15
+		call $print_string
+		call $print_new_line
+		local.get $e
+		i32.const 0
+		call $closure_call
+		local.get $e
+		i32.const 123
+		call $closure_call
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $f
+		call $print_val
+		call $print_space
+		i32.const 78
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $f
+		call $pair_print_<s*s>
+		call $print_colon
+		i32.const 79
+		i32.const 17
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 1
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $g
+		call $print_val
+		call $print_space
+		i32.const 96
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 97
+		i32.const 30
+		call $print_string
+		call $print_new_line
+		local.get $g
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 3
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		call $closure_call
+		i32.const 456
+		call $closure_call
+		local.set $i
+		call $print_val
+		call $print_space
+		i32.const 127
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $i
+		call $print_int
+		call $print_colon
+		i32.const 128
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 4
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $j
+		call $print_val
+		call $print_space
+		i32.const 131
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 132
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		local.get $j
+		i32.const 3
+		call $closure_call
+		local.set $k
+		call $print_val
+		call $print_space
+		i32.const 144
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $k
+		call $print_int
+		call $print_colon
+		i32.const 145
+		i32.const 3
+		call $print_string
+		call $print_new_line
+)
+	(func $closure_call (type $closure_call_sig)(param $closure i32)(param $arg i32) (result i32)
+		local.get $closure
+		local.get $arg
+		local.get $closure
+		i32.load offset=0 align=4
+		call_indirect $function (type $function)
+)
+	(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+		(local $old i32)
+		global.get $alloc_ptr
+		local.set $old
+		local.get $old
+		local.get $size
+		i32.add
+		global.set $alloc_ptr
+		local.get $old
+)
+	(func $pair_con_nogc_i32_nogc_i32 (type $pair_con_nogc_i32_nogc_i32)
+		(local $pair_addr i32)
+		i32.const 8
+		call $alloc
+		local.tee $pair_addr
+		local.get 0
+		i32.store offset=0 align=4
+		local.get $pair_addr
+		local.get 1
+		i32.store offset=4 align=4
+		local.get $pair_addr
+)
+	(func $function4 (type $function)(param $j i32)(param $x i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $x
+		i32.const 0
+		i32.eq
+		if (result i32)
+			i32.const 1
+		else
+			local.get $j
+			local.get $x
+			i32.const 1
+			i32.sub
+			call $closure_call
+			local.get $x
+			i32.mul
+
+		end
+)
+	(func $function3 (type $function)(param $non_recursive_closure i32)(param $z i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $z
+		i32.const 2
+		i32.mul
+)
+	(func $function1 (type $function)(param $g i32)(param $h i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 8
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 2
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.get $h
+		i32.store offset=4 align=4
+		local.get $closure_ptr
+)
+	(func $function2 (type $function)(param $non_recursive_closure i32)(param $x i32) (result i32)
+		(local $h i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $non_recursive_closure
+		i32.load offset=4 align=4
+		local.set $h
+		local.get $h
+		local.get $x
+		call $closure_call
+		local.get $h
+		i32.const 123
+		call $closure_call
+		i32.add
+)
+	(func $function0 (type $function)(param $e i32)(param $x i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $x
+		i32.const 0
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 4
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 4
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 8
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 7
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+)
+	(table $function 5 funcref)
+	(global $alloc_ptr (mut i32) i32.const 0)
+	(export "__cml_main" (func $__cml_main))
+	(start $__cml_main)	(elem (table $function)(offset i32.const 0)funcref (item ref.func $function0)
+(item ref.func $function1)
+(item ref.func $function2)
+(item ref.func $function3)
+(item ref.func $function4)
+)
+	(data $linear_memory(offset i32.const 145) "int")
+	(data $linear_memory(offset i32.const 144) "k")
+	(data $linear_memory(offset i32.const 132) "(int -> int)")
+	(data $linear_memory(offset i32.const 131) "j")
+	(data $linear_memory(offset i32.const 128) "int")
+	(data $linear_memory(offset i32.const 127) "i")
+	(data $linear_memory(offset i32.const 97) "((int -> int) -> (int -> int))")
+	(data $linear_memory(offset i32.const 96) "g")
+	(data $linear_memory(offset i32.const 79) "(string * string)")
+	(data $linear_memory(offset i32.const 78) "f")
+	(data $linear_memory(offset i32.const 63) "(int -> string)")
+	(data $linear_memory(offset i32.const 62) "e")
+	(data $linear_memory(offset i32.const 59) "int")
+	(data $linear_memory(offset i32.const 57) "d2")
+	(data $linear_memory(offset i32.const 54) "int")
+	(data $linear_memory(offset i32.const 53) "d")
+	(data $linear_memory(offset i32.const 41) "(int * bool)")
+	(data $linear_memory(offset i32.const 39) "c2")
+	(data $linear_memory(offset i32.const 27) "(int * bool)")
+	(data $linear_memory(offset i32.const 26) "c")
+	(data $linear_memory(offset i32.const 20) "string")
+	(data $linear_memory(offset i32.const 19) "b")
+	(data $linear_memory(offset i32.const 16) "int")
+	(data $linear_memory(offset i32.const 15) "a")
+	(data $linear_memory(offset i32.const 8) "nonzero")
+	(data $linear_memory(offset i32.const 4) "zero")
+	(data $linear_memory(offset i32.const 2) "NG")
+	(data $linear_memory(offset i32.const 0) "OK")
+)
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module
+	(type $function(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $pair_print_<i*b>(func (param $__pair_addr i32)))
+	(type $pair_print_<s*s>(func (param $__pair_addr i32)))
+	(type $closure_call_sig(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $alloc_sig(func (param $size i32) (result i32) ))
+	(type $pair_con_nogc_i32_nogc_i32(func (param $e1 i32)(param $e2 i32) (result i32) ))
+	(type $entry_point(func))
+	(type $print_int(func (param $value i32)))
+	(type $print_bool(func (param $value i32)))
+	(type $print_string(func (param $ptr i32)(param $size i32)))
+	(type $print_token(func))
+	(import "env" "linear_memory" (memory $linear_memory 2))
+	(import "env" "print_int" (func $print_int (type $print_int)))
+	(import "env" "print_bool" (func $print_bool (type $print_bool)))
+	(import "env" "print_string" (func $print_string (type $print_string)))
+	(import "env" "print_lparen" (func $print_lparen (type $print_token)))
+	(import "env" "print_rparen" (func $print_rparen (type $print_token)))
+	(import "env" "print_val" (func $print_val (type $print_token)))
+	(import "env" "print_comma" (func $print_comma (type $print_token)))
+	(import "env" "print_equal" (func $print_equal (type $print_token)))
+	(import "env" "print_colon" (func $print_colon (type $print_token)))
+	(import "env" "print_arrow" (func $print_arrow (type $print_token)))
+	(import "env" "print_space" (func $print_space (type $print_token)))
+	(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))
+	(import "env" "print_new_line" (func $print_new_line (type $print_token)))
+	(func $pair_print_<i*b> (type $pair_print_<i*b>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		call $print_int
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		call $print_bool
+		call $print_rparen
+)
+	(func $pair_print_<s*s> (type $pair_print_<s*s>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_rparen
+)
+	(func $__cml_main (type $entry_point) 
+		(local $l i32)
+		(local $k i32)
+		(local $j i32)
+		(local $i i32)
+		(local $g i32)
+		(local $f i32)
+		(local $e i32)
+		(local $d2 i32)
+		(local $d i32)
+		(local $c2 i32)
+		(local $c i32)
+		(local $b i32)
+		(local $a i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 172
+		global.set $alloc_ptr
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.mul
+		local.set $a
+		call $print_val
+		call $print_space
+		i32.const 15
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $a
+		call $print_int
+		call $print_colon
+		i32.const 16
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 0
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 2
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+		local.set $b
+		call $print_val
+		call $print_space
+		i32.const 19
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $b
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_colon
+		i32.const 20
+		i32.const 6
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 0
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c
+		call $print_val
+		call $print_space
+		i32.const 26
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $c
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 27
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 1
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c2
+		call $print_val
+		call $print_space
+		i32.const 39
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $c2
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 41
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		local.get $c
+		i32.load offset=4 align=4
+		if (result i32)
+			local.get $c
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.mul
+
+		else
+			local.get $c
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.div_s
+
+		end
+		local.set $d
+		call $print_val
+		call $print_space
+		i32.const 53
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $d
+		call $print_int
+		call $print_colon
+		i32.const 54
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		local.get $c2
+		i32.load offset=4 align=4
+		if (result i32)
+			local.get $c2
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.mul
+
+		else
+			local.get $c2
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.div_s
+
+		end
+		local.set $d2
+		call $print_val
+		call $print_space
+		i32.const 57
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $d2
+		call $print_int
+		call $print_colon
+		i32.const 59
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 0
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $e
+		call $print_val
+		call $print_space
+		i32.const 62
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 63
+		i32.const 15
+		call $print_string
+		call $print_new_line
+		local.get $e
+		i32.const 0
+		call $closure_call
+		local.get $e
+		i32.const 123
+		call $closure_call
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $f
+		call $print_val
+		call $print_space
+		i32.const 78
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $f
+		call $pair_print_<s*s>
+		call $print_colon
+		i32.const 79
+		i32.const 17
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 1
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $g
+		call $print_val
+		call $print_space
+		i32.const 96
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 97
+		i32.const 30
+		call $print_string
+		call $print_new_line
+		local.get $g
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 3
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		call $closure_call
+		i32.const 456
+		call $closure_call
+		local.set $i
+		call $print_val
+		call $print_space
+		i32.const 127
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $i
+		call $print_int
+		call $print_colon
+		i32.const 128
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 4
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $j
+		call $print_val
+		call $print_space
+		i32.const 131
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 132
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		local.get $j
+		i32.const 3
+		call $closure_call
+		local.set $k
+		call $print_val
+		call $print_space
+		i32.const 144
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $k
+		call $print_int
+		call $print_colon
+		i32.const 145
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 5
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $l
+		call $print_val
+		call $print_space
+		i32.const 148
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 149
+		i32.const 20
+		call $print_string
+		call $print_new_line
+)
+	(func $closure_call (type $closure_call_sig)(param $closure i32)(param $arg i32) (result i32)
+		local.get $closure
+		local.get $arg
+		local.get $closure
+		i32.load offset=0 align=4
+		call_indirect $function (type $function)
+)
+	(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+		(local $old i32)
+		global.get $alloc_ptr
+		local.set $old
+		local.get $old
+		local.get $size
+		i32.add
+		global.set $alloc_ptr
+		local.get $old
+)
+	(func $pair_con_nogc_i32_nogc_i32 (type $pair_con_nogc_i32_nogc_i32)
+		(local $pair_addr i32)
+		i32.const 8
+		call $alloc
+		local.tee $pair_addr
+		local.get 0
+		i32.store offset=0 align=4
+		local.get $pair_addr
+		local.get 1
+		i32.store offset=4 align=4
+		local.get $pair_addr
+)
+	(func $function5 (type $function)(param $l i32)(param $x i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $x
+		local.get $x
+		call $pair_con_nogc_i32_nogc_i32
+)
+	(func $function4 (type $function)(param $j i32)(param $x i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $x
+		i32.const 0
+		i32.eq
+		if (result i32)
+			i32.const 1
+		else
+			local.get $j
+			local.get $x
+			i32.const 1
+			i32.sub
+			call $closure_call
+			local.get $x
+			i32.mul
+
+		end
+)
+	(func $function3 (type $function)(param $non_recursive_closure i32)(param $z i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $z
+		i32.const 2
+		i32.mul
+)
+	(func $function1 (type $function)(param $g i32)(param $h i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 8
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 2
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.get $h
+		i32.store offset=4 align=4
+		local.get $closure_ptr
+)
+	(func $function2 (type $function)(param $non_recursive_closure i32)(param $x i32) (result i32)
+		(local $h i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $non_recursive_closure
+		i32.load offset=4 align=4
+		local.set $h
+		local.get $h
+		local.get $x
+		call $closure_call
+		local.get $h
+		i32.const 123
+		call $closure_call
+		i32.add
+)
+	(func $function0 (type $function)(param $e i32)(param $x i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $x
+		i32.const 0
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 4
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 4
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 8
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 7
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+)
+	(table $function 6 funcref)
+	(global $alloc_ptr (mut i32) i32.const 0)
+	(export "__cml_main" (func $__cml_main))
+	(start $__cml_main)	(elem (table $function)(offset i32.const 0)funcref (item ref.func $function0)
+(item ref.func $function1)
+(item ref.func $function2)
+(item ref.func $function3)
+(item ref.func $function4)
+(item ref.func $function5)
+)
+	(data $linear_memory(offset i32.const 149) "('ac -> ('ac * 'ac))")
+	(data $linear_memory(offset i32.const 148) "l")
+	(data $linear_memory(offset i32.const 145) "int")
+	(data $linear_memory(offset i32.const 144) "k")
+	(data $linear_memory(offset i32.const 132) "(int -> int)")
+	(data $linear_memory(offset i32.const 131) "j")
+	(data $linear_memory(offset i32.const 128) "int")
+	(data $linear_memory(offset i32.const 127) "i")
+	(data $linear_memory(offset i32.const 97) "((int -> int) -> (int -> int))")
+	(data $linear_memory(offset i32.const 96) "g")
+	(data $linear_memory(offset i32.const 79) "(string * string)")
+	(data $linear_memory(offset i32.const 78) "f")
+	(data $linear_memory(offset i32.const 63) "(int -> string)")
+	(data $linear_memory(offset i32.const 62) "e")
+	(data $linear_memory(offset i32.const 59) "int")
+	(data $linear_memory(offset i32.const 57) "d2")
+	(data $linear_memory(offset i32.const 54) "int")
+	(data $linear_memory(offset i32.const 53) "d")
+	(data $linear_memory(offset i32.const 41) "(int * bool)")
+	(data $linear_memory(offset i32.const 39) "c2")
+	(data $linear_memory(offset i32.const 27) "(int * bool)")
+	(data $linear_memory(offset i32.const 26) "c")
+	(data $linear_memory(offset i32.const 20) "string")
+	(data $linear_memory(offset i32.const 19) "b")
+	(data $linear_memory(offset i32.const 16) "int")
+	(data $linear_memory(offset i32.const 15) "a")
+	(data $linear_memory(offset i32.const 8) "nonzero")
+	(data $linear_memory(offset i32.const 4) "zero")
+	(data $linear_memory(offset i32.const 2) "NG")
+	(data $linear_memory(offset i32.const 0) "OK")
+)
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module
+	(type $function(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $pair_print_<<?af*?ag>->?ag*i>(func (param $__pair_addr i32)))
+	(type $pair_print_<i*b>(func (param $__pair_addr i32)))
+	(type $pair_print_<s*s>(func (param $__pair_addr i32)))
+	(type $closure_call_sig(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $alloc_sig(func (param $size i32) (result i32) ))
+	(type $pair_con_gc_i32_nogc_i32(func (param $e1 i32)(param $e2 i32) (result i32) ))
+	(type $pair_con_nogc_i32_nogc_i32(func (param $e1 i32)(param $e2 i32) (result i32) ))
+	(type $entry_point(func))
+	(type $print_int(func (param $value i32)))
+	(type $print_bool(func (param $value i32)))
+	(type $print_string(func (param $ptr i32)(param $size i32)))
+	(type $print_token(func))
+	(import "env" "linear_memory" (memory $linear_memory 2))
+	(import "env" "print_int" (func $print_int (type $print_int)))
+	(import "env" "print_bool" (func $print_bool (type $print_bool)))
+	(import "env" "print_string" (func $print_string (type $print_string)))
+	(import "env" "print_lparen" (func $print_lparen (type $print_token)))
+	(import "env" "print_rparen" (func $print_rparen (type $print_token)))
+	(import "env" "print_val" (func $print_val (type $print_token)))
+	(import "env" "print_comma" (func $print_comma (type $print_token)))
+	(import "env" "print_equal" (func $print_equal (type $print_token)))
+	(import "env" "print_colon" (func $print_colon (type $print_token)))
+	(import "env" "print_arrow" (func $print_arrow (type $print_token)))
+	(import "env" "print_space" (func $print_space (type $print_token)))
+	(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))
+	(import "env" "print_new_line" (func $print_new_line (type $print_token)))
+	(func $pair_print_<<?af*?ag>->?ag*i> (type $pair_print_<<?af*?ag>->?ag*i>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		drop
+		i32.const 170
+		i32.const 20
+		call $print_string
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		call $print_int
+		call $print_rparen
+)
+	(func $pair_print_<i*b> (type $pair_print_<i*b>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		call $print_int
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		call $print_bool
+		call $print_rparen
+)
+	(func $pair_print_<s*s> (type $pair_print_<s*s>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_rparen
+)
+	(func $__cml_main (type $entry_point) 
+		(local $m i32)
+		(local $l i32)
+		(local $k i32)
+		(local $j i32)
+		(local $i i32)
+		(local $g i32)
+		(local $f i32)
+		(local $e i32)
+		(local $d2 i32)
+		(local $d i32)
+		(local $c2 i32)
+		(local $c i32)
+		(local $b i32)
+		(local $a i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 220
+		global.set $alloc_ptr
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.mul
+		local.set $a
+		call $print_val
+		call $print_space
+		i32.const 15
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $a
+		call $print_int
+		call $print_colon
+		i32.const 16
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 0
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 2
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+		local.set $b
+		call $print_val
+		call $print_space
+		i32.const 19
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $b
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_colon
+		i32.const 20
+		i32.const 6
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 0
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c
+		call $print_val
+		call $print_space
+		i32.const 26
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $c
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 27
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 1
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c2
+		call $print_val
+		call $print_space
+		i32.const 39
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $c2
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 41
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		local.get $c
+		i32.load offset=4 align=4
+		if (result i32)
+			local.get $c
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.mul
+
+		else
+			local.get $c
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.div_s
+
+		end
+		local.set $d
+		call $print_val
+		call $print_space
+		i32.const 53
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $d
+		call $print_int
+		call $print_colon
+		i32.const 54
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		local.get $c2
+		i32.load offset=4 align=4
+		if (result i32)
+			local.get $c2
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.mul
+
+		else
+			local.get $c2
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.div_s
+
+		end
+		local.set $d2
+		call $print_val
+		call $print_space
+		i32.const 57
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $d2
+		call $print_int
+		call $print_colon
+		i32.const 59
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 0
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $e
+		call $print_val
+		call $print_space
+		i32.const 62
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 63
+		i32.const 15
+		call $print_string
+		call $print_new_line
+		local.get $e
+		i32.const 0
+		call $closure_call
+		local.get $e
+		i32.const 123
+		call $closure_call
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $f
+		call $print_val
+		call $print_space
+		i32.const 78
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $f
+		call $pair_print_<s*s>
+		call $print_colon
+		i32.const 79
+		i32.const 17
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 1
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $g
+		call $print_val
+		call $print_space
+		i32.const 96
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 97
+		i32.const 30
+		call $print_string
+		call $print_new_line
+		local.get $g
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 3
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		call $closure_call
+		i32.const 456
+		call $closure_call
+		local.set $i
+		call $print_val
+		call $print_space
+		i32.const 127
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $i
+		call $print_int
+		call $print_colon
+		i32.const 128
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 4
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $j
+		call $print_val
+		call $print_space
+		i32.const 131
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 132
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		local.get $j
+		i32.const 3
+		call $closure_call
+		local.set $k
+		call $print_val
+		call $print_space
+		i32.const 144
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $k
+		call $print_int
+		call $print_colon
+		i32.const 145
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 5
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $l
+		call $print_val
+		call $print_space
+		i32.const 148
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 149
+		i32.const 20
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 6
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		i32.const 123
+		call $pair_con_gc_i32_nogc_i32
+		local.set $m
+		call $print_val
+		call $print_space
+		i32.const 169
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $m
+		call $pair_print_<<?af*?ag>->?ag*i>
+		call $print_colon
+		i32.const 190
+		i32.const 28
+		call $print_string
+		call $print_new_line
+)
+	(func $closure_call (type $closure_call_sig)(param $closure i32)(param $arg i32) (result i32)
+		local.get $closure
+		local.get $arg
+		local.get $closure
+		i32.load offset=0 align=4
+		call_indirect $function (type $function)
+)
+	(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+		(local $old i32)
+		global.get $alloc_ptr
+		local.set $old
+		local.get $old
+		local.get $size
+		i32.add
+		global.set $alloc_ptr
+		local.get $old
+)
+	(func $pair_con_gc_i32_nogc_i32 (type $pair_con_gc_i32_nogc_i32)
+		(local $pair_addr i32)
+		i32.const 8
+		call $alloc
+		local.tee $pair_addr
+		local.get 0
+		i32.store offset=0 align=4
+		local.get $pair_addr
+		local.get 1
+		i32.store offset=4 align=4
+		local.get $pair_addr
+)
+	(func $pair_con_nogc_i32_nogc_i32 (type $pair_con_nogc_i32_nogc_i32)
+		(local $pair_addr i32)
+		i32.const 8
+		call $alloc
+		local.tee $pair_addr
+		local.get 0
+		i32.store offset=0 align=4
+		local.get $pair_addr
+		local.get 1
+		i32.store offset=4 align=4
+		local.get $pair_addr
+)
+	(func $function6 (type $function)(param $non_recursive_closure i32)(param $x i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $x
+		i32.load offset=4 align=4
+)
+	(func $function5 (type $function)(param $l i32)(param $x i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $x
+		local.get $x
+		call $pair_con_nogc_i32_nogc_i32
+)
+	(func $function4 (type $function)(param $j i32)(param $x i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $x
+		i32.const 0
+		i32.eq
+		if (result i32)
+			i32.const 1
+		else
+			local.get $j
+			local.get $x
+			i32.const 1
+			i32.sub
+			call $closure_call
+			local.get $x
+			i32.mul
+
+		end
+)
+	(func $function3 (type $function)(param $non_recursive_closure i32)(param $z i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $z
+		i32.const 2
+		i32.mul
+)
+	(func $function1 (type $function)(param $g i32)(param $h i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 8
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 2
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.get $h
+		i32.store offset=4 align=4
+		local.get $closure_ptr
+)
+	(func $function2 (type $function)(param $non_recursive_closure i32)(param $x i32) (result i32)
+		(local $h i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $non_recursive_closure
+		i32.load offset=4 align=4
+		local.set $h
+		local.get $h
+		local.get $x
+		call $closure_call
+		local.get $h
+		i32.const 123
+		call $closure_call
+		i32.add
+)
+	(func $function0 (type $function)(param $e i32)(param $x i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $x
+		i32.const 0
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 4
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 4
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 8
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 7
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+)
+	(table $function 7 funcref)
+	(global $alloc_ptr (mut i32) i32.const 0)
+	(export "__cml_main" (func $__cml_main))
+	(start $__cml_main)	(elem (table $function)(offset i32.const 0)funcref (item ref.func $function0)
+(item ref.func $function1)
+(item ref.func $function2)
+(item ref.func $function3)
+(item ref.func $function4)
+(item ref.func $function5)
+(item ref.func $function6)
+)
+	(data $linear_memory(offset i32.const 190) "((('af * 'ag) -> 'ag) * int)")
+	(data $linear_memory(offset i32.const 170) "(('af * 'ag) -> 'ag)")
+	(data $linear_memory(offset i32.const 169) "m")
+	(data $linear_memory(offset i32.const 149) "('ac -> ('ac * 'ac))")
+	(data $linear_memory(offset i32.const 148) "l")
+	(data $linear_memory(offset i32.const 145) "int")
+	(data $linear_memory(offset i32.const 144) "k")
+	(data $linear_memory(offset i32.const 132) "(int -> int)")
+	(data $linear_memory(offset i32.const 131) "j")
+	(data $linear_memory(offset i32.const 128) "int")
+	(data $linear_memory(offset i32.const 127) "i")
+	(data $linear_memory(offset i32.const 97) "((int -> int) -> (int -> int))")
+	(data $linear_memory(offset i32.const 96) "g")
+	(data $linear_memory(offset i32.const 79) "(string * string)")
+	(data $linear_memory(offset i32.const 78) "f")
+	(data $linear_memory(offset i32.const 63) "(int -> string)")
+	(data $linear_memory(offset i32.const 62) "e")
+	(data $linear_memory(offset i32.const 59) "int")
+	(data $linear_memory(offset i32.const 57) "d2")
+	(data $linear_memory(offset i32.const 54) "int")
+	(data $linear_memory(offset i32.const 53) "d")
+	(data $linear_memory(offset i32.const 41) "(int * bool)")
+	(data $linear_memory(offset i32.const 39) "c2")
+	(data $linear_memory(offset i32.const 27) "(int * bool)")
+	(data $linear_memory(offset i32.const 26) "c")
+	(data $linear_memory(offset i32.const 20) "string")
+	(data $linear_memory(offset i32.const 19) "b")
+	(data $linear_memory(offset i32.const 16) "int")
+	(data $linear_memory(offset i32.const 15) "a")
+	(data $linear_memory(offset i32.const 8) "nonzero")
+	(data $linear_memory(offset i32.const 4) "zero")
+	(data $linear_memory(offset i32.const 2) "NG")
+	(data $linear_memory(offset i32.const 0) "OK")
+)
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module
+	(type $function(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $pair_print_<<?af*?ag>->?ag*i>(func (param $__pair_addr i32)))
+	(type $pair_print_<i*b>(func (param $__pair_addr i32)))
+	(type $pair_print_<i*s>(func (param $__pair_addr i32)))
+	(type $pair_print_<s*s>(func (param $__pair_addr i32)))
+	(type $closure_call_sig(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $alloc_sig(func (param $size i32) (result i32) ))
+	(type $pair_con_gc_i32_nogc_i32(func (param $e1 i32)(param $e2 i32) (result i32) ))
+	(type $pair_con_nogc_i32_nogc_i32(func (param $e1 i32)(param $e2 i32) (result i32) ))
+	(type $entry_point(func))
+	(type $print_int(func (param $value i32)))
+	(type $print_bool(func (param $value i32)))
+	(type $print_string(func (param $ptr i32)(param $size i32)))
+	(type $print_token(func))
+	(import "env" "linear_memory" (memory $linear_memory 2))
+	(import "env" "print_int" (func $print_int (type $print_int)))
+	(import "env" "print_bool" (func $print_bool (type $print_bool)))
+	(import "env" "print_string" (func $print_string (type $print_string)))
+	(import "env" "print_lparen" (func $print_lparen (type $print_token)))
+	(import "env" "print_rparen" (func $print_rparen (type $print_token)))
+	(import "env" "print_val" (func $print_val (type $print_token)))
+	(import "env" "print_comma" (func $print_comma (type $print_token)))
+	(import "env" "print_equal" (func $print_equal (type $print_token)))
+	(import "env" "print_colon" (func $print_colon (type $print_token)))
+	(import "env" "print_arrow" (func $print_arrow (type $print_token)))
+	(import "env" "print_space" (func $print_space (type $print_token)))
+	(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))
+	(import "env" "print_new_line" (func $print_new_line (type $print_token)))
+	(func $pair_print_<<?af*?ag>->?ag*i> (type $pair_print_<<?af*?ag>->?ag*i>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		drop
+		i32.const 173
+		i32.const 20
+		call $print_string
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		call $print_int
+		call $print_rparen
+)
+	(func $pair_print_<i*b> (type $pair_print_<i*b>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		call $print_int
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		call $print_bool
+		call $print_rparen
+)
+	(func $pair_print_<i*s> (type $pair_print_<i*s>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		call $print_int
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_rparen
+)
+	(func $pair_print_<s*s> (type $pair_print_<s*s>)
+		(local $str_ptr i32)
+		call $print_lparen
+		local.get 0
+		i32.load offset=0 align=4
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_comma
+		local.get 0
+		i32.load offset=4 align=4
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_rparen
+)
+	(func $__cml_main (type $entry_point) 
+		(local $n i32)
+		(local $m i32)
+		(local $l i32)
+		(local $k i32)
+		(local $j i32)
+		(local $i i32)
+		(local $g i32)
+		(local $f i32)
+		(local $e i32)
+		(local $d2 i32)
+		(local $d i32)
+		(local $c2 i32)
+		(local $c i32)
+		(local $b i32)
+		(local $a i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 240
+		global.set $alloc_ptr
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.mul
+		local.set $a
+		call $print_val
+		call $print_space
+		i32.const 18
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $a
+		call $print_int
+		call $print_colon
+		i32.const 19
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 3
+		i32.const 2
+		i32.const 1
+		i32.add
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 0
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 2
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 2
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+		local.set $b
+		call $print_val
+		call $print_space
+		i32.const 22
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $b
+		local.tee $str_ptr
+		i32.load offset=0 align=4
+		local.get $str_ptr
+		i32.load offset=4 align=4
+		call $print_double_quote
+		call $print_string
+		call $print_double_quote
+		call $print_colon
+		i32.const 23
+		i32.const 6
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 0
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c
+		call $print_val
+		call $print_space
+		i32.const 29
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $c
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 30
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		i32.const 123
+		i32.const 1
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $c2
+		call $print_val
+		call $print_space
+		i32.const 42
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $c2
+		call $pair_print_<i*b>
+		call $print_colon
+		i32.const 44
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		local.get $c
+		i32.load offset=4 align=4
+		if (result i32)
+			local.get $c
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.mul
+
+		else
+			local.get $c
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.div_s
+
+		end
+		local.set $d
+		call $print_val
+		call $print_space
+		i32.const 56
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $d
+		call $print_int
+		call $print_colon
+		i32.const 57
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		local.get $c2
+		i32.load offset=4 align=4
+		if (result i32)
+			local.get $c2
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.mul
+
+		else
+			local.get $c2
+			i32.load offset=0 align=4
+			i32.const 2
+			i32.div_s
+
+		end
+		local.set $d2
+		call $print_val
+		call $print_space
+		i32.const 60
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $d2
+		call $print_int
+		call $print_colon
+		i32.const 62
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 0
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $e
+		call $print_val
+		call $print_space
+		i32.const 65
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 66
+		i32.const 15
+		call $print_string
+		call $print_new_line
+		local.get $e
+		i32.const 0
+		call $closure_call
+		local.get $e
+		i32.const 123
+		call $closure_call
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $f
+		call $print_val
+		call $print_space
+		i32.const 81
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $f
+		call $pair_print_<s*s>
+		call $print_colon
+		i32.const 82
+		i32.const 17
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 1
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $g
+		call $print_val
+		call $print_space
+		i32.const 99
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 100
+		i32.const 30
+		call $print_string
+		call $print_new_line
+		local.get $g
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 3
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		call $closure_call
+		i32.const 456
+		call $closure_call
+		local.set $i
+		call $print_val
+		call $print_space
+		i32.const 130
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $i
+		call $print_int
+		call $print_colon
+		i32.const 131
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 4
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $j
+		call $print_val
+		call $print_space
+		i32.const 134
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 135
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		local.get $j
+		i32.const 3
+		call $closure_call
+		local.set $k
+		call $print_val
+		call $print_space
+		i32.const 147
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $k
+		call $print_int
+		call $print_colon
+		i32.const 148
+		i32.const 3
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 5
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $l
+		call $print_val
+		call $print_space
+		i32.const 151
+		i32.const 1
+		call $print_string
+		call $print_colon
+		i32.const 152
+		i32.const 20
+		call $print_string
+		call $print_new_line
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 6
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		i32.const 123
+		call $pair_con_gc_i32_nogc_i32
+		local.set $m
+		call $print_val
+		call $print_space
+		i32.const 172
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $m
+		call $pair_print_<<?af*?ag>->?ag*i>
+		call $print_colon
+		i32.const 193
+		i32.const 28
+		call $print_string
+		call $print_new_line
+		local.get $m
+		i32.load offset=0 align=4
+		local.get $l
+		i32.const 456
+		call $closure_call
+		call $closure_call
+		local.get $m
+		i32.load offset=0 align=4
+		local.get $l
+		i32.const 8
+		call $alloc
+		local.tee $str_ptr
+		i32.const 15
+		i32.store offset=0 align=4
+		local.get $str_ptr
+		i32.const 3
+		i32.store offset=4 align=4
+		local.get $str_ptr
+		call $closure_call
+		call $closure_call
+		call $pair_con_nogc_i32_nogc_i32
+		local.set $n
+		call $print_val
+		call $print_space
+		i32.const 221
+		i32.const 1
+		call $print_string
+		call $print_equal
+		local.get $n
+		call $pair_print_<i*s>
+		call $print_colon
+		i32.const 222
+		i32.const 14
+		call $print_string
+		call $print_new_line
+)
+	(func $closure_call (type $closure_call_sig)(param $closure i32)(param $arg i32) (result i32)
+		local.get $closure
+		local.get $arg
+		local.get $closure
+		i32.load offset=0 align=4
+		call_indirect $function (type $function)
+)
+	(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+		(local $old i32)
+		global.get $alloc_ptr
+		local.set $old
+		local.get $old
+		local.get $size
+		i32.add
+		global.set $alloc_ptr
+		local.get $old
+)
+	(func $pair_con_gc_i32_nogc_i32 (type $pair_con_gc_i32_nogc_i32)
+		(local $pair_addr i32)
+		i32.const 8
+		call $alloc
+		local.tee $pair_addr
+		local.get 0
+		i32.store offset=0 align=4
+		local.get $pair_addr
+		local.get 1
+		i32.store offset=4 align=4
+		local.get $pair_addr
+)
+	(func $pair_con_nogc_i32_nogc_i32 (type $pair_con_nogc_i32_nogc_i32)
+		(local $pair_addr i32)
+		i32.const 8
+		call $alloc
+		local.tee $pair_addr
+		local.get 0
+		i32.store offset=0 align=4
+		local.get $pair_addr
+		local.get 1
+		i32.store offset=4 align=4
+		local.get $pair_addr
+)
+	(func $function6 (type $function)(param $non_recursive_closure i32)(param $x i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $x
+		i32.load offset=4 align=4
+)
+	(func $function5 (type $function)(param $l i32)(param $x i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $x
+		local.get $x
+		call $pair_con_nogc_i32_nogc_i32
+)
+	(func $function4 (type $function)(param $j i32)(param $x i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $x
+		i32.const 0
+		i32.eq
+		if (result i32)
+			i32.const 1
+		else
+			local.get $j
+			local.get $x
+			i32.const 1
+			i32.sub
+			call $closure_call
+			local.get $x
+			i32.mul
+
+		end
+)
+	(func $function3 (type $function)(param $non_recursive_closure i32)(param $z i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $z
+		i32.const 2
+		i32.mul
+)
+	(func $function1 (type $function)(param $g i32)(param $h i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 8
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 2
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.get $h
+		i32.store offset=4 align=4
+		local.get $closure_ptr
+)
+	(func $function2 (type $function)(param $non_recursive_closure i32)(param $x i32) (result i32)
+		(local $h i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $non_recursive_closure
+		i32.load offset=4 align=4
+		local.set $h
+		local.get $h
+		local.get $x
+		call $closure_call
+		local.get $h
+		i32.const 123
+		call $closure_call
+		i32.add
+)
+	(func $function0 (type $function)(param $e i32)(param $x i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $x
+		i32.const 0
+		i32.eq
+		if (result i32)
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 4
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 4
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		else
+			i32.const 8
+			call $alloc
+			local.tee $str_ptr
+			i32.const 8
+			i32.store offset=0 align=4
+			local.get $str_ptr
+			i32.const 7
+			i32.store offset=4 align=4
+			local.get $str_ptr
+
+		end
+)
+	(table $function 7 funcref)
+	(global $alloc_ptr (mut i32) i32.const 0)
+	(export "__cml_main" (func $__cml_main))
+	(start $__cml_main)	(elem (table $function)(offset i32.const 0)funcref (item ref.func $function0)
+(item ref.func $function1)
+(item ref.func $function2)
+(item ref.func $function3)
+(item ref.func $function4)
+(item ref.func $function5)
+(item ref.func $function6)
+)
+	(data $linear_memory(offset i32.const 222) "(int * string)")
+	(data $linear_memory(offset i32.const 221) "n")
+	(data $linear_memory(offset i32.const 193) "((('af * 'ag) -> 'ag) * int)")
+	(data $linear_memory(offset i32.const 173) "(('af * 'ag) -> 'ag)")
+	(data $linear_memory(offset i32.const 172) "m")
+	(data $linear_memory(offset i32.const 152) "('ac -> ('ac * 'ac))")
+	(data $linear_memory(offset i32.const 151) "l")
+	(data $linear_memory(offset i32.const 148) "int")
+	(data $linear_memory(offset i32.const 147) "k")
+	(data $linear_memory(offset i32.const 135) "(int -> int)")
+	(data $linear_memory(offset i32.const 134) "j")
+	(data $linear_memory(offset i32.const 131) "int")
+	(data $linear_memory(offset i32.const 130) "i")
+	(data $linear_memory(offset i32.const 100) "((int -> int) -> (int -> int))")
+	(data $linear_memory(offset i32.const 99) "g")
+	(data $linear_memory(offset i32.const 82) "(string * string)")
+	(data $linear_memory(offset i32.const 81) "f")
+	(data $linear_memory(offset i32.const 66) "(int -> string)")
+	(data $linear_memory(offset i32.const 65) "e")
+	(data $linear_memory(offset i32.const 62) "int")
+	(data $linear_memory(offset i32.const 60) "d2")
+	(data $linear_memory(offset i32.const 57) "int")
+	(data $linear_memory(offset i32.const 56) "d")
+	(data $linear_memory(offset i32.const 44) "(int * bool)")
+	(data $linear_memory(offset i32.const 42) "c2")
+	(data $linear_memory(offset i32.const 30) "(int * bool)")
+	(data $linear_memory(offset i32.const 29) "c")
+	(data $linear_memory(offset i32.const 23) "string")
+	(data $linear_memory(offset i32.const 22) "b")
+	(data $linear_memory(offset i32.const 19) "int")
+	(data $linear_memory(offset i32.const 18) "a")
+	(data $linear_memory(offset i32.const 15) "abc")
+	(data $linear_memory(offset i32.const 8) "nonzero")
+	(data $linear_memory(offset i32.const 4) "zero")
+	(data $linear_memory(offset i32.const 2) "NG")
+	(data $linear_memory(offset i32.const 0) "OK")
+)
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module
+	(type $function(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $closure_call_sig(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $alloc_sig(func (param $size i32) (result i32) ))
+	(type $entry_point(func))
+	(type $print_int(func (param $value i32)))
+	(type $print_bool(func (param $value i32)))
+	(type $print_string(func (param $ptr i32)(param $size i32)))
+	(type $print_token(func))
+	(import "env" "linear_memory" (memory $linear_memory 2))
+	(import "env" "print_int" (func $print_int (type $print_int)))
+	(import "env" "print_bool" (func $print_bool (type $print_bool)))
+	(import "env" "print_string" (func $print_string (type $print_string)))
+	(import "env" "print_lparen" (func $print_lparen (type $print_token)))
+	(import "env" "print_rparen" (func $print_rparen (type $print_token)))
+	(import "env" "print_val" (func $print_val (type $print_token)))
+	(import "env" "print_comma" (func $print_comma (type $print_token)))
+	(import "env" "print_equal" (func $print_equal (type $print_token)))
+	(import "env" "print_colon" (func $print_colon (type $print_token)))
+	(import "env" "print_arrow" (func $print_arrow (type $print_token)))
+	(import "env" "print_space" (func $print_space (type $print_token)))
+	(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))
+	(import "env" "print_new_line" (func $print_new_line (type $print_token)))
+	(func $__cml_main (type $entry_point) 
+		(local $fib i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 16
+		global.set $alloc_ptr
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 0
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $fib
+		call $print_val
+		call $print_space
+		i32.const 0
+		i32.const 3
+		call $print_string
+		call $print_colon
+		i32.const 3
+		i32.const 12
+		call $print_string
+		call $print_new_line
+)
+	(func $closure_call (type $closure_call_sig)(param $closure i32)(param $arg i32) (result i32)
+		local.get $closure
+		local.get $arg
+		local.get $closure
+		i32.load offset=0 align=4
+		call_indirect $function (type $function)
+)
+	(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+		(local $old i32)
+		global.get $alloc_ptr
+		local.set $old
+		local.get $old
+		local.get $size
+		i32.add
+		global.set $alloc_ptr
+		local.get $old
+)
+	(func $function0 (type $function)(param $fib i32)(param $x i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $x
+		i32.const 1
+		i32.eq
+		if (result i32)
+			i32.const 1
+		else
+			local.get $x
+			i32.const 2
+			i32.eq
+			if (result i32)
+				i32.const 1
+			else
+				local.get $fib
+				local.get $x
+				i32.const 1
+				i32.sub
+				call $closure_call
+				local.get $fib
+				local.get $x
+				i32.const 2
+				i32.sub
+				call $closure_call
+				i32.add
+
+			end
+
+		end
+)
+	(table $function 1 funcref)
+	(global $alloc_ptr (mut i32) i32.const 0)
+	(export "__cml_main" (func $__cml_main))
+	(start $__cml_main)	(elem (table $function)(offset i32.const 0)funcref (item ref.func $function0)
+)
+	(data $linear_memory(offset i32.const 3) "(int -> int)")
+	(data $linear_memory(offset i32.const 0) "fib")
+)
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module
+	(type $function(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $closure_call_sig(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $alloc_sig(func (param $size i32) (result i32) ))
+	(type $entry_point(func))
+	(type $print_int(func (param $value i32)))
+	(type $print_bool(func (param $value i32)))
+	(type $print_string(func (param $ptr i32)(param $size i32)))
+	(type $print_token(func))
+	(import "env" "linear_memory" (memory $linear_memory 2))
+	(import "env" "print_int" (func $print_int (type $print_int)))
+	(import "env" "print_bool" (func $print_bool (type $print_bool)))
+	(import "env" "print_string" (func $print_string (type $print_string)))
+	(import "env" "print_lparen" (func $print_lparen (type $print_token)))
+	(import "env" "print_rparen" (func $print_rparen (type $print_token)))
+	(import "env" "print_val" (func $print_val (type $print_token)))
+	(import "env" "print_comma" (func $print_comma (type $print_token)))
+	(import "env" "print_equal" (func $print_equal (type $print_token)))
+	(import "env" "print_colon" (func $print_colon (type $print_token)))
+	(import "env" "print_arrow" (func $print_arrow (type $print_token)))
+	(import "env" "print_space" (func $print_space (type $print_token)))
+	(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))
+	(import "env" "print_new_line" (func $print_new_line (type $print_token)))
+	(func $__cml_main (type $entry_point) 
+		(local $fib i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 16
+		global.set $alloc_ptr
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 0
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $fib
+		call $print_val
+		call $print_space
+		i32.const 0
+		i32.const 3
+		call $print_string
+		call $print_colon
+		i32.const 3
+		i32.const 12
+		call $print_string
+		call $print_new_line
+)
+	(func $closure_call (type $closure_call_sig)(param $closure i32)(param $arg i32) (result i32)
+		local.get $closure
+		local.get $arg
+		local.get $closure
+		i32.load offset=0 align=4
+		call_indirect $function (type $function)
+)
+	(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+		(local $old i32)
+		global.get $alloc_ptr
+		local.set $old
+		local.get $old
+		local.get $size
+		i32.add
+		global.set $alloc_ptr
+		local.get $old
+)
+	(func $function0 (type $function)(param $fib i32)(param $x i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $x
+		i32.const 1
+		i32.eq
+		if (result i32)
+			i32.const 1
+		else
+			local.get $x
+			i32.const 2
+			i32.eq
+			if (result i32)
+				i32.const 1
+			else
+				local.get $fib
+				local.get $x
+				i32.const 1
+				i32.sub
+				call $closure_call
+				local.get $fib
+				local.get $x
+				i32.const 2
+				i32.sub
+				call $closure_call
+				i32.add
+
+			end
+
+		end
+)
+	(table $function 1 funcref)
+	(global $alloc_ptr (mut i32) i32.const 0)
+	(export "__cml_main" (func $__cml_main))
+	(start $__cml_main)	(elem (table $function)(offset i32.const 0)funcref (item ref.func $function0)
+)
+	(data $linear_memory(offset i32.const 3) "(int -> int)")
+	(data $linear_memory(offset i32.const 0) "fib")
+)
+generated imports
+Execute finished
+Wat to Wasm Builder and compiler started
+A webassembly text passed 
+(module
+	(type $function(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $closure_call_sig(func (param $closure i32)(param $arg i32) (result i32) ))
+	(type $alloc_sig(func (param $size i32) (result i32) ))
+	(type $entry_point(func))
+	(type $print_int(func (param $value i32)))
+	(type $print_bool(func (param $value i32)))
+	(type $print_string(func (param $ptr i32)(param $size i32)))
+	(type $print_token(func))
+	(import "env" "linear_memory" (memory $linear_memory 2))
+	(import "env" "print_int" (func $print_int (type $print_int)))
+	(import "env" "print_bool" (func $print_bool (type $print_bool)))
+	(import "env" "print_string" (func $print_string (type $print_string)))
+	(import "env" "print_lparen" (func $print_lparen (type $print_token)))
+	(import "env" "print_rparen" (func $print_rparen (type $print_token)))
+	(import "env" "print_val" (func $print_val (type $print_token)))
+	(import "env" "print_comma" (func $print_comma (type $print_token)))
+	(import "env" "print_equal" (func $print_equal (type $print_token)))
+	(import "env" "print_colon" (func $print_colon (type $print_token)))
+	(import "env" "print_arrow" (func $print_arrow (type $print_token)))
+	(import "env" "print_space" (func $print_space (type $print_token)))
+	(import "env" "print_double_quote" (func $print_double_quote (type $print_token)))
+	(import "env" "print_new_line" (func $print_new_line (type $print_token)))
+	(func $__cml_main (type $entry_point) 
+		(local $it i32)
+		(local $fib i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		i32.const 24
+		global.set $alloc_ptr
+		i32.const 4
+		call $alloc
+		local.tee $closure_ptr
+		i32.const 0
+		i32.store offset=0 align=4
+		local.get $closure_ptr
+		local.set $fib
+		call $print_val
+		call $print_space
+		i32.const 0
+		i32.const 3
+		call $print_string
+		call $print_colon
+		i32.const 3
+		i32.const 12
+		call $print_string
+		call $print_new_line
+		local.get $fib
+		i32.const 8
+		call $closure_call
+		local.set $it
+		call $print_val
+		call $print_space
+		i32.const 15
+		i32.const 2
+		call $print_string
+		call $print_equal
+		local.get $it
+		call $print_int
+		call $print_colon
+		i32.const 17
+		i32.const 3
+		call $print_string
+		call $print_new_line
+)
+	(func $closure_call (type $closure_call_sig)(param $closure i32)(param $arg i32) (result i32)
+		local.get $closure
+		local.get $arg
+		local.get $closure
+		i32.load offset=0 align=4
+		call_indirect $function (type $function)
+)
+	(func $alloc (type $alloc_sig)(param $size i32) (result i32)
+		(local $old i32)
+		global.get $alloc_ptr
+		local.set $old
+		local.get $old
+		local.get $size
+		i32.add
+		global.set $alloc_ptr
+		local.get $old
+)
+	(func $function0 (type $function)(param $fib i32)(param $x i32) (result i32)
+		(local $str_ptr i32)
+		(local $closure_ptr i32)
+		local.get $x
+		i32.const 1
+		i32.eq
+		if (result i32)
+			i32.const 1
+		else
+			local.get $x
+			i32.const 2
+			i32.eq
+			if (result i32)
+				i32.const 1
+			else
+				local.get $fib
+				local.get $x
+				i32.const 1
+				i32.sub
+				call $closure_call
+				local.get $fib
+				local.get $x
+				i32.const 2
+				i32.sub
+				call $closure_call
+				i32.add
+
+			end
+
+		end
+)
+	(table $function 1 funcref)
+	(global $alloc_ptr (mut i32) i32.const 0)
+	(export "__cml_main" (func $__cml_main))
+	(start $__cml_main)	(elem (table $function)(offset i32.const 0)funcref (item ref.func $function0)
+)
+	(data $linear_memory(offset i32.const 17) "int")
+	(data $linear_memory(offset i32.const 15) "it")
+	(data $linear_memory(offset i32.const 3) "(int -> int)")
+	(data $linear_memory(offset i32.const 0) "fib")
+)
+generated imports
+Execute finished

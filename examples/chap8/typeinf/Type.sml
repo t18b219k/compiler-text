@@ -1,7 +1,9 @@
-structure Type = struct
+structure Type =
+struct
   local
     val nextTyId = ref 0
-    fun newTyId () = (!nextTyId before nextTyId := !nextTyId + 1)
+    fun newTyId () =
+      (!nextTyId before nextTyId := !nextTyId + 1)
   in
     fun initSeed () = nextTyId := 0
     fun newTyIdName () =
@@ -12,10 +14,8 @@ structure Type = struct
               if n < 26 then
                 [ord #"a" + n]
               else
-                let
-                  val (msb, rest) = (n mod 26, (n div 26) - 1)
-                in
-                  (ord #"a" + msb) :: (numeral rest)
+                let val (msb, rest) = (n mod 26, (n div 26) - 1)
+                in (ord #"a" + msb) :: (numeral rest)
                 end
           in
             (implode (map chr (rev (numeral tid))))
@@ -34,7 +34,8 @@ structure Type = struct
   | PAIRty of ty * ty
   | POLYty of string list * ty
 
-  fun newTy () = TYVARty (newTyIdName ())
+  fun newTy () =
+    TYVARty (newTyIdName ())
 
   fun tyToString ty =
     case ty of
@@ -44,5 +45,6 @@ structure Type = struct
     | TYVARty string => "'" ^ string
     | FUNty (ty1, ty2) => "(" ^ tyToString ty1 ^ " -> " ^ tyToString ty2 ^ ")"
     | PAIRty (ty1, ty2) => "(" ^ tyToString ty1 ^ " * " ^ tyToString ty2 ^ ")"
-    | POLYty (tids, ty) => "[" ^ String.concatWith "," tids ^ "." ^ tyToString ty ^ "]"
+    | POLYty (tids, ty) =>
+        "[" ^ String.concatWith "," tids ^ "." ^ tyToString ty ^ "]"
 end
