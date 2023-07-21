@@ -329,7 +329,7 @@ struct
         Type.FUNty(a,b)=>(a,b)
         |x =>raise CantMapToWasmValType x
         (*関数内部名生成*)
-    val f_sig = generate_type_id (TS.getTy e) 
+    val f_sig = "function" 
     val f_sig_in_cml = ([I.param(f,I.numtype I.i32),I.param(x,CMLTyTovaltype var_ty)],[I.result(CMLTyTovaltype return_ty)])
 
     val (internal_function_name,function_index,function_ids) =
@@ -358,7 +358,7 @@ struct
         I.i32const closure_size,
         I.call(IDX.funcidx(IDX.text_id "alloc" )),
         I.localtee(IDX.localidx(IDX.text_id "closure_ptr")),
-        I.i32const (SEnv.numItems function_sigs),
+        I.i32const function_index,
         I.i32store(I.memarg(0w0,0w4))
         ]@K
         (*渡されてきたクロージャをローカル変数に展開する
@@ -381,7 +381,9 @@ struct
     val locals =(map (fn (v_name,v_ty)=>I.local_(SOME(IDX.localidx(IDX.text_id v_name)),v_ty)) prelude) @ internal_local_vars
 
 
-    val function =(    SOME(IDX.funcidx(IDX.text_id internal_function_name)),I.with_functype(IDX.typeidx(IDX.text_id (generate_type_id (TS.getTy e))),#1 f_sig_in_cml ,#2 f_sig_in_cml),locals,f_body)
+    val function =(
+      SOME(IDX.funcidx(IDX.text_id internal_function_name)),
+      I.with_functype(IDX.typeidx(IDX.text_id "function"),#1 f_sig_in_cml ,#2 f_sig_in_cml),locals,f_body)
     
     fun filter_fn (SOME(IDX.tableidx (IDX.text_id a)),I.tabletype b ) = a = f_sig
     | filter_fn (_,I.tabletype b) = false
@@ -461,7 +463,12 @@ struct
 
       val pc_sigs = foldr (fn ((name,(_,s)),l)=>s::l) [] pair_constructions 
       val pc_fns = foldr (fn ((name,(f,_)),l)=>f::l) [] pair_constructions
-      val module = { ty = closure_call_sig::alloc_sig::pc_sigs @(#ty module), im = mem::(#im module), fn_ = closure_call::alloc::pc_fns@(#fn_ module) , ta = #ta module , me = #me module, gl = alloc_ptr::(#gl module) , ex = #ex module, st = #st module, el = #el module, da = #da module  }
+      val module = 
+      { ty = closure_call_sig::alloc_sig::pc_sigs @(#ty module), im = mem::(#im module), fn_ =if (SEnv.numItems function_sigs =0)
+      then
+        alloc::pc_fns@(#fn_ module) 
+      else
+        closure_call::alloc::pc_fns@(#fn_ module) , ta = #ta module , me = #me module, gl = alloc_ptr::(#gl module) , ex = #ex module, st = #st module, el = #el module, da = #da module  }
       val local_and_exprs=ListPair.zip (locals,wasm_expr_list) 
 
       fun folder ((I.local_(local_id,val_ty),expr),(module,iseq,memoffset,pp_table))= 
