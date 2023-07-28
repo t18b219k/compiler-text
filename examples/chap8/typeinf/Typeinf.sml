@@ -17,6 +17,7 @@ struct
     {then_ty: ty, else_ty: ty, then_exp: exp, else_exp: exp}
   exception TypeError
   exception UndefinedVariable of string
+  exception Unreachable
   infixr ++
 
   fun s1 ++ s2 = composeSubst s1 s2
@@ -142,6 +143,7 @@ struct
               case id of
                 2 => raise ExpectedToBeInt {actual = a, expression = exp1}
               | 1 => raise ExpectedToBeInt {actual = a, expression = exp2}
+              | _ => raise Unreachable
           val ty3 =
             case p of
               EQ => BOOLty

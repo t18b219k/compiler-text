@@ -1,3 +1,0 @@
-val it = (fn x=>(x,x),fn x=>x);
-val h = #2 it 12345;
-val j = #1 it 12345;

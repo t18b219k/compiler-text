@@ -1,6 +1,6 @@
 version = 1
 [workspace]
-root = "main/Main.cm"
+root = "examples/chap8/main/Main.cm"
 [diagnostics]
 5011.severity = "warning"
 4015.severity = "error"

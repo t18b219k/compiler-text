@@ -2,6 +2,8 @@ SMLSHARP = smlsharp
 SMLFLAGS = -O2
 LIBS = ../coreml_env/target/release/libcoreml_env.a
 all: Main
+clean: 
+	rm -rf *.o Main *.log *.wat *.wasm ../coreml_env/target/* ../parser/*.o ../SECD/*.o ../wasm_text_emitter/*.o ../typeinf/*.o ../*.wat ../*.wasm && cd ../coreml_env && cargo clean
 Main: ../parser/Syntax.smi ../parser/CoreML.grm.sig ../parser/CoreML.grm.smi \
  ../parser/CoreML.lex.smi ../parser/Parser.smi ../typeinf/Type.smi \
  ../parser/TypedSyntax.smi ../typeinf/TypeUtils.smi ../typeinf/UnifyTy.smi \
