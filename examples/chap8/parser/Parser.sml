@@ -30,4 +30,11 @@ struct
     let val lexer = CoreMLLex.makeLexer (fn n => TextIO.inputN (inStream, 1))
     in P.makeStream {lexer = lexer}
     end
+  fun makeStringStream string =
+    let 
+      val stream =TextIO.openString string
+    
+    val lexer = CoreMLLex.makeLexer(fn n=>TextIO.inputN(stream,1)) in 
+      P.makeStream{lexer=lexer}
+  end  
 end

@@ -73,25 +73,25 @@ struct
     | EXPIF (exp1, exp2, exp3) =>
         "if " ^ expToString exp1 ^ " then " ^ expToString exp2 ^ " else "
         ^ expToString exp3
-    | EXPFN (var_id, typed_exp, ty) =>
-        "(fn " ^ var_id ^ " => " ^ expToString typed_exp ^ ") : "
+    | EXPFN (var_id, exp, ty) =>
+        "(fn " ^ var_id ^ " => " ^ expToString exp ^ ") : "
         ^ tyToString ty
-    | EXPPROJ1 typed_exp =>
-        "#1 " ^ expToString typed_exp ^ " : "
+    | EXPPROJ1 exp =>
+        "#1 " ^ expToString exp ^ " : "
         ^
         tyToString
-          (case (getTy typed_exp) of
+          (case (getTy exp) of
              PAIRty (a, _) => a
            | x => raise UnexpectedType x)
-    | EXPPROJ2 typed_exp =>
-        "#2 " ^ expToString typed_exp ^ " : "
+    | EXPPROJ2 exp =>
+        "#2 " ^ expToString exp ^ " : "
         ^
         tyToString
           (case (getTy typed_exp) of
              PAIRty (_, b) => b
            | x => raise UnexpectedType x)
-    | EXPFIX (f, x, typed_exp, ty) =>
-        "(fix " ^ f ^ "(" ^ x ^ ") => " ^ expToString typed_exp ^ ") : "
+    | EXPFIX (f, x, exp, ty) =>
+        "(fix " ^ f ^ "(" ^ x ^ ") => " ^ expToString exp ^ ") : "
         ^ (tyToString ty)
     | EXPPRIM (p, exp1, exp2) =>
         let

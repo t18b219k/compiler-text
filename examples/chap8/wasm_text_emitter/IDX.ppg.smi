@@ -1,0 +1,49 @@
+_require "smlformat-lib.smi"
+_require "basis.smi"
+structure IDX = struct 
+    datatype idx =int_id of word |text_id of string
+val format_idx:idx->SMLFormat.FormatExpression.expression list
+end 
+structure TypeIDX = struct 
+        datatype TypeIDX =new of  IDX.idx
+val format_TypeIDX:TypeIDX-> SMLFormat.FormatExpression.expression list
+end 
+structure FuncIDX = struct 
+    datatype FuncIDX =new of  IDX.idx
+val format_FuncIDX:FuncIDX-> SMLFormat.FormatExpression.expression list
+end 
+structure TableIDX = struct 
+    (*% @formatter(IDX.idx) IDX.format_idx*)
+    datatype TableIDX =new of  IDX.idx
+val format_TableIDX:TableIDX-> SMLFormat.FormatExpression.expression list
+end 
+structure MemIDX = struct 
+    (*% @formatter(IDX.idx) IDX.format_idx*)
+    datatype MemIDX=new of  IDX.idx
+val format_MemIDX:MemIDX-> SMLFormat.FormatExpression.expression list
+end 
+structure GlobalIDX = struct 
+    (*% @formatter(IDX.idx) IDX.format_idx*)
+    datatype GlobalIDX =new of  IDX.idx
+val format_GlobalIDX:GlobalIDX-> SMLFormat.FormatExpression.expression list
+end
+structure ElemIDX = struct 
+    (*% @formatter(IDX.idx) IDX.format_idx*)
+    datatype ElemIDX =new of  IDX.idx
+val format_ElemIDX:ElemIDX-> SMLFormat.FormatExpression.expression list
+end 
+structure DataIDX =struct 
+    (*% @formatter(IDX.idx) IDX.format_idx*)
+    datatype DataIDX = new of  IDX.idx
+val format_DataIDX:DataIDX-> SMLFormat.FormatExpression.expression list
+end
+structure LocalIDX = struct 
+    (*% @formatter(IDX.idx) IDX.format_idx*)
+    datatype LocalIDX =new of  IDX.idx
+val format_LocalIDX:LocalIDX-> SMLFormat.FormatExpression.expression list
+end 
+structure LabelIDX = struct 
+    (*% @formatter(IDX.idx) IDX.format_idx*)
+    datatype LabelIDX =new of  IDX.idx
+val format_LabelIDX:LabelIDX-> SMLFormat.FormatExpression.expression list
+end 

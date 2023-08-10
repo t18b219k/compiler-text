@@ -11,3 +11,4 @@ crate-type = ["staticlib", "lib"]
 wasmer = { version = "4.0.0-alpha.1", features = ["tracing", "jit"] }
 log = "0.4"
 fern = "0.6.2"
+oxhttp="0.1"

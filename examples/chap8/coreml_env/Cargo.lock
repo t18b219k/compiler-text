@@ -131,6 +131,7 @@ version = "0.1.0"
 dependencies = [
  "fern",
  "log",
+ "oxhttp",
  "wasmer",
 ]
 
@@ -467,6 +468,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "443144c8cdadd93ebf52ddb4056d257f5b52c04d3c804e657d19eb73fc33668b"
 
 [[package]]
+name = "httparse"
+version = "1.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d897f394bad6a705d5f4104762e116a75639e470d80901eed05a860a95cb1904"
+
+[[package]]
 name = "ident_case"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -616,6 +623,17 @@ name = "once_cell"
 version = "1.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dd8b5dd2ae5ed71462c540258bedcb51965123ad7e7ccf4b9a8cafaa4a63576d"
+
+[[package]]
+name = "oxhttp"
+version = "0.1.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "aba22f4e7dc5088def616521ad0357b33fa9bc952848e6a449e0b6843a34e628"
+dependencies = [
+ "httparse",
+ "lazy_static",
+ "url",
+]
 
 [[package]]
 name = "parking_lot_core"

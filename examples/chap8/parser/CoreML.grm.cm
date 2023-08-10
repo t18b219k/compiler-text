@@ -52,7 +52,6 @@ end
 *)
 Library
     structure CoreMLLrVals
-    structure CoreMLLrVals.Parser
 is 
     $/basis.cm
     $/ml-yacc-lib.cm

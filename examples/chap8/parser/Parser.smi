@@ -9,4 +9,5 @@ struct
   type stream (= CoreMLLrVals.Parser.stream)
   val doParse : stream -> Syntax.dec * stream
   val makeStream : TextIO.instream -> stream
+  val makeStringStream:string->stream
 end

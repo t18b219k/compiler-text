@@ -1,7 +1,7 @@
 SMLSHARP = smlsharp
 SMLFLAGS = -O2
 LIBS = ../coreml_env/target/release/libcoreml_env.a
-all: Main
+all: Main WebTop
 clean: 
 	rm -rf *.o Main *.log *.wat *.wasm ../coreml_env/target/* ../parser/*.o ../SECD/*.o ../wasm_text_emitter/*.o ../typeinf/*.o ../*.wat ../*.wasm && cd ../coreml_env && cargo clean
 Main: ../parser/Syntax.smi ../parser/CoreML.grm.sig ../parser/CoreML.grm.smi \
@@ -17,6 +17,19 @@ Main: ../parser/Syntax.smi ../parser/CoreML.grm.sig ../parser/CoreML.grm.smi \
  ../wasm_text_emitter/WasmModule.o ../wasm_text_emitter/Debug.o \
  ../wasm_text_emitter/Comp.o Top.o Main.o libcoreml_env.a
 	$(SMLSHARP) $(LDFLAGS) -o Main Main.smi $(LIBS)
+WebTop: ../parser/Syntax.smi ../parser/CoreML.grm.sig ../parser/CoreML.grm.smi \
+ ../parser/CoreML.lex.smi ../parser/Parser.smi ../typeinf/Type.smi \
+ ../parser/TypedSyntax.smi ../typeinf/TypeUtils.smi ../typeinf/UnifyTy.smi \
+ ../typeinf/Typeinf.smi ../SECD/Instruction.smi ../SECD/Comp.smi \
+ ../SECD/Value.smi ../SECD/Exec.smi ../wasm_text_emitter/WasmModule.smi \
+ ../wasm_text_emitter/Debug.smi ../wasm_text_emitter/Comp.smi Top.smi Main.smi \
+ ../parser/Syntax.o ../parser/CoreML.grm.o ../parser/CoreML.lex.o \
+ ../parser/Parser.o ../typeinf/Type.o ../parser/TypedSyntax.o \
+ ../typeinf/TypeUtils.o ../typeinf/UnifyTy.o ../typeinf/Typeinf.o \
+ ../SECD/Instruction.o ../SECD/Comp.o ../SECD/Value.o ../SECD/Exec.o \
+ ../wasm_text_emitter/WasmModule.o ../wasm_text_emitter/Debug.o \
+ ../wasm_text_emitter/Comp.o WebTop.o libcoreml_env.a
+	$(SMLSHARP) $(LDFLAGS) -o WebTop WebTop.smi $(LIBS)
 ../parser/Syntax.o: ../parser/Syntax.sml ../parser/Syntax.smi
 	$(SMLSHARP) $(SMLFLAGS) -o ../parser/Syntax.o -c ../parser/Syntax.sml
 ../parser/CoreML.grm.o: ../parser/CoreML.grm.sml ../parser/Syntax.smi \
@@ -83,6 +96,14 @@ Top.o: Top.sml ../parser/Syntax.smi ../parser/CoreML.grm.sig \
  ../wasm_text_emitter/WasmModule.smi ../wasm_text_emitter/Debug.smi \
  ../wasm_text_emitter/Comp.smi Top.smi
 	$(SMLSHARP) $(SMLFLAGS) -o Top.o -c Top.sml
+WebTop.o: WebTop.sml ../parser/Syntax.smi ../parser/CoreML.grm.sig \
+ ../parser/CoreML.grm.smi ../parser/CoreML.lex.smi ../parser/Parser.smi \
+ ../typeinf/Type.smi ../parser/TypedSyntax.smi ../typeinf/TypeUtils.smi \
+ ../typeinf/UnifyTy.smi ../typeinf/Typeinf.smi ../SECD/Instruction.smi \
+ ../SECD/Comp.smi ../SECD/Value.smi ../SECD/Exec.smi \
+ ../wasm_text_emitter/WasmModule.smi ../wasm_text_emitter/Debug.smi \
+ ../wasm_text_emitter/Comp.smi WebTop.smi
+	$(SMLSHARP) $(SMLFLAGS) -o WebTop.o -c WebTop.sml
 Main.o: Main.sml ../parser/Syntax.smi ../parser/CoreML.grm.sig \
  ../parser/CoreML.grm.smi ../parser/CoreML.lex.smi ../parser/Parser.smi \
  ../typeinf/Type.smi ../parser/TypedSyntax.smi ../typeinf/TypeUtils.smi \
