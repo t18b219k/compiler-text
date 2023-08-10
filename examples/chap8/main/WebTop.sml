@@ -19,7 +19,7 @@
                     val Syntax.VAL (name, _) = dec
                 in 
                    declarations := TypedSyntax.VAL(name,typed_expr):: !declarations;
-                   readAndParseLoop gamma stream
+                   readAndParseLoop newGamma stream
                 end
                 ) 
             val _ = readAndParseLoop gamma stream  handle 

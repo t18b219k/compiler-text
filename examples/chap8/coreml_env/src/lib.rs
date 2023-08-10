@@ -190,9 +190,7 @@ fn executer(source: &str) -> String {
                     if let Ok(main) = instance.exports.get_function("__cml_main") {
                         std::io::stdout().flush().unwrap();
                         info!("Execute finished");
-                        let mut text = env.as_ref(&store).text_buffer.clone();
-                        text.push('\0');
-                        text
+                        env.as_ref(&store).text_buffer.clone()
                     } else {
                         info!("__cml_main not found");
                         "__cml_main not found.".to_owned()

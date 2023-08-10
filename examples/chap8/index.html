@@ -5,8 +5,6 @@
 <head>
     <meta charset="utf-8">
     <title>CoreML Wasm WebRT</title>
-    <script type="text/javascript" src="https://unpkg.com/wabt@1.0.32/index.js"></script>
-
     <script>
         async function run() {
             // 実行開始時にterminal は初期化する.
@@ -14,49 +12,27 @@
             term.value = ""
             const src = document.getElementById("src").value;
             console.info(src);
-            let asm_code = ""
-            let result = ""
             let decoder = new TextDecoder();
             // ただのテキストで帰ってくる
-            fetch("/compile", {
+            let asm_code = (await fetch("/compile", {
                 method: "POST", mode: "cors", cache: "no-cache", credentials: "omit", headers: {
                     "Content-Type": "text/plain",
                 },
                 redirect: "follow",
                 referrerPolicy: "no-referrer",
                 body: src
-            }).then((asm) => {
-                let reader = asm.body.getReader();
-                reader.read().then(
-                    function Read({ done, value }) {
-                        asm_code += decoder.decode(value);
-                        reader.read().then(Read)
-                    }
-                );
-            }).finally((_) => {
-                document.getElementById("asm").value = asm_code;
-            });
-            /*
+            })).text();
+            document.getElementById("asm").value = await asm_code;
             // ただのテキストで帰ってくる
-            fetch("/exec_result", {
+            let result = (await fetch("/exec_result", {
                 method: "POST", mode: "cors", cache: "no-cache", credentials: "omit", headers: {
                     "Content-Type": "text/plain",
                 },
                 redirect: "follow",
                 referrerPolicy: "no-referrer",
                 body: src
-            }).then((result) => {
-                let reader = result.body.getReader();
-                reader.read().then(
-                    function Read({ done, value }) {
-                        asm_code += decoder.decode(value);
-                        reader.read().then(Read)
-                    }
-                );
-            }).finally((_) => {
-                document.getElementById("terminal").value = result;
-            });
-            */
+            })).text();
+            document.getElementById("terminal").value = await result;
         }
     </script>
 </head>
